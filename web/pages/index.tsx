@@ -1,19 +1,23 @@
-import { Button, Flex, useColorMode, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  RangeSlider,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+  RangeSliderTrack,
+  useColorMode,
+  VStack,
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useMemo, useState } from "react";
+import { Typewriter } from "react-simple-typewriter";
 
 const Home: NextPage = () => {
   const [counter, setCounter] = useState(0);
   const { toggleColorMode } = useColorMode();
-
-  useEffect(() => {
-    setTimeout(() => {
-      setCounter(counter + 1);
-    }, 1000);
-  }, [counter]);
 
   return (
     <Flex height="100vh" justifyContent="center" alignItems="center">
@@ -27,6 +31,13 @@ const Home: NextPage = () => {
         <Button colorScheme="blue" onClick={() => setCounter(counter + 1)}>
           {counter}
         </Button>
+        <RangeSlider aria-label={["min", "max"]} defaultValue={[10, 30]}>
+          <RangeSliderTrack>
+            <RangeSliderFilledTrack />
+          </RangeSliderTrack>
+          <RangeSliderThumb index={0} />
+          <RangeSliderThumb index={1} />
+        </RangeSlider>
         <Button onClick={toggleColorMode}>change theme</Button>
         <Link href="/amongus">
           <button>amongus</button>
