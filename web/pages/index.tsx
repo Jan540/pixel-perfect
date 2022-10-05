@@ -13,6 +13,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { stringify } from "querystring";
 import { FC, useEffect, useMemo, useState } from "react";
 import { Typewriter, useTypewriter, Cursor } from "react-simple-typewriter";
 import { quotes } from "../data/quotes";

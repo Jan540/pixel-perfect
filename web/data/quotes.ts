@@ -1,5 +1,19 @@
+import {
+  Button,
+  Flex,
+  RangeSlider,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+  RangeSliderTrack,
+  useColorMode,
+  VStack,
+  Text,
+} from "@chakra-ui/react";
+
+const place = "place".fontcolor("red");
+
 export const quotes = [
-  "Come to Life, Come to Place!",
+  `Come to Life, Come to Place`,
   "Mamma Mia, That's a Spicy Place.",
   "My Place is Better than your Place",
   "Oh my Goddess, it's a Place!",
@@ -22,7 +36,7 @@ export const quotes = [
   "Free Place with your Purchase",
   "Maybe she's Born with it, maybe it's Place",
   "Placetastic!",
-  "Wouldn't you like to be a Place too?"
+  "Wouldn't you like to be a Place too?",
 ];
 
 export const amongus = "amongus";
