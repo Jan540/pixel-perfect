@@ -15,19 +15,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { stringify } from "querystring";
 import { FC, useEffect, useMemo, useState } from "react";
-import { Typewriter, useTypewriter, Cursor } from "react-simple-typewriter";
+//import { Typewriter, useTypewriter, Cursor } from "react-simple-typewriter";
 import { quotes } from "../data/quotes";
+import Typewriter from "typewriter-effect";
 
 const Home: NextPage = () => {
   const user = "bingbong";
-
-  const [text] = useTypewriter({
-    words: quotes,
-    loop: Infinity,
-    deleteSpeed: 25,
-    typeSpeed: 55,
-    delaySpeed: 1500,
-  });
 
   return (
     <Flex height="100vh" justifyContent="center">
@@ -39,12 +32,16 @@ const Home: NextPage = () => {
 
       <VStack>
         <VStack height="100vh" justifyContent="center">
-          <div className="App">
-            <Text fontSize="5xl">
-              {text}
-              <Cursor />
-            </Text>
-          </div>
+          <Typewriter
+            options={{
+              strings: quotes,
+              autoStart: true,
+              loop: true,
+              deleteSpeed: 25,
+              delay: 55,
+              
+            }}
+          />
         </VStack>
 
         <VStack height="100vh">

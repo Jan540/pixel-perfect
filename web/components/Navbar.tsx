@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   useDisclosure,
+  Image,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { FC, useRef } from "react";
@@ -38,7 +39,14 @@ const Navbar: FC = () => {
     >
       <div>
         <Link href="/">
-          <Button mr="1.5">PlaceTube</Button>
+          <Button mr="1.5">
+            <Image
+              boxSize="25px"
+              src="https://s1.piq.land/2012/05/12/rxm6ralgb554FlzSW1NR4Tmc_400x400.png"
+              mr="1.5"
+            />
+            PlaceTube
+          </Button>
         </Link>
       </div>
       <div>
