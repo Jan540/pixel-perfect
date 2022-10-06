@@ -20,7 +20,7 @@ import { quotes } from "../data/quotes";
 import Typewriter from "typewriter-effect";
 
 const Home: NextPage = () => {
-  const user = "bingbong";
+  const user = "BingBong ChingCong";
 
   return (
     <Flex height="100vh" justifyContent="center">
@@ -32,16 +32,17 @@ const Home: NextPage = () => {
 
       <VStack>
         <VStack height="100vh" justifyContent="center">
-          <Typewriter
-            options={{
-              strings: quotes,
-              autoStart: true,
-              loop: true,
-              deleteSpeed: 25,
-              delay: 55,
-              
-            }}
-          />
+          <Text fontSize="5xl">
+            <Typewriter
+              options={{
+                strings: quotes,
+                autoStart: true,
+                loop: true,
+                deleteSpeed: 25,
+                delay: 55,
+              }}
+            />
+          </Text>
         </VStack>
 
         <VStack height="100vh">
