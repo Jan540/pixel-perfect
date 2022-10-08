@@ -11,8 +11,14 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
-  async register(@Arg("options") options: UsernamePasswordInput) {
-    const errors = await validateNewUser(options.email, options.username, options.password);
+  async register(
+    @Arg("options") options: UsernamePasswordInput
+  ): Promise<UserResponse> {
+    const errors = await validateNewUser(
+      options.email,
+      options.username,
+      options.password
+    );
     if (errors) return { errors };
 
     const hashedPassword = await bcrypt.hash(options.password, 10);
@@ -27,15 +33,57 @@ export class UserResolver {
 
     return { user };
   }
+
+  @Query(() => UserResponse)
+  async login(
+    @Arg("usernameOrEmail") usernameOrEmail: string,
+    @Arg("password") password: string
+  ): Promise<UserResponse> {
+    const user = await User.findOne(
+      usernameOrEmail.includes("@")
+        ? { where: { email: usernameOrEmail } }
+        : { where: { username: usernameOrEmail } }
+    );
+
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "usernameOrEmail",
+            message: "User does not exist",
+          },
+        ],
+      };
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return {
+        errors: [
+          {
+            field: "password",
+            message: "Incorrect password",
+          },
+        ],
+      };
+    }
+
+    return { user };
+  }
 }
 
-async function validateNewUser(email: string, username: string, password: string) {
+async function validateNewUser(
+  email: string,
+  username: string,
+  password: string
+) {
   // http://emailregex.com/
   const emailRegex: RegExp =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   // at least 3 characters long, no _ or . at the beginning / end, no __ or _. or ._ or .. inside
-  const usernameRegex: RegExp = /^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
+  const usernameRegex: RegExp =
+    /^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
 
   // Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
   const passwordRegex: RegExp =
