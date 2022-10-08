@@ -1,22 +1,26 @@
-import { ApolloServer } from "apollo-server-express";
+import "dotenv/config";
+import { ApolloServer, CorsOptions } from "apollo-server-express";
 import express from "express";
 import { buildSchema } from "type-graphql";
 import { AppDataSource } from "./data-source";
 import { HelloResolver } from "./resolvers/hello";
 import { MyContext } from "./types";
-import { UserResolver } from "./resolvers/user";
+import { UserResolver } from "./resolvers/userRsolver";
+import cookieParser from "cookie-parser";
 
 const main = async () => {
   await AppDataSource.initialize();
 
-  // const user = new User();
-  // user.username = "DharMann";
-  // user.email = "dharminder.mann@gmail.com";
-  // user.password = await bcrypt.hash("dhar", 10);
-
-  // await user.save();
-
   const app = express();
+
+  app.use(cookieParser());
+
+  // CORS MOMENT TODO: remove this in production
+  const externalClientURL = "https://studio.apollographql.com";
+  const corsOptions: CorsOptions = {
+    origin: new URL(externalClientURL).origin,
+    credentials: true,
+  };
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
@@ -27,7 +31,7 @@ const main = async () => {
   });
 
   await apolloServer.start();
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: corsOptions });
   app.listen(4000, () => {
     console.log(`🚀 server running on http://localhost:4000/graphql`);
   });
