@@ -29,7 +29,8 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async register(
-    @Arg("options") options: UsernamePasswordInput
+    @Arg("options") options: UsernamePasswordInput,
+    @Ctx() { res }: MyContext
   ): Promise<UserResponse> {
     const errors = await this.validateNewUser(
       options.email,
@@ -47,6 +48,8 @@ export class UserResolver {
     });
 
     await user.save();
+
+    res.cookie(COOKIE_NAME, createRefreshToken(user), COOKIE_OPTIONS);
 
     return { accessToken: createAccessToken(user) };
   }
