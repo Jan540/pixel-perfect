@@ -21,7 +21,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { FC, useRef } from "react";
+import { FC, RefObject, useRef } from "react";
 
 const Navbar: FC = () => {
   const { toggleColorMode, colorMode } = useColorMode();
@@ -62,7 +62,7 @@ const Navbar: FC = () => {
               <Link href="#">
                 <MenuItem>Account</MenuItem>
               </Link>
-              <AlertDialogExample />
+              <LogoutDialog />
             </MenuList>
           </Menu>
         ) : (
@@ -78,7 +78,7 @@ const Navbar: FC = () => {
   );
 };
 
-function AlertDialogExample() {
+function LogoutDialog() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
@@ -88,7 +88,11 @@ function AlertDialogExample() {
         Log out
       </MenuItem>
 
-      <AlertDialog isOpen={isOpen} onClose={onClose}>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef as RefObject<any>}
+        onClose={onClose}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -98,7 +102,9 @@ function AlertDialogExample() {
             <AlertDialogBody>Are you sure you want to log out?</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button ref={cancelRef as RefObject<any>} onClick={onClose}>
+                Cancel
+              </Button>
               <Button colorScheme="red" onClick={onClose} ml={3}>
                 Log out
               </Button>
