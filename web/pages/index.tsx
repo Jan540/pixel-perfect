@@ -8,6 +8,7 @@ import {
   useColorMode,
   VStack,
   Text,
+  Container,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -32,7 +33,7 @@ const Home: NextPage = () => {
 
       <VStack>
         <VStack height="100vh" justifyContent="center">
-          <Text fontSize="5xl">
+          <Container fontSize="5xl">
             <Typewriter
               options={{
                 strings: quotes,
@@ -42,7 +43,7 @@ const Home: NextPage = () => {
                 delay: 55,
               }}
             />
-          </Text>
+          </Container>
         </VStack>
 
         <VStack height="100vh">

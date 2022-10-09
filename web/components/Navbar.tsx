@@ -39,14 +39,7 @@ const Navbar: FC = () => {
     >
       <div>
         <Link href="/">
-          <Button mr="1.5">
-            <Image
-              boxSize="25px"
-              src="https://s1.piq.land/2012/05/12/rxm6ralgb554FlzSW1NR4Tmc_400x400.png"
-              mr="1.5"
-            />
-            PlaceTube
-          </Button>
+          <Button mr="1.5">Place</Button>
         </Link>
       </div>
       <div>
@@ -95,11 +88,7 @@ function AlertDialogExample() {
         Log out
       </MenuItem>
 
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
+      <AlertDialog isOpen={isOpen} onClose={onClose}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -109,9 +98,7 @@ function AlertDialogExample() {
             <AlertDialogBody>Are you sure you want to log out?</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Cancel
-              </Button>
+              <Button onClick={onClose}>Cancel</Button>
               <Button colorScheme="red" onClick={onClose} ml={3}>
                 Log out
               </Button>
