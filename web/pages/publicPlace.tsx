@@ -18,19 +18,33 @@ import Link from "next/link";
 import { stringify } from "querystring";
 import { FC, useEffect, useMemo, useState } from "react";
 
-const publicPl: NextPage = () => {
+const publicPlace: NextPage = () => {
   return (
     <>
-      <Flex height="100vh" justifyContent="center" alignItems="center">
-        <>
-          {Array(10)
-            .fill(0)
-            .map((_, i) => {
-              <Text>test</Text>;
-            })}
-        </>
+      <Flex
+        height="100vh"
+        width="100vw"
+        justifyContent="center"
+        alignItems="center"
+      >
+        
       </Flex>
     </>
   );
 };
-export default publicPl;
+
+<>
+  {Array(250)
+    .fill(0)
+    .map((_, i) => (
+      <Box
+        key={i}
+        border="1px"
+        borderColor="black"
+        width="10px"
+        height="10px"
+      />
+    ))}
+</>;
+
+export default publicPlace;
