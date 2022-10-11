@@ -49,12 +49,12 @@ const Home: NextPage = () => {
         <VStack height="100vh">
           {user ? (
             <>
-              <Link href="/pubPlace">
+              <Link href="/publicPl">
                 <Button colorScheme="green" size="lg" width="100%">
                   Public Place
                 </Button>
               </Link>
-              <Link href="/privPlace">
+              <Link href="/privatePl">
                 <Button colorScheme="red" size="lg" width="100%">
                   Private Place
                 </Button>
