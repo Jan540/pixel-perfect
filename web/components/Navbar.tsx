@@ -19,9 +19,23 @@ import {
   AlertDialogOverlay,
   useDisclosure,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Box,
+  Checkbox,
+  FormControl,
+  Input,
+  Stack,
+  useColorModeValue,
+  Link,
 } from "@chakra-ui/react";
-import Link from "next/link";
 import { FC, RefObject, useRef } from "react";
+import ModalLogin from './ModalLogin'
 
 const Navbar: FC = () => {
   const { toggleColorMode, colorMode } = useColorMode();
@@ -66,7 +80,7 @@ const Navbar: FC = () => {
             </MenuList>
           </Menu>
         ) : (
-          <Button mr="1.5">Log in</Button>
+          <ModalLogin />
         )}
         <IconButton
           onClick={toggleColorMode}

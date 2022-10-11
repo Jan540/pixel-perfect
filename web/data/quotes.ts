@@ -5,7 +5,7 @@ export const quotes = [
   `Come to Life, Come to ${place}.`,
   `Mamma Mia, That's a Spicy ${place}!`,
   `My ${place} is Better than your Place.`,
-  `Oh my Goddess, it's a ${place}!`,
+  `Oh my Goodness, it's a ${place}!`,
   `Problem? The Solution: ${place}!`,
   `Moving at the Speed of ${place}.`,
   `Be Young, Have Fun, Drink ${place}!`,
