@@ -35,7 +35,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { FC, RefObject, useRef } from "react";
-import ModalLogin from './ModalLogin'
+import ModalLogin from "./ModalLogin";
 
 const Navbar: FC = () => {
   const { toggleColorMode, colorMode } = useColorMode();
@@ -73,7 +73,7 @@ const Navbar: FC = () => {
               <Link href="#">
                 <MenuItem>Profile</MenuItem>
               </Link>
-              <Link href="#">
+              <Link href="/account">
                 <MenuItem>Account</MenuItem>
               </Link>
               <LogoutDialog />
