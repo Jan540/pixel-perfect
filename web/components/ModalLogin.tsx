@@ -83,4 +83,4 @@ const LoginFields: FC = () => {
   );
 };
 
-export default Login;
+export default LoginFields;
