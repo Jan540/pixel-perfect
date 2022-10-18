@@ -12,67 +12,71 @@ import {
   FormControl,
   FormLabel,
   Link,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import React from "react";
-import { FC } from "react";
+import React, { FC } from "react";
+import { Formik } from "formik";
+import { log } from "util";
 
 const Login: NextPage = () => {
   return (
-    <>
-      <Flex justifyContent="center" height="50vh">
-        <LoginFields />
-      </Flex>
-    </>
+    <Flex height="100vh" justifyContent={"center"} alignItems={"center"}>
+      <Box
+        boxShadow="lg"
+        w="400px"
+        backgroundColor={useColorModeValue("gray.50", "gray.700")}
+        borderRadius={8}
+      >
+        <LoginForm />
+      </Box>
+    </Flex>
   );
 };
 
-const LoginFields: FC = () => {
+const LoginForm: FC = () => {
   return (
-    <Flex
-      alignItems={"center"}
-      justifyContent={"center"}
-      bg={useColorModeValue("grey.50", "grey.800")}
-      height="100vh"
+    <Formik
+      initialValues={{
+        usernameOrEmail: "",
+        password: "",
+        remember: false,
+      }}
+      onSubmit={(values) => {
+        console.log(
+          `${values.usernameOrEmail} ${values.password} ${values.remember}`
+        );
+      }}
     >
-      <Box
-        rounded={"lg"}
-        bg={useColorModeValue("white", "gray.700")}
-        boxShadow={"lg"}
-        p={"10"}
-      >
-        <Text fontSize="2 xl" paddingBottom={6}>
-          Log into your Account
-        </Text>
-        <Stack spacing={4}>
-          <FormControl id="email">
-            <Input placeholder="Username" type="username" />
-          </FormControl>
-          <FormControl id="password">
-            <Input placeholder="Password" type="password" />
-          </FormControl>
-          <Stack spacing={10}>
-            <Stack
-              direction={{ base: "column", sm: "row" }}
-              align={"start"}
-              justify={"space-between"}
-            >
-              <Checkbox>Remember me</Checkbox>
-              <Link color={"blue.400"}>Forgot password?</Link>
-            </Stack>
-            <Button
-              bg={"blue.400"}
-              color={"white"}
-              _hover={{
-                bg: "blue.500",
-              }}
-            >
-              Sign in
-            </Button>
+      {({ values, errors, touched, handleChange, handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <Stack spacing={4} p={8}>
+            <FormControl isInvalid={errors.usernameOrEmail !== undefined}>
+              <FormLabel>Username or Email</FormLabel>
+              <Input
+                type="text"
+                name="usernameOrEmail"
+                onChange={handleChange}
+                value={values.usernameOrEmail}
+                placeholder="XxX_BingBong_XxX"
+              />
+              <FormErrorMessage>{errors.usernameOrEmail}</FormErrorMessage>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                name="password"
+                onChange={handleChange}
+                value={values.password}
+                placeholder="verysecure1234"
+              />
+              <FormErrorMessage>{errors.password}</FormErrorMessage>
+            </FormControl>
           </Stack>
-        </Stack>
-      </Box>
-    </Flex>
+        </form>
+      )}
+    </Formik>
   );
 };
 

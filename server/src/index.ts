@@ -33,7 +33,7 @@ const main = async () => {
   await apolloServer.start();
   apolloServer.applyMiddleware({ app, cors: corsOptions });
   app.listen(4000, () => {
-    console.log(`🚀 server running on http://localhost:4000/graphql`);
+      console.log(`🚀🥐🥐🥐  server running on http://localhost:4000/graphql`);
   });
 };
 
