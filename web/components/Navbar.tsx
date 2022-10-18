@@ -25,7 +25,7 @@ import LoginFields from "./LoginFields";
 
 const Navbar: FC = () => {
   const { toggleColorMode, colorMode } = useColorMode();
-  const user = "45";
+  const user = "";
 
   return (
     <Flex

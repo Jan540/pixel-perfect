@@ -69,6 +69,9 @@ const LoginFields: FC = () => {
                   _hover={{
                     bg: "blue.500",
                   }}
+                  _active={{
+                    bg: "pink.500",
+                  }}
                 >
                   Sign in
                 </Button>
