@@ -21,7 +21,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { FC, RefObject, useRef } from "react";
-import LoginFields from "./ModalLogin";
+import LoginFields from "./LoginFields";
 
 const Navbar: FC = () => {
   const { toggleColorMode, colorMode } = useColorMode();
