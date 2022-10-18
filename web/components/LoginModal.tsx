@@ -21,12 +21,13 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import React from "react";
+import React, { useState } from "react";
 import { FC } from "react";
 import Login from "../pages/login";
 
-const LoginFields: FC = () => {
+const LoginModal = ({ setUsername }: { setUsername: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [usernameValue, setUsernameValue] = useState("");
 
   return (
     <>
@@ -48,8 +49,13 @@ const LoginFields: FC = () => {
               Log into your Account
             </Text>
             <Stack spacing={4}>
-              <FormControl id="email">
-                <Input placeholder="Username" type="username" />
+              <FormControl id="username">
+                <Input
+                  placeholder="Username"
+                  type="username"
+                  value={usernameValue}
+                  onChange={(e) => setUsernameValue(e.target.value)}
+                />
               </FormControl>
               <FormControl id="password">
                 <Input placeholder="Password" type="password" />
@@ -69,9 +75,7 @@ const LoginFields: FC = () => {
                   _hover={{
                     bg: "blue.500",
                   }}
-                  _active={{
-                    bg: "pink.500",
-                  }}
+                  onClick={() => setUsername(usernameValue)}
                 >
                   Sign in
                 </Button>
@@ -86,4 +90,4 @@ const LoginFields: FC = () => {
   );
 };
 
-export default LoginFields;
+export default LoginModal;

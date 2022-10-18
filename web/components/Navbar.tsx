@@ -20,12 +20,15 @@ import {
   useDisclosure,
   Link,
 } from "@chakra-ui/react";
-import { FC, RefObject, useRef } from "react";
-import LoginFields from "./LoginFields";
+import { FC, RefObject, useRef, useState } from "react";
+import LoginModal from "./LoginModal";
 
 const Navbar: FC = () => {
   const { toggleColorMode, colorMode } = useColorMode();
-  const user = "";
+  const [user, setUser] = useState("");
+  const setUserValue = (value: string) => {
+    setUser(value);
+  };
 
   return (
     <Flex
@@ -47,7 +50,7 @@ const Navbar: FC = () => {
           <Menu>
             <MenuButton as={Button} mr={"1.5"}>
               <HStack>
-                <Text>BingBong</Text>
+                <Text>{user}</Text>
                 <Avatar
                   size="sm"
                   name="Dan Abrahmov"
@@ -62,11 +65,11 @@ const Navbar: FC = () => {
               <Link href="/account">
                 <MenuItem>Account</MenuItem>
               </Link>
-              <LogoutDialog />
+              <LogoutDialog logout={setUserValue} />
             </MenuList>
           </Menu>
         ) : (
-          <LoginFields />
+          <LoginModal setUsername={setUserValue} />
         )}
         <IconButton
           onClick={toggleColorMode}
@@ -78,7 +81,7 @@ const Navbar: FC = () => {
   );
 };
 
-function LogoutDialog() {
+function LogoutDialog({ logout }: { logout: (name: string) => void }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
@@ -105,7 +108,14 @@ function LogoutDialog() {
               <Button ref={cancelRef as RefObject<any>} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={onClose} ml={3}>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  logout("");
+                  onClose();
+                }}
+                ml={3}
+              >
                 Log out
               </Button>
             </AlertDialogFooter>

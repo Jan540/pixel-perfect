@@ -1,0 +1,47 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type AuthResponse {
+    accessToken: String
+}
+
+type FieldError {
+    field: String!
+    message: String!
+}
+
+type Mutation {
+    login(password: String!, usernameOrEmail: String!): UserResponse!
+    logout: Boolean!
+    register(options: UsernamePasswordInput!): UserResponse!
+}
+
+type Query {
+    User: [User!]
+    bye: String!
+    hello: String!
+    newAccessToken: AuthResponse
+}
+
+type User {
+    createdAt: String!
+    email: String!
+    id: Float!
+    updatedAt: String!
+    username: String!
+}
+
+type UserResponse {
+    accessToken: String
+    errors: [FieldError!]
+}
+
+input UsernamePasswordInput {
+    email: String!
+    password: String!
+    username: String!
+}
