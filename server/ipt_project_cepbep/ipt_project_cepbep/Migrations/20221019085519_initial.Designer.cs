@@ -11,7 +11,7 @@ using ipt_project_cepbep.Data;
 
 namespace iptprojectcepbep.Migrations
 {
-    [DbContext(typeof(UserContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20221019085519_initial")]
     partial class initial
     {

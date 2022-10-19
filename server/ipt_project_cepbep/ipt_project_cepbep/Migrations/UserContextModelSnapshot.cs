@@ -10,7 +10,7 @@ using ipt_project_cepbep.Data;
 
 namespace iptprojectcepbep.Migrations
 {
-    [DbContext(typeof(UserContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class UserContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
