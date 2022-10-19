@@ -1,6 +1,7 @@
 using ipt_project_cepbep.Data;
 using ipt_project_cepbep.Models;
 using Microsoft.AspNetCore.Mvc;
+using BCrypt.Net;
 
 namespace ipt_project_cepbep.Controllers;
 
@@ -9,7 +10,7 @@ namespace ipt_project_cepbep.Controllers;
 public class UserController : ControllerBase
 {
     private AppDbContext _context;
-    
+
     public UserController(IConfiguration configuration)
     {
         _context = new AppDbContext(configuration);
@@ -18,6 +19,18 @@ public class UserController : ControllerBase
     [HttpGet("{username}")]
     public IEnumerable<User> GetUser(string username)
     {
-        return _context.Users.Where(u => u.Username == username);
+        return _context.Users.Where(u => u.Username.ToLower() == username.ToLower());
+    }
+
+    [HttpPost]
+    public void AddUser(User user)
+    {
+        _context.AddUser(user);
+    }
+
+    [HttpDelete]
+    public void RemoveUser(string username, string password)
+    {
+        _context.RemoveUser(username, password);
     }
 }

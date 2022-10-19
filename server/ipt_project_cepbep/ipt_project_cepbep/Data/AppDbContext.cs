@@ -44,10 +44,14 @@ public class AppDbContext : DbContext
         SaveChanges();
     }
 
-    public void RemoveUser(User user)
+    public void RemoveUser(string username, string password)
     {
-        Remove(user);
-        SaveChanges();
+        var user = Users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
+        if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+        {
+            Remove(user);
+            SaveChanges();
+        }
     }
 
     public DbSet<User> Users { get; set; }
