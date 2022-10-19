@@ -20,11 +20,17 @@ public class UserContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>().
-            Property(u => u.CreatedAt)
-            .HasDefaultValueSql("NOW() ");
+        modelBuilder.Entity<User>(ub =>
+        {
+            ub.Property(u => u.UserId)
+                .HasDefaultValueSql("gen_random_uuid()");
+
+            ub.Property(u => u.CreatedAt)
+                .HasDefaultValueSql("now()");
+        });
 
         var users = new Faker<User>()
+            .RuleFor(u => u.UserId, f => Guid.NewGuid())
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.Password, f => f.Internet.Password())
             .RuleFor(u => u.Username, f => f.Internet.UserName());
