@@ -1,7 +1,7 @@
 using ipt_project_cepbep.Data;
+using ipt_project_cepbep.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.Services.AddControllers();

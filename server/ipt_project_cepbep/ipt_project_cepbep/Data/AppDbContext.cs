@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ipt_project_cepbep.Data;
 
-public class UserContext : DbContext
+public class AppDbContext : DbContext
 {
     protected readonly IConfiguration Configuration;
     
-    public UserContext(IConfiguration configuration)
+    public AppDbContext(IConfiguration configuration)
     {
         Configuration = configuration;
     }
@@ -36,6 +36,18 @@ public class UserContext : DbContext
             .RuleFor(u => u.Username, f => f.Internet.UserName());
         
         modelBuilder.Entity<User>().HasData(users.Generate(1000));
+    }
+
+    public void AddUser(User user)
+    {
+        Add(user);
+        SaveChanges();
+    }
+
+    public void RemoveUser(User user)
+    {
+        Remove(user);
+        SaveChanges();
     }
 
     public DbSet<User>? Users { get; set; }
