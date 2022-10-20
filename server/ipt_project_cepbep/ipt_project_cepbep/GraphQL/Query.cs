@@ -1,6 +1,7 @@
 using ipt_project_cepbep.Data;
 using ipt_project_cepbep.Models;
-using BCrypt.Net;
+using BC = BCrypt.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ipt_project_cepbep.GraphQL
 {
@@ -11,22 +12,21 @@ namespace ipt_project_cepbep.GraphQL
         {
             _context = new AppDbContext(configuration);
         }
+        
+        [GraphQLName("GetAllUsers")]
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await Task.Run(() => _context.Users) ;
         }
-        
-        public User GetUser(string name, string password)
-        {
-            bool has = BCrypt.Net.BCrypt.Verify( password,  _context.Users.FirstOrDefault(u => u.Username == name).Password);
-            if (has)
+
+        [GraphQLName("LoginUser")]
+        public async Task<UserResponse> LoginUser(string email, string password){
+            User? user = await Task.Run(() => _context.Users.FirstOrDefault(u => u.Email == email));
+            if(user is not null && BC.BCrypt.Verify(password, user.Password))
             {
-                return _context.Users.FirstOrDefault(u => u.Username == name);
+                return new UserResponse(user);
             }
-
-            return new User();
+            return new UserResponse("User not found");
         }
-
-
     }
 }
