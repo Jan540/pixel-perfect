@@ -4,7 +4,7 @@ namespace ipt_project_cepbep.GraphQL;
 
 public class UserResponse
 {
-    public UserResponse(User user)
+    public UserResponse(Models.User user)
     {
         User = user;
         Users = null;
@@ -18,7 +18,7 @@ public class UserResponse
         User = null;
     }
     
-    public UserResponse(IEnumerable<User> users)
+    public UserResponse(IEnumerable<Models.User> users)
     {
         Users = users;
         User = null;
@@ -30,8 +30,8 @@ public class UserResponse
         Console.WriteLine("UserResponse disposed");
     }
 
-    public IEnumerable<User>? Users { get; }
-    public User? User { get; }
+    public IEnumerable<Models.User>? Users { get; }
+    public Models.User? User { get; }
 
     public string? Error { get; }
 }

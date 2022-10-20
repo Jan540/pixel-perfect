@@ -1,33 +1,48 @@
-using HotChocolate.Subscriptions;
 using ipt_project_cepbep.Data;
 using ipt_project_cepbep.Models;
-using BC = BCrypt.Net.BCrypt;
+using Microsoft.AspNetCore.Mvc;
+using BC = BCrypt.Net;
 
 namespace ipt_project_cepbep.GraphQL;
 
 public class UserMutation
 {
-    private AppDbContext _context;
-    
+    private readonly AppDbContext _context;
     public UserMutation(IConfiguration configuration)
     {
         _context = new AppDbContext(configuration);
     }
 
-    public async Task<User> RegisterUser(string email, string username, string password, [Service] ITopicEventSender sender)
+    [GraphQLName("RegisterUser")]
+    public async Task<UserResponse> RegisterUser(string username, string email, string password)
     {
-        string hashedPassword = await Task.Run(() => BC.HashPassword(password));
-        
-        var user = new User
+        if (_context.Users.Any(u => u.Email == email)) 
+            return new UserResponse("User already exists");
+        string passwordHash = await Task.Run(() => BC.BCrypt.HashPassword(password));
+        var user = new Models.User
         {
-            Email = email,
             Username = username,
-            Password = hashedPassword
+            Email = email,
+            Password = passwordHash
         };
-        
-        await _context.Users.AddAsync(user);
+        await Task.Run(() => _context.Users.Add(user));
+            
         await _context.SaveChangesAsync();
-        await sender.SendAsync(nameof(UserSubscription.OnUserCreation), user);
-        return user;
+        return new UserResponse(user);
+    }
+
+
+
+
+    [GraphQLName("RemoveUser")]
+    public async Task<UserResponse> RemoveUser(string email)
+    {
+        var user = _context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        if (user is null)
+            return new UserResponse("User not found");
+
+        await Task.Run(() => _context.Users.Remove(user));
+        await _context.SaveChangesAsync();
+        return new UserResponse(user);
     }
 }

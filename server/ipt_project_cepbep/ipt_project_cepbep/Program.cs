@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services
     .AddGraphQLServer()
-    .AddQueryType<Query>()
+    .AddQueryType<UserQuery>()
     .AddMutationType<UserMutation>()
     .AddSubscriptionType<UserSubscription>()
     .AddInMemorySubscriptions();
