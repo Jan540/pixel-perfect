@@ -3,7 +3,7 @@ using ipt_project_cepbep.Models;
 using Microsoft.AspNetCore.Mvc;
 using BC = BCrypt.Net;
 
-namespace ipt_project_cepbep.GraphQL;
+namespace ipt_project_cepbep.GraphQL.User;
 
 public class UserMutation
 {

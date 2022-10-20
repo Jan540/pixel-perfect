@@ -1,6 +1,6 @@
 using ipt_project_cepbep.Models;
 
-namespace ipt_project_cepbep.GraphQL;
+namespace ipt_project_cepbep.GraphQL.User;
 
 public class UserSubscription
 {
