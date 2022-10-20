@@ -42,21 +42,6 @@ public class AppDbContext : DbContext
         
         modelBuilder.Entity<User>().HasData(users.Generate(1000));
     }
-
-    // public override int SaveChanges()
-    // {
-    //     var entries = ChangeTracker
-    //         .Entries()
-    //         .Where(e => e.Entity is BaseModel && (
-    //             e.State == EntityState.Modified));
-    //
-    //     foreach (var entityEntry in entries)
-    //     {
-    //         ((BaseModel)entityEntry.Entity).UpdatedAt = DateTime.Now;
-    //     }
-    //     return base.SaveChanges();
-    // }
     
-
     public DbSet<User> Users { get; set; }
 }
