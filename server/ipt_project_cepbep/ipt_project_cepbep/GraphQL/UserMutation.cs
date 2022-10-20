@@ -13,7 +13,7 @@ public class UserMutation
         _context = new AppDbContext(configuration);
     }
 
-    [GraphQLName("RegisterUser")]
+    [GraphQLName("registerUser")]
     public async Task<UserResponse> RegisterUser(string username, string email, string password)
     {
         if (_context.Users.Any(u => u.Email == email)) 
@@ -31,11 +31,8 @@ public class UserMutation
         return new UserResponse(user);
     }
 
-
-
-
-    [GraphQLName("RemoveUser")]
-    public async Task<UserResponse> RemoveUser(string email)
+    [GraphQLName("deleteUser")]
+    public async Task<UserResponse> DeleteUser(string email)
     {
         var user = _context.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
         if (user is null)
@@ -44,5 +41,15 @@ public class UserMutation
         await Task.Run(() => _context.Users.Remove(user));
         await _context.SaveChangesAsync();
         return new UserResponse(user);
+    }
+    
+    [GraphQLName("loginUser")]
+    public async Task<UserResponse> LoginUser(string email, string password){
+        Models.User? user = await Task.Run(() => _context.Users.FirstOrDefault(u => u.Email == email));
+        if(user is not null && BC.BCrypt.Verify(password, user.Password))
+        {
+            return new UserResponse(user);
+        }
+        return new UserResponse("User not found");
     }
 }

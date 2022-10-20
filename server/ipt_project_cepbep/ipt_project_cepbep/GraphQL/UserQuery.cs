@@ -12,19 +12,10 @@ namespace ipt_project_cepbep.GraphQL
             _context = new AppDbContext(configuration);
         }
         
-        [GraphQLName("getAllUsers")]
+        [GraphQLName("users")]
         public async Task<IEnumerable<Models.User>> GetUsers()
         {
             return await Task.Run(() => _context.Users) ;
-        }
-
-        public async Task<UserResponse> LoginUser(string email, string password){
-            Models.User? user = await Task.Run(() => _context.Users.FirstOrDefault(u => u.Email == email));
-            if(user is not null && BC.BCrypt.Verify(password, user.Password))
-            {
-                return new UserResponse(user);
-            }
-            return new UserResponse("User not found");
         }
     }
 }
