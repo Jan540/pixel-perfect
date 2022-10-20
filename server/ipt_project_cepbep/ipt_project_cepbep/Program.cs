@@ -1,4 +1,4 @@
-using ipt_project_cepbep.GraphQL.User;
+using ipt_project_cepbep.GraphQL.UserCepbep;
 using Microsoft.EntityFrameworkCore;
 using ipt_project_cepbep.Data;
 using ipt_project_cepbep.Models;

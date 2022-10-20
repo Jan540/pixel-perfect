@@ -2,7 +2,6 @@ using Bogus;
 using ipt_project_cepbep.GraphQL;
 using ipt_project_cepbep.Models;
 using Microsoft.EntityFrameworkCore;
-using User = ipt_project_cepbep.Models.User;
 
 namespace ipt_project_cepbep.Data;
 
