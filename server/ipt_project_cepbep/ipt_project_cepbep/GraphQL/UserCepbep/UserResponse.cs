@@ -4,27 +4,12 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep;
 
 public class UserResponse
 {
-    public UserResponse(Models.User user)
+    public UserResponse(User? user = null, string? error = null)
     {
         User = user;
-        Users = null;
-        Error = String.Empty;
-    }
-
-    public UserResponse(string error)
-    {
         Error = error;
-        Users = null;
-        User = null;
     }
     
-    public UserResponse(IEnumerable<Models.User> users)
-    {
-        Users = users;
-        User = null;
-        Error = string.Empty;
-    }
-
     ~UserResponse()
     {
         Console.WriteLine("UserResponse disposed");

@@ -1,6 +1,7 @@
 using ipt_project_cepbep.Data;
 using ipt_project_cepbep.Models;
 using BC = BCrypt.Net;
+using Path = System.IO.Path;
 
 namespace ipt_project_cepbep.GraphQL.UserCepbep;
 
@@ -22,24 +23,25 @@ public class UserMutation
         {
             Username = username,
             Email = email,
-            Password = passwordHash
+            Password = passwordHash,
         };
         await Task.Run(() => _context.Users.Add(user));
-            
+        
         await _context.SaveChangesAsync();
         return new UserResponse(user);
     }
 
     [GraphQLName("deleteUser")]
-    public async Task<UserResponse> DeleteUser(string email)
+    public async Task<UserResponse> DeleteUser(string email, string password)
     {
         var user = _context.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase));
-        if (user is null)
-            return new UserResponse("User not found");
-
-        await Task.Run(() => _context.Users.Remove(user));
-        await _context.SaveChangesAsync();
-        return new UserResponse(user);
+        if (user is not null && BC.BCrypt.Verify(password, user.Password))
+        {
+            await Task.Run(() => _context.Users.Remove(user));
+            await _context.SaveChangesAsync();
+            return new UserResponse(user);
+        } 
+        return new UserResponse("Email or password was incorrect");
     }
     
     [GraphQLName("loginUser")]
@@ -49,6 +51,17 @@ public class UserMutation
         {
             return new UserResponse(user);
         }
-        return new UserResponse("User not found");
+        return new UserResponse("Email or password was incorrect");
+    }
+
+    public async Task<UserResponse> UploadProfilePicture(string userId, IFile file)
+    {
+        User? user = await _context.Users.FindAsync(userId);
+        if (user is null)
+            return new UserResponse("User not found");
+        //
+        // await using var stream = File.Create($"{userId}.png");
+        // await file.CopyToAsync(stream, cancellationToken);
+        return new UserResponse(user);
     }
 }

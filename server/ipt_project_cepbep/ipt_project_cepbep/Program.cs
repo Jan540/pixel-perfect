@@ -10,6 +10,7 @@ builder.Services
     .AddQueryType<UserQuery>()
     .AddMutationType<UserMutation>()
     .AddSubscriptionType<UserSubscription>()
+    .AddType<UploadType>()
     .AddInMemorySubscriptions();
 
 
