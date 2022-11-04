@@ -8,9 +8,9 @@ public class User : BaseModel
 {
     public User()
     {
-        Email = "";
-        Username = "";
-        Password = "";
+        Email = String.Empty;
+        Username = String.Empty;
+        Password = String.Empty;
     }
     
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

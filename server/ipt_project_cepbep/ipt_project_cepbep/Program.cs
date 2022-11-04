@@ -4,6 +4,9 @@ using ipt_project_cepbep.Data;
 using ipt_project_cepbep.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>();
+
 // Add services to the container.
 builder.Services
     .AddGraphQLServer()
@@ -11,7 +14,9 @@ builder.Services
     .AddMutationType<UserMutation>()
     .AddSubscriptionType<UserSubscription>()
     .AddType<UploadType>()
-    .AddInMemorySubscriptions();
+    .RegisterDbContext<AppDbContext>()
+    .AddInMemorySubscriptions()
+    .AddMutationConventions();
 
 
 var app = builder.Build();

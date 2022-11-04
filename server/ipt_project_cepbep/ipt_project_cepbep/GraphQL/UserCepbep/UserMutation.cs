@@ -7,16 +7,11 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep;
 
 public class UserMutation
 {
-    private readonly AppDbContext _context;
-    public UserMutation(IConfiguration configuration)
-    {
-        _context = new AppDbContext(configuration);
-    }
 
     [GraphQLName("registerUser")]
-    public async Task<UserResponse> RegisterUser(string username, string email, string password)
+    public async Task<UserResponse> RegisterUser(AppDbContext context ,string username, string email, string password)
     {
-        if (_context.Users.Any(u => u.Email == email)) 
+        if (context.Users.Any(u => u.Email == email)) 
             return new UserResponse("User already exists");
         string passwordHash = await Task.Run(() => BC.BCrypt.HashPassword(password));
         var user = new User
@@ -25,28 +20,28 @@ public class UserMutation
             Email = email,
             Password = passwordHash,
         };
-        await Task.Run(() => _context.Users.Add(user));
+        await Task.Run(() => context.Users.Add(user));
         
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
         return new UserResponse(user);
     }
 
     [GraphQLName("deleteUser")]
-    public async Task<UserResponse> DeleteUser(string email, string password)
+    public async Task<UserResponse> DeleteUser(AppDbContext context ,string email, string password)
     {
-        var user = _context.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase));
+        var user = context.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase));
         if (user is not null && BC.BCrypt.Verify(password, user.Password))
         {
-            await Task.Run(() => _context.Users.Remove(user));
-            await _context.SaveChangesAsync();
+            await Task.Run(() => context.Users.Remove(user));
+            await context.SaveChangesAsync();
             return new UserResponse(user);
         } 
         return new UserResponse("Email or password was incorrect");
     }
     
     [GraphQLName("loginUser")]
-    public async Task<UserResponse> LoginUser(string email, string password){
-        User? user = await Task.Run(() => _context.Users.FirstOrDefault(u => u.Email == email));
+    public async Task<UserResponse> LoginUser(AppDbContext context ,string email, string password){
+        User? user = await Task.Run(() => context.Users.FirstOrDefault(u => u.Email == email));
         if(user is not null && BC.BCrypt.Verify(password, user.Password))
         {
             return new UserResponse(user);
@@ -54,14 +49,14 @@ public class UserMutation
         return new UserResponse("Email or password was incorrect");
     }
 
-    public async Task<UserResponse> UploadProfilePicture(string userId, IFile file)
+    public async Task<UserResponse> UploadProfilePicture(AppDbContext context, Guid userId, IFile file)
     {
-        User? user = await _context.Users.FindAsync(userId);
+        User? user = await context.Users.FindAsync(userId);
         if (user is null)
             return new UserResponse("User not found");
-        //
-        // await using var stream = File.Create($"{userId}.png");
-        // await file.CopyToAsync(stream, cancellationToken);
+        
+        await using var stream = File.Create(Path.Combine("ProfilePictures", $"{userId}.png"));
+        await file.CopyToAsync(stream);
         return new UserResponse(user);
     }
 }

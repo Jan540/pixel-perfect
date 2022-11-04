@@ -6,16 +6,11 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep
 {
     public class UserQuery
     {
-        private readonly AppDbContext _context;
-        public UserQuery(IConfiguration configuration)
-        {
-            _context = new AppDbContext(configuration);
-        }
-        
+
         [GraphQLName("users")]
-        public async Task<IEnumerable<Models.User>> GetUsers()
+        public async Task<IEnumerable<Models.User>> GetUsers(AppDbContext context)
         {
-            return await Task.Run(() => _context.Users) ;
+            return await Task.Run(() => context.Users) ;
         }
     }
 }
