@@ -50,12 +50,12 @@ const Home: NextPage = () => {
           {user ? (
             <>
               <Link href="/publicPlace">
-                <Button colorScheme="green" size="lg" width="100%">
+                <Button bgColor={"blue.400"} size="lg" width="100%">
                   Public Place
                 </Button>
               </Link>
               <Link href="/privatePlace">
-                <Button colorScheme="red" size="lg" width="100%">
+                <Button bgColor={"pink.500"} size="lg" width="100%">
                   Private Place
                 </Button>
               </Link>

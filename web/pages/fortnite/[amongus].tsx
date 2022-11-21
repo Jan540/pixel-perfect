@@ -8,4 +8,5 @@ const Amongus: NextPage = () => {
   return <h1>{amongus}</h1>;
 };
 
+
 export default Amongus;
