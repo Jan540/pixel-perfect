@@ -10,7 +10,7 @@ public static class UserValidator
         if (String.IsNullOrEmpty(username))
             return false;
         
-        Regex rx = new Regex("^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$");
+        Regex rx = new Regex("^(?=.{4,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$");
         
         return rx.IsMatch(username);
     }

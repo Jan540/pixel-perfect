@@ -1,6 +1,13 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using HotChocolate.AspNetCore.Authorization;
+using HotChocolate.Subscriptions;
 using ipt_project_cepbep.Data;
+using ipt_project_cepbep.GraphQL.Auth;
 using ipt_project_cepbep.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using BC = BCrypt.Net;
 using Path = System.IO.Path;
 
@@ -8,6 +15,8 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep;
 
 public class UserMutation
 {
+    // TODO: ERROR HANDLING
+
     [GraphQLName("registerUser")]
     public async Task<UserResponse> RegisterUser(AppDbContext context, string username, string email, string password)
     {
@@ -27,12 +36,7 @@ public class UserMutation
             return new UserResponse(error: "Email already taken!");
 
         string passwordHash = await Task.Run(() => BC.BCrypt.HashPassword(password));
-        var user = new User
-        {
-            Username = username,
-            Email = email,
-            Password = passwordHash
-        };
+        var user = new User(username, email, passwordHash, UserRole.User);
         await Task.Run(() => context.Users.Add(user));
 
         await context.SaveChangesAsync();
@@ -53,40 +57,75 @@ public class UserMutation
     }
 
     [GraphQLName("loginUser")]
-    public async Task<UserResponse> LoginUser(AppDbContext context, string email, string password)
+    public async Task<string> LoginUser(AppDbContext context, [Service] IHttpContextAccessor httpContextAccessor, string email, string password)
     {
         User? user = await Task.Run(() => context.Users.FirstOrDefault(u => u.Email == email));
         if (user is not null && BC.BCrypt.Verify(password, user.Password))
         {
-            return new UserResponse(user);
+            string refreshToken = TokenGenerator.GenRefreshToken(user);
+            httpContextAccessor.HttpContext?.Response.Cookies.Append("jid", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Lax,
+                Secure = true,
+                Expires = DateTime.Now.AddDays(365)
+            });
+            return TokenGenerator.GenAccessToken(user);
         }
 
-        return new UserResponse(error: "Email or password was incorrect!");
+        return "very cringus";
+        // return new UserResponse(error: "Email or password was incorrect!");
     }
 
     [GraphQLName("updateUsername")]
-    public User? UpdateUsername(AppDbContext context, string email, string username)
+    public async Task<bool> UpdateUsername(AppDbContext context, [Service] ITopicEventSender sender, string email, string username)
     { 
-        User? user = context.Users.FirstOrDefault(u => u.Email == email);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user == null)
-            return null;
+            return false;
 
         user.Username = username;
-        user.UpdatedAt = DateTime.UtcNow;
-        context.SaveChanges();
-        return user;
+        // context.Entry(user).State = EntityState.Modified;
+        // context.Entry(user).Property(nameof(user.UpdatedAt)).IsModified = true;
+        await context.SaveChangesAsync();
+
+        await sender.SendAsync(nameof(UserSubscription.OnUserUpdate), user);
+        
+        return true;
     }
-    
+
     [GraphQLName("uploadProfilePicture")]
     public async Task<UserResponse> UploadProfilePicture(AppDbContext context, Guid userId, IFile file)
     {
         User? user = await context.Users.FindAsync(userId);
         if (user is null)
             return new UserResponse(error: "User not found");
-        
+
         await using var stream = File.Create(Path.Combine("ProfilePictures", $"{userId}.png"));
         await file.CopyToAsync(stream);
         return new UserResponse(user);
+    }
+    
+    [GraphQLName("refreshUser")]
+    public async Task<string> RefreshUser(AppDbContext context, [Service] IHttpContextAccessor httpContextAccessor)
+    {
+        string? token = httpContextAccessor.HttpContext?.Request.Cookies["jid"];
+
+        if (token is null)
+            return "not logged in";
+
+        var principal = TokenGenerator.GetPrincipal(token, TokenType.Refresh);
+        
+        if (principal is null)
+            return "invalid token";
+
+        Guid userid = Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier));
+        User? user = await context.Users.FirstOrDefaultAsync(u => u.UserId == userid);
+        
+        if (user is null)
+            return "user not found";
+        
+        return TokenGenerator.GenAccessToken(user);
     }
 }

@@ -1,5 +1,4 @@
 using Bogus;
-using ipt_project_cepbep.GraphQL;
 using ipt_project_cepbep.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,9 +40,11 @@ public class AppDbContext : DbContext
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.Password, f => f.Internet.Password())
             .RuleFor(u => u.Username, f => f.Internet.UserName())
+            .RuleFor(u => u.Role, f => f.PickRandom(new[] {UserRole.User, UserRole.PremiumUser}))
             .RuleFor(u => u.UpdatedAt, f => DateTime.UtcNow);
         
-        modelBuilder.Entity<User>().HasData(users.Generate(100));
+        // TODO: muss auskommentiert sein aus irgendeinem Grund
+        // modelBuilder.Entity<User>().HasData(users.Generate(100));
     }
     
     public DbSet<User> Users { get; set; }

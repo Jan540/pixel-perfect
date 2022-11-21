@@ -12,7 +12,7 @@ using ipt_project_cepbep.Data;
 namespace iptprojectcepbep.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221021070703_initial")]
+    [Migration("20221108114458_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -44,6 +44,9 @@ namespace iptprojectcepbep.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
