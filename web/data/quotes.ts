@@ -1,4 +1,4 @@
-const color = "green";
+const color = "";
 const place = "Place".fontcolor(color);
 
 export const quotes = [

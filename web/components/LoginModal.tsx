@@ -26,6 +26,7 @@ import {
   TabList,
   TabPanels,
   TabPanel,
+  TagLabel,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import React, { useState } from "react";
@@ -34,9 +35,12 @@ import Login from "../pages/login";
 import DividerWithText from "./DividerWithText";
 
 const LoginModal = ({ setUsername }: { setUsername: any }) => {
+  const [tabIndex, setTabIndex] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [usernameValue, setUsernameValue] = useState("");
-
+    const handleTabsChange = (index : number) => {
+      setTabIndex(index);
+    };
   return (
     <>
       <Button mr="1.5" onClick={onOpen}>
@@ -47,8 +51,8 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <Tabs>
-            <TabList>
+          <Tabs index={tabIndex} isFitted onChange={handleTabsChange}>
+            <TabList mt="2">
               <Tab>Log in</Tab>
               <Tab>Sign up</Tab>
             </TabList>
@@ -65,15 +69,17 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
                   </Text>
                   <Stack>
                     <FormControl id="username">
+                      <FormLabel mb="0.5">Username</FormLabel>
                       <Input
-                        placeholder="Username"
+                        placeholder="XxX_BingBong_XxX"
                         type="username"
                         value={usernameValue}
                         onChange={(e) => setUsernameValue(e.target.value)}
                       />
                     </FormControl>
+                    <FormLabel mb="0.5">Password</FormLabel>
                     <FormControl id="password">
-                      <Input placeholder="Password" type="password" />
+                      <Input placeholder="VerySecure!" type="password" />
                     </FormControl>
                     <Stack spacing={10}>
                       <Stack
@@ -82,21 +88,21 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
                         justify={"space-between"}
                       >
                         <Checkbox>Remember me</Checkbox>
-                        <Link color={"pink.400"}>Forgot password?</Link>
+                        <Link color={"blue.400"}>Forgot password?</Link>
                       </Stack>
                       <Stack>
                         <Button
-                          bg={"pink.500"}
+                          bg={"blue.500"}
                           color={"white"}
                           _hover={{
-                            bg: "pink.400",
+                            bg: "blue.400",
                           }}
                           onClick={() => setUsername(usernameValue)}
                         >
                           Log in
                         </Button>
                         <DividerWithText text="Don't have an account?" />
-                        <Button>Sign up</Button>
+                        <Button onClick={() => setTabIndex(1)}>Sign up</Button>
                       </Stack>
                     </Stack>
                   </Stack>
@@ -114,34 +120,38 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
                   </Text>
                   <Stack>
                     <FormControl id="email">
-                      <Input  placeholder="E-mail (optional)" type="email" />
+                      <FormLabel mb="0.5">Email</FormLabel>
+                      <Input placeholder="amongus@imposter.sus" type="email" />
                     </FormControl>
-                    <FormControl id="username">
+                    <FormControl id="username" isRequired>
+                      <FormLabel mb="0.5">Username</FormLabel>
                       <Input
-                        placeholder="Username"
+                        placeholder="XxX_BingBong_XxX"
                         type="username"
                         value={usernameValue}
                         onChange={(e) => setUsernameValue(e.target.value)}
                       />
                     </FormControl>
 
-                    <FormControl id="password">
-                      <Input placeholder="Password" type="password" />
+                    <FormControl id="password" isRequired>
+                      <FormLabel mb="0.5">Password</FormLabel>
+                      <Input placeholder="VerySecure!" type="password" />
                     </FormControl>
+
                     <Stack spacing={10}>
-                      <Stack>
+                      <Stack mt="2">
                         <Button
-                          bg={"pink.500"}
+                          bg={"blue.400"}
                           color={"white"}
                           _hover={{
-                            bg: "pink.400",
+                            bg: "blue.500",
                           }}
                           onClick={() => setUsername(usernameValue)}
                         >
                           Sign up
                         </Button>
                         <DividerWithText text="Have an account?" />
-                        <Button>Log in</Button>
+                        <Button onClick={() => setTabIndex(0)}>Log in</Button>
                       </Stack>
                     </Stack>
                   </Stack>
