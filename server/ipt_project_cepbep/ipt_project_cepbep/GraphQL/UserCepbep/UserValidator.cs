@@ -5,7 +5,7 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep;
 
 public static class UserValidator
 {
-    public static bool IsValidUsername(string username)
+    public static bool IsValidUsername(this string username)
     {
         if (String.IsNullOrEmpty(username))
             return false;
@@ -15,7 +15,7 @@ public static class UserValidator
         return rx.IsMatch(username);
     }
 
-    public static bool IsValidEmail(string email)
+    public static bool IsValidEmail(this string email)
     {
         if (String.IsNullOrEmpty(email))
             return false;
@@ -25,7 +25,7 @@ public static class UserValidator
         return rx.IsMatch(email);
     }
     
-    public static bool IsValidPassword(string password)
+    public static bool IsValidPassword(this string password)
     {
         if (String.IsNullOrEmpty(password))
             return false;

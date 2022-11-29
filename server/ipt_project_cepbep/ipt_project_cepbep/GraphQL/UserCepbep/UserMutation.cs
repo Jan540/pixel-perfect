@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -20,23 +21,23 @@ public class UserMutation
     [GraphQLName("registerUser")]
     public async Task<UserResponse> RegisterUser(AppDbContext context, string username, string email, string password)
     {
-        if (!UserValidator.IsValidEmail(email))
+        if (!email.IsValidEmail())
             return new UserResponse(error: "Invalid Email ᮯ!");
 
-        if (!UserValidator.IsValidUsername(username))
+        if (!username.IsValidUsername())
             return new UserResponse(error: "Invalid Username 𒌥!");
 
-        if (!UserValidator.IsValidPassword(password))
+        if (!password.IsValidPassword())
             return new UserResponse(error: "Password does not meet requirements. 𒌦");
 
         if (context.Users.Any(u => u.Username == username))
             return new UserResponse(error: "Username already taken!");
 
-        if (context.Users.Any(u => u.Email == email))
+        if (context.Users.Any(u => u.Email == email.ToLower()))
             return new UserResponse(error: "Email already taken!");
 
         string passwordHash = await Task.Run(() => BC.BCrypt.HashPassword(password));
-        var user = new User(username, email, passwordHash, UserRole.User);
+        var user = new User(email.ToLower(), username, passwordHash, UserRole.User);
         await Task.Run(() => context.Users.Add(user));
 
         await context.SaveChangesAsync();
@@ -46,8 +47,11 @@ public class UserMutation
     [GraphQLName("deleteUser")]
     public async Task<UserResponse> DeleteUser(AppDbContext context, string email)
     {
-        var user = await context.Users.FirstOrDefaultAsync(u =>
-            string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase));
+
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email.ToLower());
+            //TODO: KA was da bitte falsch ist
+            //string.Equals(u.Email, email, StringComparison.CurrentCultureIgnoreCase));
+        
         if (user is null)
             return new UserResponse(error: "User not found!");
 
@@ -57,9 +61,10 @@ public class UserMutation
     }
 
     [GraphQLName("loginUser")]
+    //WAS DA KAPUTUS AMOGUS
     public async Task<string> LoginUser(AppDbContext context, [Service] IHttpContextAccessor httpContextAccessor, string email, string password)
     {
-        User? user = await Task.Run(() => context.Users.FirstOrDefault(u => u.Email == email));
+        User? user = await context.Users.FirstOrDefaultAsync(u => u.Email == email.ToLower());
         if (user is not null && BC.BCrypt.Verify(password, user.Password))
         {
             string refreshToken = TokenGenerator.GenRefreshToken(user);
@@ -80,7 +85,7 @@ public class UserMutation
     [GraphQLName("updateUsername")]
     public async Task<bool> UpdateUsername(AppDbContext context, [Service] ITopicEventSender sender, string email, string username)
     { 
-        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email.ToLower());
 
         if (user == null)
             return false;
@@ -94,7 +99,7 @@ public class UserMutation
         
         return true;
     }
-
+    
     [GraphQLName("uploadProfilePicture")]
     public async Task<UserResponse> UploadProfilePicture(AppDbContext context, Guid userId, IFile file)
     {

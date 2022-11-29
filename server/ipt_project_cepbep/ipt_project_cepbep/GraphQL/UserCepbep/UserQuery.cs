@@ -21,7 +21,10 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep
 
         // [Authorize(Roles = new[] { "Admin" })]
         [GraphQLName("users")]
-        public IEnumerable<User> GetUsers(AppDbContext context) => context.Users;
+        public IEnumerable<User> GetUsers(AppDbContext context, int amount)
+        {
+            return context.Users.Take(amount);   
+        }
 
         [GraphQLName("user")]
         public User? GetUserByEmail(AppDbContext context, string email) =>
