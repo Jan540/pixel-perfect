@@ -42,8 +42,9 @@ public static class TokenGenerator
             Audience,
             claims,
             expires: DateTime.Now.AddMinutes(AccessTokenExpiration),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccessKey)), SecurityAlgorithms.HmacSha256));
-
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AccessKey)), 
+                SecurityAlgorithms.HmacSha256));
+        
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
@@ -56,9 +57,7 @@ public static class TokenGenerator
     {
         List<Claim> claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email)
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
         };
         
         var token = new JwtSecurityToken(
