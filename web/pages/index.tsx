@@ -1,27 +1,43 @@
-import {
-  Button,
-  Flex,
-  RangeSlider,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  RangeSliderTrack,
-  useColorMode,
-  VStack,
-  Text,
-  Container,
-} from "@chakra-ui/react";
+import { Button, Flex, VStack, Container } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { stringify } from "querystring";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 //import { Typewriter, useTypewriter, Cursor } from "react-simple-typewriter";
 import { quotes } from "../data/quotes";
 import Typewriter from "typewriter-effect";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import GET_USERS from "../graphql/queries/users";
+import UPLOAD_PRFPIC from "../graphql/mutations/uploadProfilePicture";
 
 const Home: NextPage = () => {
   const user = "BingBong ChingCong";
+  // const client = ...
+
+  const UploadPFPIC: FC = () => {
+    const [mutate, {data, error, loading}] = useMutation(UPLOAD_PRFPIC);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :\</p>;
+
+    function onChange({
+      target: {
+        validity,
+        files: [file],
+      },
+    }: any) {
+      if (validity.valid)
+        mutate({
+          variables: {
+            input: { file, userId: "0d395174-1d0a-45b9-b907-a969a176c59c" },
+          },
+        });
+    }
+
+    return <input type="file" required onChange={onChange} />;
+  };
 
   return (
     <Flex height="100vh" justifyContent="center">
@@ -44,6 +60,7 @@ const Home: NextPage = () => {
               }}
             />
           </Container>
+          <UploadPFPIC />
         </VStack>
 
         <VStack height="100vh">

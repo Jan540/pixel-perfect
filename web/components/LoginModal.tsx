@@ -1,13 +1,9 @@
+import { ApolloClient, useMutation } from "@apollo/client";
 import {
-  Flex,
   Text,
   Input,
   Stack,
-  InputRightElement,
-  InputGroup,
   Button,
-  useColorModeValue,
-  Box,
   Checkbox,
   FormControl,
   FormLabel,
@@ -19,28 +15,31 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
-  HStack,
-  Divider,
   Tabs,
   Tab,
   TabList,
   TabPanels,
   TabPanel,
-  TagLabel,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import React, { useState } from "react";
 import { FC } from "react";
-import Login from "../pages/login";
 import DividerWithText from "./DividerWithText";
+import REGISTER from "../graphql/mutations/registerUser";
+import { client } from "../lib/apolloClient";
 
-const LoginModal = ({ setUsername }: { setUsername: any }) => {
+const LoginModal = ({ setUsername }: any) => {
   const [tabIndex, setTabIndex] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [usernameValue, setUsernameValue] = useState("");
-    const handleTabsChange = (index : number) => {
-      setTabIndex(index);
-    };
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index);
+  };
+
   return (
     <>
       <Button mr="1.5" onClick={onOpen}>
@@ -72,14 +71,19 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
                       <FormLabel mb="0.5">Username</FormLabel>
                       <Input
                         placeholder="XxX_BingBong_XxX"
-                        type="username"
+                        type="text"
                         value={usernameValue}
                         onChange={(e) => setUsernameValue(e.target.value)}
                       />
                     </FormControl>
                     <FormLabel mb="0.5">Password</FormLabel>
                     <FormControl id="password">
-                      <Input placeholder="VerySecure!" type="password" />
+                      <Input
+                        placeholder="VerySecure!"
+                        type="password"
+                        value={passwordValue}
+                        onChange={(e) => setPasswordValue(e.target.value)}
+                      />
                     </FormControl>
                     <Stack spacing={10}>
                       <Stack
@@ -97,7 +101,9 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
                           _hover={{
                             bg: "blue.400",
                           }}
-                          onClick={() => setUsername(usernameValue)}
+                          onClick={() => {
+                            setUsername(usernameValue);
+                          }}
                         >
                           Log in
                         </Button>
@@ -121,7 +127,12 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
                   <Stack>
                     <FormControl id="email">
                       <FormLabel mb="0.5">Email</FormLabel>
-                      <Input placeholder="amongus@imposter.sus" type="email" />
+                      <Input
+                        placeholder="amongus@imposter.sus"
+                        type="email"
+                        value={emailValue}
+                        onChange={(e) => setEmailValue(e.target.value)}
+                      />
                     </FormControl>
                     <FormControl id="username" isRequired>
                       <FormLabel mb="0.5">Username</FormLabel>
@@ -135,7 +146,12 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
 
                     <FormControl id="password" isRequired>
                       <FormLabel mb="0.5">Password</FormLabel>
-                      <Input placeholder="VerySecure!" type="password" />
+                      <Input
+                        placeholder="VerySecure!"
+                        type="password"
+                        value={passwordValue}
+                        onChange={(e) => setPasswordValue(e.target.value)}
+                      />
                     </FormControl>
 
                     <Stack spacing={10}>
@@ -146,11 +162,26 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
                           _hover={{
                             bg: "blue.500",
                           }}
-                          onClick={() => setUsername(usernameValue)}
+                          onClick={async () => {
+                            setUsername(usernameValue);
+                            console.log(usernameValue);
+                            const { data, errors, extensions } =
+                              await client.mutate({
+                                mutation: REGISTER,
+                                variables: {
+                                  input: {
+                                    username: usernameValue,
+                                    email: emailValue,
+                                    password: passwordValue,
+                                  },
+                                },
+                              });
+                            console.log(data);
+                          }}
                         >
                           Sign up
                         </Button>
-                        <DividerWithText text="Have an account?" />
+                        <DividerWithText text="Already have an account?" />
                         <Button onClick={() => setTabIndex(0)}>Log in</Button>
                       </Stack>
                     </Stack>
@@ -159,7 +190,6 @@ const LoginModal = ({ setUsername }: { setUsername: any }) => {
               </TabPanel>
             </TabPanels>
           </Tabs>
-
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
