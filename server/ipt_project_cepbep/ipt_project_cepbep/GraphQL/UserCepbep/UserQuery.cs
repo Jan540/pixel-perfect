@@ -19,15 +19,15 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep
             return user;
         }
 
-        // [Authorize(Roles = new[] { "Admin" })]
+        [Authorize(Roles = new[] { "Admin" })]
+        [UsePaging]
+        [UseFiltering]
+        [UseSorting]
         [GraphQLName("users")]
-        public IEnumerable<User> GetUsers(AppDbContext context, int amount)
-        {
-            return context.Users.Take(amount);   
-        }
+        public IEnumerable<User> GetUsers(AppDbContext context) => context.Users;
 
         [GraphQLName("user")]
-        public User? GetUserByEmail(AppDbContext context, string email) =>
-            context.Users.FirstOrDefault(u => u.Email == email);
+        public IQueryable<User> GetUserByEmail(AppDbContext context, string email) =>
+            context.Users.Where(u => u.Email == email);
     }
 }

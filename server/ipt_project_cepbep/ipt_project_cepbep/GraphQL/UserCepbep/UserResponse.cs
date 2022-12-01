@@ -4,17 +4,12 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep;
 
 public class UserResponse
 {
-    public UserResponse(User? user = null, string? error = null)
+    public UserResponse(User user, string token)
     {
-        User = user;
-        Error = error;
+        User = user ?? throw new ArgumentNullException(nameof(user));
+        Token = token ?? throw new ArgumentNullException(nameof(token));
     }
 
-    ~UserResponse()
-    {
-        Console.WriteLine("UserResponse disposed");
-    }
-    public User? User { get; }
-
-    public string? Error { get; }
+    public User User { get; set; }
+    public string Token { get; set; }
 }

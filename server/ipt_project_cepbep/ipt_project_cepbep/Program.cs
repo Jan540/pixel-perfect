@@ -1,5 +1,6 @@
 using System.Text;
 using ipt_project_cepbep.Data;
+using ipt_project_cepbep.GraphQL;
 using ipt_project_cepbep.GraphQL.UserCepbep;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -33,6 +34,9 @@ builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddQueryType<UserQuery>()
+    .AddFiltering()
+    .AddSorting()
+    .AddErrorFilter<ErrorFilter>()
     .AddMutationType<UserMutation>()
     .AddMutationConventions()
     .AddSubscriptionType<UserSubscription>()

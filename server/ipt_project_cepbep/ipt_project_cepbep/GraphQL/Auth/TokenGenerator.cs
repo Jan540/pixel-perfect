@@ -76,11 +76,10 @@ public static class TokenGenerator
     /// <param name="token">The JWT</param>
     /// <param name="type">If JWT is a Access or Refresh token</param>
     /// <returns></returns>
-    public static ClaimsPrincipal? GetPrincipal(string token, TokenType type)
+    public static ClaimsPrincipal GetPrincipal(string token, TokenType type)
     {
         string key = type == TokenType.Access ? AccessKey : RefreshKey;
 
-        
         var tokenHandler = new JwtSecurityTokenHandler();
         var validationParameters = new TokenValidationParameters
         {
@@ -96,12 +95,12 @@ public static class TokenGenerator
 
         try
         {
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
             return principal;
         }
         catch
         {
-            return null;
+            throw new SecurityTokenException("Invalid token");
         }
     }
 }
