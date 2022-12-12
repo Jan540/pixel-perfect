@@ -1,6 +1,7 @@
 using System.Text;
 using ipt_project_cepbep.Data;
 using ipt_project_cepbep.GraphQL;
+using ipt_project_cepbep.GraphQL.Canvas;
 using ipt_project_cepbep.GraphQL.UserCepbep;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -33,23 +34,28 @@ builder.Services.AddDbContext<AppDbContext>();
 builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
-    .AddQueryType<UserQuery>()
+    .AddQueryType(q => q.Name("Query"))
+        .AddType<UserQuery>()
     .AddFiltering()
     .AddSorting()
     .AddErrorFilter<ErrorFilter>()
-    .AddMutationType<UserMutation>()
+    .AddMutationType(m => m.Name("Mutation"))
+        .AddType<UserMutation>()
+        .AddType<CanvasMutation>()
     .AddMutationConventions()
-    .AddSubscriptionType<UserSubscription>()
+    .AddSubscriptionType<CanvasSubscription>()
     .AddInMemorySubscriptions()
     .RegisterDbContext<AppDbContext>()
     .AddType<UploadType>();
 
+string[] origins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
-        b => b.WithOrigins("http://localhost:3000","http://localhost:5107", "https://localhost:7217" )
-            .AllowAnyMethod()
+        b => b.WithOrigins(origins)
             .AllowAnyHeader()
+            .AllowAnyMethod()
             .AllowCredentials());
 }); 
 

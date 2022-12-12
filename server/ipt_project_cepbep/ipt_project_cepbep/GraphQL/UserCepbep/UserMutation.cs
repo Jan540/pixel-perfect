@@ -11,9 +11,9 @@ using BC = BCrypt.Net;
 using Path = System.IO.Path;
 namespace ipt_project_cepbep.GraphQL.UserCepbep;
 
+[ExtendObjectType(Name = "Mutation")]
 public class UserMutation
 {
-    // TODO: ERROR HANDLING
     [GraphQLName("registerUser")]
     public async Task<UserResponse> RegisterUser(AppDbContext context, [Service] IHttpContextAccessor httpContextAccessor, 
         string username, string email, string password)

@@ -6,7 +6,10 @@ public static class CookieConfig
     {
         HttpOnly = true,
         SameSite = SameSiteMode.Lax,
-        Secure = true,
-        Expires = DateTime.Now.AddDays(365)
+        Secure = false,
+        IsEssential = true,
+        Expires = DateTime.Now.AddDays(365),
+        Domain = "localhost",
+        Path = "/",
     };
 }

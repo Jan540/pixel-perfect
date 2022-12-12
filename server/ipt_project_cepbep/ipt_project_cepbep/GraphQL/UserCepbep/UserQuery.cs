@@ -1,13 +1,12 @@
 using System.Security.Claims;
 using HotChocolate.AspNetCore.Authorization;
+using ipt_project_cepbep.Config;
 using ipt_project_cepbep.Data;
-using ipt_project_cepbep.GraphQL.Auth;
 using ipt_project_cepbep.Models;
-using Microsoft.EntityFrameworkCore;
-using BC = BCrypt.Net;
 
 namespace ipt_project_cepbep.GraphQL.UserCepbep
 {
+    [ExtendObjectType(name: "Query")]
     public class UserQuery
     {
         [Authorize]
@@ -19,15 +18,30 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep
             return user;
         }
 
-        [Authorize(Roles = new[] { "Admin" })]
         [UsePaging]
         [UseFiltering]
         [UseSorting]
         [GraphQLName("users")]
-        public IEnumerable<User> GetUsers(AppDbContext context) => context.Users;
+        public IEnumerable<User> GetUsers(AppDbContext context)
+        {
+            var users = context.Users;
+            return users;
+        }
 
         [GraphQLName("user")]
         public IQueryable<User> GetUserByEmail(AppDbContext context, string email) =>
             context.Users.Where(u => u.Email == email);
+
+        [GraphQLName("cookie")]
+        public bool GetCookie([Service] IHttpContextAccessor httpContextAccessor)
+        {
+            if (httpContextAccessor.HttpContext != null)
+            {
+                httpContextAccessor.HttpContext.Response.Cookies.Append("test", "test", CookieConfig.Options);
+                return true;
+            }
+
+            return false;
+        }
     }
 }
