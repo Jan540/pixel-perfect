@@ -1,9 +1,7 @@
 "use client";
 
-import { Flex } from "@chakra-ui/react";
-import PixelArtCanvas from "../components/PixerlArtCanvas";
-import { useMutation } from "@apollo/client";
-import { LOGIN } from "../graphql/code/login";
+import { Button, Flex, Text, VStack } from "@chakra-ui/react";
+import Link from "next/link";
 
 const Page = () => {
   return (
@@ -14,7 +12,12 @@ const Page = () => {
         height="100vh"
         width="100vw"
       >
-        <PixelArtCanvas width={32} height={32} />
+        <VStack spacing={10}>
+          <Text fontSize="7xl">Page</Text>
+          <Link href="/canvas">
+            <Button colorScheme="blue">Canvas</Button>
+          </Link>
+        </VStack>
       </Flex>
     </div>
   );

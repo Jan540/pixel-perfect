@@ -2,6 +2,7 @@
 import { ApolloProvider } from "@apollo/client";
 /* eslint-disable @next/next/no-head-element */
 import { ChakraProvider } from "@chakra-ui/react";
+import { Navbar } from "../components/Navbar";
 import apolloClient from "../lib/apolloClient";
 
 export default function RootLayout({
@@ -16,7 +17,10 @@ export default function RootLayout({
       </head>
       <body>
         <ApolloProvider client={apolloClient}>
-          <ChakraProvider>{children}</ChakraProvider>
+          <ChakraProvider>
+            <Navbar />
+            {children}
+          </ChakraProvider>
         </ApolloProvider>
       </body>
     </html>

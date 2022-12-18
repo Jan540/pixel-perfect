@@ -11,32 +11,32 @@ type PixelArtCanvasProps = {
 };
 
 const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
-  const { data, error } = useSubscription(ON_PIXEL_CHANGE);
+  const { data, error } = useSubscription(ON_PIXEL_CHANGE, {
+    onData: (onChangeData) => {
+      if (!onChangeData.data.data) return;
+      const { onPixelChange } = onChangeData.data.data;
+      drawPixelChange(
+        onPixelChange.row,
+        onPixelChange.col,
+        onPixelChange.color
+      );
+    },
+  });
   const [submitChange, { loading, error: submitError }] =
     useMutation(CHANGE_PIXEL);
 
   const [grid, setGrid] = useState<PixelGrid>([]);
-  const [color, setColor] = useState<string>("green");
+  const [color, setColor] = useState<string>("black");
   const [mouseDown, setMouseDown] = useState<boolean>(false);
 
-  const drawPixelChange = useCallback(
-    (row: number, col: number, color: string) => {
-      const newGrid: PixelGrid = [...grid];
-      newGrid[row][col] = { color };
-      setGrid(newGrid);
-    },
-    [grid]
-  );
+  const drawPixelChange = (row: number, col: number, color: string) => {
+    const pixel = document.getElementById(`pixel-${row}-${col}`);
+    if (!pixel) return;
 
-  useEffect(() => {
-    if (data) {
-      drawPixelChange(
-        data.onPixelChange.row,
-        data.onPixelChange.col,
-        data.onPixelChange.color
-      );
+    if (pixel.style.backgroundColor !== color) {
+      pixel.style.backgroundColor = color;
     }
-  }, [drawPixelChange, data]);
+  };
 
   const createGrid = () => {
     const newGrid: PixelGrid = [];
@@ -50,11 +50,27 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
   };
 
   const handleColorChange = (newColor: ColorResult) => {
-    setColor(newColor.hex);
+    setColor(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
   };
 
-  const handlePixelChange = async (row: number, col: number) => {
-    drawPixelChange(row, col, color);
+  const handlePixelChange = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    row: number,
+    col: number
+  ) => {
+    let pixel = e.currentTarget;
+    await updatePixel(pixel, color, row, col);
+  };
+
+  const updatePixel = async (
+    pixel: EventTarget & HTMLDivElement,
+    color: string,
+    row: number,
+    col: number
+  ) => {
+    if (pixel.style.backgroundColor === color) return;
+
+    pixel.style.backgroundColor = color;
     await submitChange({
       variables: {
         input: {
@@ -76,32 +92,49 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
     setMouseDown(false);
   };
 
-  const handlePixelMouseEnter = (row: number, col: number) => {
+  const handlePixelMouseMove = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    row: number,
+    col: number
+  ) => {
     if (mouseDown) {
-      handlePixelChange(row, col);
+      await updatePixel(e.currentTarget, color, row, col);
     }
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <SwatchesPicker onChangeComplete={handleColorChange} />
-      <div>
-        <button onClick={createGrid}>Create Grid</button>
-      </div>
+      <button
+        onClick={(e) => {
+          createGrid();
+          e.currentTarget.style.display = "none";
+        }}
+      >
+        Create Grid
+      </button>
       <div onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
         {grid.map((row, i) => (
           <div key={i} style={{ display: "flex" }}>
             {row.map((pixel, j) => (
               <div
+                id={`pixel-${i}-${j}`}
                 key={j}
                 style={{
-                  width: 20,
-                  height: 20,
+                  width: 25,
+                  height: 25,
                   backgroundColor: pixel.color,
                   cursor: "crosshair",
                 }}
-                onClick={() => handlePixelChange(i, j)}
-                onMouseMove={() => handlePixelMouseEnter(i, j)}
+                onClick={(e) => handlePixelChange(e, i, j)}
+                onMouseMove={(e) => handlePixelMouseMove(e, i, j)}
               />
             ))}
           </div>
