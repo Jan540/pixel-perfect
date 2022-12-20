@@ -1,12 +1,13 @@
 import { graphql } from "../../gql";
 
-const REGISTER = graphql(`
-  mutation registerUser($input: RegisterUserInput!) {
-    registerUser(input: $input) {
+const LOGIN = graphql(`
+  mutation loginUser($input: LoginUserInput!) {
+    loginUser(input: $input) {
       userResponse {
         user {
           username
           email
+          userId
         }
         token
       }
@@ -14,4 +15,4 @@ const REGISTER = graphql(`
   }
 `);
 
-export default REGISTER;
+export default LOGIN;

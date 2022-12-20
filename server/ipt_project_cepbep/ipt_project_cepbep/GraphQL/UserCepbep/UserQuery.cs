@@ -31,17 +31,5 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep
         [GraphQLName("user")]
         public IQueryable<User> GetUserByEmail(AppDbContext context, string email) =>
             context.Users.Where(u => u.Email == email);
-
-        [GraphQLName("cookie")]
-        public bool GetCookie([Service] IHttpContextAccessor httpContextAccessor)
-        {
-            if (httpContextAccessor.HttpContext != null)
-            {
-                httpContextAccessor.HttpContext.Response.Cookies.Append("test", "test", CookieConfig.Options);
-                return true;
-            }
-
-            return false;
-        }
     }
 }

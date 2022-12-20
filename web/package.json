@@ -18,8 +18,10 @@
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "graphql": "^16.6.0",
+    "js-cookie": "^3.0.1",
     "next": "12.3.0",
     "react": "18.2.0",
+    "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
     "styled-components": "^5.3.6",
     "typewriter-effect": "^2.19.0"
@@ -28,6 +30,7 @@
     "@graphql-codegen/cli": "^2.14.1",
     "@graphql-codegen/client-preset": "^1.1.5",
     "@types/apollo-upload-client": "^17.0.2",
+    "@types/js-cookie": "^3.0.2",
     "@types/node": "18.7.18",
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",

@@ -1,5 +1,3 @@
-import React, { Fragment } from "react";
-
 import GlobalStyles from "../assets/GlobalStyles";
 import DrawCanvas from "../components/DrawCanvas/DrawCanvas";
 import { NextPage } from "next";

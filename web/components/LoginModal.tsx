@@ -1,4 +1,4 @@
-import { ApolloClient, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import {
   Text,
   Input,
@@ -21,14 +21,51 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
-import { NextPage } from "next";
-import React, { useState } from "react";
-import { FC } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DividerWithText from "./DividerWithText";
 import REGISTER from "../graphql/mutations/registerUser";
-import { client } from "../lib/apolloClient";
+import { setAccessToken } from "../lib/User/acesstoken";
+import LOGIN from "../graphql/mutations/loginUser";
+import { UserContext } from "../lib/User/Usercontext";
 
 const LoginModal = ({ setUsername }: any) => {
+  const { user, setUser } = useContext(UserContext);
+
+  const [
+    registerUser,
+    { data: RegisterData, error: RegisterError, loading: RegisterLoading },
+  ] = useMutation(REGISTER);
+  const [
+    loginUser,
+    { data: LoginData, error: LoginError, loading: LoginLoading },
+  ] = useMutation(LOGIN);
+
+  useEffect(() => {
+    if (!LoginData || LoginError) {
+      return;
+    }
+    setUser({
+      username: LoginData?.loginUser.userResponse?.user.username!,
+      email: LoginData?.loginUser.userResponse?.user.email!,
+      userId: LoginData?.loginUser.userResponse?.user.userId!,
+    });
+    setAccessToken(LoginData?.loginUser.userResponse?.token!);
+    setUsername(user.username);
+  }, [LoginData, LoginError, setUser, user.username, setUsername]);
+
+  useEffect(() => {
+    if (!RegisterData || RegisterError) {
+      return;
+    }
+    setUser({
+      username: RegisterData?.registerUser.userResponse?.user.username!,
+      email: RegisterData?.registerUser.userResponse?.user.email!,
+      userId: LoginData?.loginUser.userResponse?.user.userId!,
+    });
+    setAccessToken(RegisterData?.registerUser.userResponse?.token!);
+    setUsername(user.username);
+  }, [RegisterData, RegisterError, setUser, setUsername, user.username]);
+
   const [tabIndex, setTabIndex] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -38,6 +75,40 @@ const LoginModal = ({ setUsername }: any) => {
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
+  };
+
+  const RegisterUser = async () => {
+    try {
+      await registerUser({
+        variables: {
+          input: {
+            username: usernameValue,
+            email: emailValue,
+            password: passwordValue,
+          },
+        },
+        ignoreResults: false,
+      });
+    } catch {
+      return false;
+    }
+    return true;
+  };
+
+  const LoginUser = async () => {
+    try {
+      await loginUser({
+        variables: {
+          input: {
+            email: emailValue,
+            password: passwordValue,
+          },
+        },
+      });
+    } catch {
+      return false;
+    }
+    return true;
   };
 
   return (
@@ -58,6 +129,10 @@ const LoginModal = ({ setUsername }: any) => {
             <TabPanels>
               <TabPanel>
                 <ModalBody>
+                  {LoginError && (
+                    <Text color={"red"}>{LoginError.message}</Text>
+                  )}
+                  {LoginLoading && <Text>Loading...</Text>}
                   <Text
                     color="white"
                     fontSize="2 xl"
@@ -67,13 +142,13 @@ const LoginModal = ({ setUsername }: any) => {
                     Log into your Account
                   </Text>
                   <Stack>
-                    <FormControl id="username">
-                      <FormLabel mb="0.5">Username</FormLabel>
+                    <FormControl id="email">
+                      <FormLabel mb="0.5">Email</FormLabel>
                       <Input
                         placeholder="XxX_BingBong_XxX"
                         type="text"
-                        value={usernameValue}
-                        onChange={(e) => setUsernameValue(e.target.value)}
+                        value={emailValue}
+                        onChange={(e) => setEmailValue(e.target.value)}
                       />
                     </FormControl>
                     <FormLabel mb="0.5">Password</FormLabel>
@@ -101,8 +176,8 @@ const LoginModal = ({ setUsername }: any) => {
                           _hover={{
                             bg: "blue.400",
                           }}
-                          onClick={() => {
-                            setUsername(usernameValue);
+                          onClick={async () => {
+                            await LoginUser();
                           }}
                         >
                           Log in
@@ -116,6 +191,10 @@ const LoginModal = ({ setUsername }: any) => {
               </TabPanel>
               <TabPanel>
                 <ModalBody>
+                  {RegisterError && (
+                    <Text color={"red"}>{RegisterError.message}</Text>
+                  )}
+                  {RegisterLoading && <Text>Loading...</Text>}
                   <Text
                     color="white"
                     fontSize="2 xl"
@@ -163,20 +242,7 @@ const LoginModal = ({ setUsername }: any) => {
                             bg: "blue.500",
                           }}
                           onClick={async () => {
-                            setUsername(usernameValue);
-                            console.log(usernameValue);
-                            const { data, errors, extensions } =
-                              await client.mutate({
-                                mutation: REGISTER,
-                                variables: {
-                                  input: {
-                                    username: usernameValue,
-                                    email: emailValue,
-                                    password: passwordValue,
-                                  },
-                                },
-                              });
-                            console.log(data);
+                            await RegisterUser();
                           }}
                         >
                           Sign up

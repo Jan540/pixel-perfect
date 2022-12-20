@@ -33,4 +33,8 @@
       <Folder Include="ProfilePictures" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="ProfilePictures\6583b4fe-d579-404b-b796-0cd1b78b792f.png" />
+    </ItemGroup>
+
 </Project>

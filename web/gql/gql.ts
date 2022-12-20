@@ -13,23 +13,38 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
-    "\n  mutation register($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          userId\n        }\n        error\n      }\n    }\n  }\n": types.RegisterDocument,
-    "\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      userResponse {\n        user {\n          username\n        }\n        error\n      }\n    }\n  }\n": types.UploadProfilePictureDocument,
-    "\n  query getUsers {\n    users {\n      email\n      username\n    }\n  }\n": types.GetUsersDocument,
+    "\n  mutation loginUser($input: LoginUserInput!) {\n    loginUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n          userId\n        }\n        token\n      }\n    }\n  }\n": types.LoginUserDocument,
+    "\n  mutation logoutUser{\n    logoutUser {\n      boolean\n    }\n  }\n": types.LogoutUserDocument,
+    "\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n        }\n        token\n      }\n    }\n  }\n": types.RefreshTokenDocument,
+    "\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n": types.RegisterUserDocument,
+    "\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n": types.UpdatePasswordDocument,
+    "\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      user {\n        userId\n      }\n    }\n  }\n": types.UploadProfilePictureDocument,
 };
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation register($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          userId\n        }\n        error\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation register($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          userId\n        }\n        error\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation loginUser($input: LoginUserInput!) {\n    loginUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n          userId\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation loginUser($input: LoginUserInput!) {\n    loginUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n          userId\n        }\n        token\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      userResponse {\n        user {\n          username\n        }\n        error\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      userResponse {\n        user {\n          username\n        }\n        error\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation logoutUser{\n    logoutUser {\n      boolean\n    }\n  }\n"): (typeof documents)["\n  mutation logoutUser{\n    logoutUser {\n      boolean\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getUsers {\n    users {\n      email\n      username\n    }\n  }\n"): (typeof documents)["\n  query getUsers {\n    users {\n      email\n      username\n    }\n  }\n"];
+export function graphql(source: "\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n        }\n        token\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n"): (typeof documents)["\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      user {\n        userId\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      user {\n        userId\n      }\n    }\n  }\n"];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

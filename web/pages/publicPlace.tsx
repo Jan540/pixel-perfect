@@ -12,11 +12,6 @@ import {
   Box,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import { stringify } from "querystring";
-import { FC, useEffect, useMemo, useState } from "react";
 
 const publicPlace: NextPage = () => {
   return (
@@ -26,9 +21,7 @@ const publicPlace: NextPage = () => {
         width="100vw"
         justifyContent="center"
         alignItems="center"
-      >
-        
-      </Flex>
+      ></Flex>
     </>
   );
 };

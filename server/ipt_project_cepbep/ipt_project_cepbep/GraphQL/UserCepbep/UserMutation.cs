@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics;
 using System.Security.Authentication;
 using System.Security.Claims;
 using HotChocolate.AspNetCore.Authorization;
@@ -68,7 +69,6 @@ public class UserMutation
         {
             string refreshToken = TokenGenerator.GenRefreshToken(user);
             httpContextAccessor.HttpContext?.Response.Cookies.Append("jid", refreshToken, CookieConfig.Options);
-            
             return new UserResponse(user, TokenGenerator.GenAccessToken(user));
         }
 
@@ -101,7 +101,7 @@ public class UserMutation
         if (user is null)
             throw new ArgumentException("User not Found!");
 
-        if (!file.ContentType!.StartsWith("image/"))
+        if (!file.ContentType!.StartsWith("image/") && !new[] {".png", ".jpg", ".jpeg"}.Contains(Path.GetExtension(file.Name).ToLower()))
             throw new ArgumentException("File is not an image!");
         
         await using var stream = File.Create(Path.Combine("ProfilePictures", $"{userId}{Path.GetExtension(file.Name)}"));
@@ -115,7 +115,7 @@ public class UserMutation
         string? token = httpContextAccessor.HttpContext?.Request.Cookies["jid"];
 
         if (token is null)
-            throw new AuthenticationException("No refresh token found!");
+            return new UserResponse(new User("", "", "", UserRole.User), "");
 
         var principal = TokenGenerator.GetPrincipal(token, TokenType.Refresh);
 
@@ -126,5 +126,41 @@ public class UserMutation
             throw new AuthenticationException("User does not exist!");
         
         return new UserResponse(user, TokenGenerator.GenAccessToken(user));
+    }
+    
+    
+    [Authorize]
+    [GraphQLName("updatePassword")]
+    public async Task<bool> UpdatePassword(AppDbContext context, ClaimsPrincipal claimsPrincipal, string oldPassword, string newPassword)
+    {
+        Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        User? user = await context.Users.FindAsync(userId);
+        
+        if (user is null)
+            throw new ArgumentException("User not Found!");
+        
+        if (!BC.BCrypt.Verify(oldPassword, user.Password))
+            throw new ArgumentException("Wrong password");
+        
+        if (!newPassword.IsValidPassword())
+            throw new ArgumentException("Password does not meet requirements! 𒌦");
+        
+        string password = BC.BCrypt.HashPassword(newPassword);
+        user.Password = password;
+        await context.SaveChangesAsync();
+        return true;
+    }
+
+    [Authorize]
+    [GraphQLName("logoutUser")]
+    public async Task<bool> LogoutUser(AppDbContext context, ClaimsPrincipal claimsPrincipal, [Service] IHttpContextAccessor httpContextAccessor)
+    {
+        Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+        User? user = await context.Users.FindAsync(userId);
+        if (user is null)
+            throw new ArgumentException("User not Found!");
+        httpContextAccessor.HttpContext.Response.Cookies.Delete("jid");
+        return true;
     }
 }

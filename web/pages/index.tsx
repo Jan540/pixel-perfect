@@ -1,40 +1,40 @@
-import { Button, Flex, VStack, Container } from "@chakra-ui/react";
+import { Button, Flex, VStack, Container, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
-import { stringify } from "querystring";
-import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useContext } from "react";
 //import { Typewriter, useTypewriter, Cursor } from "react-simple-typewriter";
 import { quotes } from "../data/quotes";
 import Typewriter from "typewriter-effect";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import GET_USERS from "../graphql/queries/users";
+import { useMutation } from "@apollo/client";
 import UPLOAD_PRFPIC from "../graphql/mutations/uploadProfilePicture";
+import { UserContext } from "../lib/User/Usercontext";
+import { getAccessToken } from "../lib/User/acesstoken";
 
 const Home: NextPage = () => {
-  const user = "BingBong ChingCong";
+  //const { user, setUser } = useContext(UserContext);
   // const client = ...
-
+  const [uploadProfilePicture, { data, error, loading }] =
+    useMutation(UPLOAD_PRFPIC);
   const UploadPFPIC: FC = () => {
-    const [mutate, {data, error, loading}] = useMutation(UPLOAD_PRFPIC);
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :\</p>;
-
-    function onChange({
+    const onChange = async ({
       target: {
         validity,
         files: [file],
       },
-    }: any) {
-      if (validity.valid)
-        mutate({
-          variables: {
-            input: { file, userId: "0d395174-1d0a-45b9-b907-a969a176c59c" },
-          },
-        });
-    }
+    }: any) => {
+      try {
+        if (validity.valid) {
+          await uploadProfilePicture({
+            variables: {
+              input: { file },
+            },
+          });
+        }
+      } catch {
+        return false;
+      }
+    };
 
     return <input type="file" required onChange={onChange} />;
   };
@@ -61,29 +61,25 @@ const Home: NextPage = () => {
             />
           </Container>
           <UploadPFPIC />
+          {error && <Text color={"red"}>{error.message}</Text>};
+          {loading && <Text>loading...</Text>}
         </VStack>
 
         <VStack height="100vh">
-          {user ? (
-            <>
-              <Link href="/publicPlace">
-                <Button bgColor={"blue.400"} size="lg" width="100%">
-                  Public Place
-                </Button>
-              </Link>
-              <Link href="/privatePlace">
-                <Button bgColor={"pink.500"} size="lg" width="100%">
-                  Private Place
-                </Button>
-              </Link>
-            </>
-          ) : (
-            <Link href="/login">
-              <Button bottom="0" size="lg" colorScheme="green">
-                Login
+          (
+          <>
+            <Link href="/publicPlace">
+              <Button bgColor={"blue.400"} size="lg" width="100%">
+                Public Place
               </Button>
             </Link>
-          )}
+            <Link href="/privatePlace">
+              <Button bgColor={"pink.500"} size="lg" width="100%">
+                Private Place
+              </Button>
+            </Link>
+          </>
+          )
         </VStack>
       </VStack>
     </Flex>

@@ -1,4 +1,4 @@
-import { EmailIcon, MoonIcon, SearchIcon, SunIcon } from "@chakra-ui/icons";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Text,
   Avatar,
@@ -20,15 +20,81 @@ import {
   useDisclosure,
   Link,
 } from "@chakra-ui/react";
-import { FC, RefObject, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import { FC, RefObject, useContext, useRef, useState } from "react";
 import LoginModal from "./LoginModal";
+import { UserContext } from "../lib/User/Usercontext";
+import { setAccessToken } from "../lib/User/acesstoken";
+import { useMutation } from "@apollo/client";
+import LOGOUT from "../graphql/mutations/logoutUser";
 
 const Navbar: FC = () => {
+  const { user, setUser } = useContext(UserContext);
+
   const { toggleColorMode, colorMode } = useColorMode();
-  const [user, setUser] = useState("");
-  const setUserValue = (value: string) => {
-    setUser(value);
+  const [username, setUsername] = useState("");
+  const router = useRouter();
+
+  const [logoutUser] = useMutation(LOGOUT);
+
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } catch {
+      return false;
+    }
+    setUser({ username: "", email: "", userId: "" });
+    setAccessToken("");
   };
+
+  function LogoutDialog() {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const cancelRef = useRef();
+
+    return (
+      <>
+        <MenuItem onClick={onOpen} color="red">
+          Log out
+        </MenuItem>
+
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef as RefObject<any>}
+          onClose={onClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Log out!
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                Are you sure you want to log out?
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button ref={cancelRef as RefObject<any>} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  colorScheme="red"
+                  onClick={() => {
+                    router.push("/");
+                    logout();
+                    setUsername(user.username);
+                    onClose();
+                  }}
+                  ml={3}
+                >
+                  Log out
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      </>
+    );
+  }
 
   return (
     <Flex
@@ -46,30 +112,30 @@ const Navbar: FC = () => {
         </Link>
       </div>
       <div>
-        {user ? (
+        {user.username ? (
           <Menu>
             <MenuButton as={Button} mr={"1.5"}>
               <HStack>
-                <Text>{user}</Text>
+                <Text>{user.username}</Text>
                 <Avatar
                   size="sm"
-                  name="Dan Abrahmov"
-                  src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.want.nl%2Fwp-content%2Fuploads%2F2020%2F10%2FAmong-Us-jij-bent-imposter.jpg&f=1&nofb=1&ipt=04ca4d558a7f302f72d1a1e8fe16fe477c8d69c96cca31748b9f6318e7c6500c&ipo=images"
+                  name={user.username}
+                  src="https://avatars.githubusercontent.com/u/1"
                 />
               </HStack>
             </MenuButton>
             <MenuList>
-              <Link href="#">
+              <Link href={user.username}>
                 <MenuItem>Profile</MenuItem>
               </Link>
               <Link href="/account">
                 <MenuItem>Account</MenuItem>
               </Link>
-              <LogoutDialog logout={setUserValue} />
+              <LogoutDialog />
             </MenuList>
           </Menu>
         ) : (
-          <LoginModal setUsername={setUserValue} />
+          <LoginModal setUsername={setUsername} />
         )}
         <IconButton
           onClick={toggleColorMode}
@@ -80,50 +146,5 @@ const Navbar: FC = () => {
     </Flex>
   );
 };
-
-function LogoutDialog({ logout }: { logout: (name: string) => void }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
-
-  return (
-    <>
-      <MenuItem onClick={onOpen} color="red">
-        Log out
-      </MenuItem>
-
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef as RefObject<any>}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Log out!
-            </AlertDialogHeader>
-
-            <AlertDialogBody>Are you sure you want to log out?</AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef as RefObject<any>} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button
-                colorScheme="red"
-                onClick={() => {
-                  logout("");
-                  onClose();
-                }}
-                ml={3}
-              >
-                Log out
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    </>
-  );
-}
 
 export default Navbar;
