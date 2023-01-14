@@ -37,11 +37,6 @@ public class AppDbContext : DbContext
                 .IsUnique();
         });
 
-        modelBuilder.Entity<Canvas_Model>(cb =>
-        {
-            cb.Property(c => c.Canvas_id).HasDefaultValue();
-        });
-        
         var users = new Faker<User>()
             .RuleFor(u => u.UserId, f => Guid.NewGuid())
             .RuleFor(u => u.Email, f => f.Internet.Email())

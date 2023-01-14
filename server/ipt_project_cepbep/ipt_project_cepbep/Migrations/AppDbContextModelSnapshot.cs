@@ -22,25 +22,24 @@ namespace iptprojectcepbep.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas", b =>
+            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas_Model", b =>
                 {
-                    b.Property<Guid>("Canvas_id")
+                    b.Property<string>("Canvas_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+                        .HasColumnType("text");
+
+                    b.Property<string>("Colors")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("User_id")
                         .HasColumnType("uuid");
-
-                    b.Property<string[,]>("colors")
-                        .IsRequired()
-                        .HasColumnType("text[]");
 
                     b.HasKey("Canvas_id");
 
                     b.HasIndex("User_id");
 
-                    b.ToTable("Canvas");
+                    b.ToTable("canvas");
                 });
 
             modelBuilder.Entity("ipt_project_cepbep.Models.User", b =>
@@ -84,7 +83,7 @@ namespace iptprojectcepbep.Migrations
                     b.ToTable("user");
                 });
 
-            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas", b =>
+            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas_Model", b =>
                 {
                     b.HasOne("ipt_project_cepbep.Models.User", "User")
                         .WithMany()

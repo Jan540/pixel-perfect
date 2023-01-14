@@ -21,6 +21,7 @@
     "js-cookie": "^3.0.1",
     "next": "12.3.0",
     "react": "18.2.0",
+    "react-color": "^2.19.3",
     "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
     "styled-components": "^5.3.6",

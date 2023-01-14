@@ -19,7 +19,8 @@ public class CanvasMutation
     
     // TODO: ERROR HANDLING
     [Authorize]
-    public async Task<string> CreateCanvas(AppDbContext context ,ClaimsPrincipal claimsPrincipal)
+    [GraphQLName("createCanvas")]
+    public async Task<Canvas_Model> CreateCanvas(AppDbContext context ,ClaimsPrincipal claimsPrincipal)
     {
         Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
         var user = await context.Users.FindAsync(userId);
@@ -27,23 +28,26 @@ public class CanvasMutation
         Canvas_Model canvas = new Canvas_Model()
         {
             User_id = userId,
-            Canvas_id = canvas_id
+            Canvas_id = canvas_id,
+            Colors = ""
         };
+        context.Canvases.Add(canvas);
         await context.SaveChangesAsync();
-        return canvas_id;
+        return canvas;
     }
-    
-    public async Task<bool> SaveCanvas(AppDbContext context, string canvas_id, string[,] colors)
+    [GraphQLName("saveCanvas")]
+    public async Task<bool> SaveCanvas(AppDbContext context, string canvas_id, string colors)
     {
         var canvas = await context.Canvases.FindAsync(canvas_id);
         canvas.Colors = colors;
         await context.SaveChangesAsync();
         return true;
     }
-    
-    public async Task<string[,]>LoadCanvas(AppDbContext context, string canvas_id)
+    [GraphQLName("loadCanvas")]
+    public async Task<string>LoadCanvas(AppDbContext context, string canvas_id)
     {
         var canvas = await context.Canvases.FindAsync(canvas_id);
         return canvas.Colors;
     }
+
 }

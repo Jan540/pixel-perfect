@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace iptprojectcepbep.Migrations
 {
     /// <inheritdoc />
-    public partial class canvastable : Migration
+    public partial class ssysybaka : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -514,18 +514,18 @@ namespace iptprojectcepbep.Migrations
                 keyValue: new Guid("fe537b31-39d5-4fcf-8703-c2248a2ecae9"));
 
             migrationBuilder.CreateTable(
-                name: "Canvas",
+                name: "canvas",
                 columns: table => new
                 {
-                    Canvasid = table.Column<Guid>(name: "Canvas_id", type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    Canvasid = table.Column<string>(name: "Canvas_id", type: "text", nullable: false),
                     Userid = table.Column<Guid>(name: "User_id", type: "uuid", nullable: false),
-                    colors = table.Column<string[,]>(type: "text[]", nullable: false)
+                    Colors = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Canvas", x => x.Canvasid);
+                    table.PrimaryKey("PK_canvas", x => x.Canvasid);
                     table.ForeignKey(
-                        name: "FK_Canvas_user_User_id",
+                        name: "FK_canvas_user_User_id",
                         column: x => x.Userid,
                         principalTable: "user",
                         principalColumn: "UserId",
@@ -533,8 +533,8 @@ namespace iptprojectcepbep.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Canvas_User_id",
-                table: "Canvas",
+                name: "IX_canvas_User_id",
+                table: "canvas",
                 column: "User_id");
         }
 
@@ -542,7 +542,7 @@ namespace iptprojectcepbep.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Canvas");
+                name: "canvas");
 
             migrationBuilder.InsertData(
                 table: "user",

@@ -14,6 +14,7 @@ import { getAccessToken } from '../lib/User/acesstoken';
 const Home: NextPage = () => {
   //const { user, setUser } = useContext(UserContext);
   // const client = ...
+  const isLoggedIn = !!getAccessToken();
   const [uploadProfilePicture, { data, error, loading }] = useMutation(UPLOAD_PRFPIC);
   const UploadPFPIC: FC = () => {
     const onChange = async ({
@@ -66,7 +67,7 @@ const Home: NextPage = () => {
         <HStack height='150vh' width='1500px' spacing='20'>
           (
           <>
-            <Link href='/privatePlace'>
+            <Link href={isLoggedIn ? './canvasCollection' : './privatePlace'}>
               <Button bgColor={'grey.500'} size='lg' width='100%' height='80%'>
                 <VStack spacing='15px'>
                   <Text>Private Place</Text>
@@ -75,7 +76,7 @@ const Home: NextPage = () => {
                 </VStack>
               </Button>
             </Link>
-            <Link href='/publicPlace'>
+            <Link href='./publicPlace'>
               <Button bgColor={'grey.500'} size='lg' width='100%' height='80%'>
                 <VStack spacing='15px'>
                   <Text>Public Place</Text>

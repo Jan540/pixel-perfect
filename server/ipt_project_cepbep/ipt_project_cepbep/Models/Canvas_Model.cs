@@ -11,7 +11,7 @@ public class Canvas_Model
     public Guid User_id { get; set; }
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Canvas_id { get; set; }
-    public string[,] Colors { get; set; }
+    public string Colors { get; set; }
     public User User { get; set; }
     
     
