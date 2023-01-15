@@ -20,9 +20,11 @@ const documents = {
     "\n  mutation logoutUser{\n    logoutUser {\n      boolean\n    }\n  }\n": types.LogoutUserDocument,
     "\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n        }\n        token\n      }\n    }\n  }\n": types.RefreshTokenDocument,
     "\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n": types.RegisterUserDocument,
+    "\n    mutation saveCanvas($input: SaveCanvasInput!) {\n        saveCanvas(input: $input){\n            string\n        }\n    }\n": types.SaveCanvasDocument,
     "\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n": types.UpdatePasswordDocument,
     "\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      user {\n        userId\n      }\n    }\n  }\n": types.UploadProfilePictureDocument,
     "\n  query getCanvas{\n    getCanvas {\n        user_id\n        canvas_id\n        colors\n    }\n  }\n": types.GetCanvasDocument,
+    "\n    query loadCanvas($input: String!) {\n        loadCanvas(canvas_id: $input)\n    }\n": types.LoadCanvasDocument,
 };
 
 /**
@@ -56,6 +58,10 @@ export function graphql(source: "\n  mutation registerUser($input: RegisterUserI
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n    mutation saveCanvas($input: SaveCanvasInput!) {\n        saveCanvas(input: $input){\n            string\n        }\n    }\n"): (typeof documents)["\n    mutation saveCanvas($input: SaveCanvasInput!) {\n        saveCanvas(input: $input){\n            string\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n"): (typeof documents)["\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -65,6 +71,10 @@ export function graphql(source: "\n  mutation uploadProfilePICTURE($input: Uploa
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query getCanvas{\n    getCanvas {\n        user_id\n        canvas_id\n        colors\n    }\n  }\n"): (typeof documents)["\n  query getCanvas{\n    getCanvas {\n        user_id\n        canvas_id\n        colors\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query loadCanvas($input: String!) {\n        loadCanvas(canvas_id: $input)\n    }\n"): (typeof documents)["\n    query loadCanvas($input: String!) {\n        loadCanvas(canvas_id: $input)\n    }\n"];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

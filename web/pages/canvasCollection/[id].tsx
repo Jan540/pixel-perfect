@@ -6,14 +6,14 @@ import { SizeModal } from "../../components/SizeModal";
 
 const privatePlace: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
-
+  const { id } = router.query; 
+  
   return (
     <>
       <Flex justifyContent='center' alignItems='center' height='100vh' width='100vw'>
-        <PixelArtCanvas width={32} height={32} />
+        <PixelArtCanvas width={32} height={32} id={id as string} />
       </Flex>
-      <SizeModal />
+      {/*<SizeModal />*/}
     </>
   );
 };

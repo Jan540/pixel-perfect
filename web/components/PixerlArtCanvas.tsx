@@ -1,34 +1,36 @@
-import { useMutation, useSubscription } from "@apollo/client";
-import { FC, useCallback, useEffect, useState } from "react";
-import { CHANGE_PIXEL } from "../graphql/code/changePixel";
-import { ON_PIXEL_CHANGE } from "../graphql/code/onPixelChange";
-import { PixelGrid } from "../types/PixelArtCanvasTypes";
-import { ColorResult, SwatchesPicker } from "react-color";
+import { useMutation, useQuery, useSubscription } from '@apollo/client';
+import { FC, useCallback, useEffect, useState } from 'react';
+import { CHANGE_PIXEL } from '../graphql/code/changePixel';
+import { ON_PIXEL_CHANGE } from '../graphql/code/onPixelChange';
+import { PixelGrid } from '../types/PixelArtCanvasTypes';
+import { ColorResult, SwatchesPicker } from 'react-color';
+import SAVE_CANVAS from '../graphql/mutations/saveCanvas';
+import LOAD_CANVAS from '../graphql/query/loadCanvas';
 
 type PixelArtCanvasProps = {
   width?: number;
   height?: number;
+  id: string;
 };
 
-const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
+const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
   const { data, error } = useSubscription(ON_PIXEL_CHANGE, {
     onData: (onChangeData) => {
       if (!onChangeData.data.data) return;
       const { onPixelChange } = onChangeData.data.data;
-      drawPixelChange(
-        onPixelChange.row,
-        onPixelChange.col,
-        onPixelChange.color
-      );
+      drawPixelChange(onPixelChange.row, onPixelChange.col, onPixelChange.color);
     },
   });
-  const [submitChange, { loading, error: submitError }] =
-    useMutation(CHANGE_PIXEL);
+  const [submitChange, { loading, error: submitError }] = useMutation(CHANGE_PIXEL);
 
   const [grid, setGrid] = useState<PixelGrid>([]);
-  const [color, setColor] = useState<string>("rgb(0, 0, 0)");
+  const [color, setColor] = useState<string>('rgb(0, 0, 0)');
   const [mouseDown, setMouseDown] = useState<boolean>(false);
-  const [serializedData, setSerializedData] = useState<any>();
+  const [saveCanvas, { data: saveData, error: saveError }] = useMutation(SAVE_CANVAS);
+  const [savedGrid, setSavedGrid] = useState<any>();
+  const { data: colorsData, error: colorsError } = useQuery<any>(LOAD_CANVAS, { variables: { input: id }});
+  const [loadedColors, setLoadedColors] = useState<string>();
+
   const drawPixelChange = (row: number, col: number, color: string) => {
     const pixel = document.getElementById(`pixel-${row}-${col}`);
     if (!pixel) return;
@@ -37,17 +39,36 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
       pixel.style.backgroundColor = color;
     }
   };
+  // load function on page load
 
   const createGrid = () => {
     const newGrid: PixelGrid = [];
     for (let i = 0; i < height!; i++) {
       newGrid.push([]);
       for (let j = 0; j < width!; j++) {
-        newGrid[i].push({ color: "rgb(255,255,255)" });
+        newGrid[i].push({ color: 'rgb(255,255,255)' });
       }
     }
     setGrid(newGrid);
   };
+
+  useEffect(() => {
+    if (!colorsData) {
+      return;
+    }
+    setLoadedColors(colorsData.loadCanvas as string);
+    console.log(colorsData);
+  }, [colorsData]);
+
+  useEffect(() => {
+    createGrid();
+  }, []);
+  useEffect(() => {
+    if (!loadedColors) {
+      return;
+    }
+    loadGrid();
+  }, [loadedColors]);
 
   const saveGrid = () => {
     const mainDiv = document.getElementById('pixel-grid') as HTMLDivElement;
@@ -62,35 +83,30 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
         const cell = row.children[j] as HTMLDivElement;
         rowData.push(cell.style.backgroundColor);
       }
-
       grid.push(rowData);
     }
-    setSerializedData(JSON.stringify(grid));
+    try {
+      console.log(id, grid);
+      saveCanvas({
+        variables: { input: { canvas_id: id, colors: JSON.stringify(grid) } },
+      });
+    } catch {
+      console.log('error saving canvas');
+    }
   };
 
-    const loadGrid = () => {
-      console.log(serializedData);
-      // convert the colors string into a twodimensional-array with the type string
-      const previousGrid: PixelGrid = [];
-      for (let i = 0; i < width!; i++) {
-        for (let j = 0; j < height!; j++) {
-          const pixel = document.getElementById(`pixel-${i}-${j}`) as HTMLDivElement;
-          console.log(pixel);
-          console.log(serializedData[i][j]);
-          pixel.style.backgroundColor = serializedData[i][j];
-          console.log('🚀🚀🚀🚀🚀');
-        }
+  const loadGrid = () => {
+    const colorData = JSON.parse(loadedColors!);
+    console.log(colorData);
+    // TODO: maybe change?
+    for (let i = 0; i < width!; i++) {
+      for (let j = 0; j < height!; j++) {
+        const pixel = document.getElementById(`pixel-${i}-${j}`) as HTMLDivElement;
+        pixel.style.backgroundColor = colorData[i][j];
+        pixel.style.backgroundColor = colorData[i][j];
       }
-      for (let i = 0; i < width!; i++) {
-        previousGrid.push([]);
-        for (let j = 0; j < height!; j++) {
-          previousGrid[i].push({ color: serializedData[i][j] });
-          console.log(previousGrid[i][j].color);
-        }
-      }
-      setGrid(previousGrid);
-      console.log('grid loaded');
-    };
+    }
+  };
 
   const handleColorChange = (newColor: ColorResult) => {
     setColor(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
@@ -99,7 +115,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
   const handlePixelChange = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     row: number,
-    col: number
+    col: number,
   ) => {
     let pixel = e.currentTarget;
     await updatePixel(pixel, color, row, col);
@@ -109,7 +125,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
     pixel: EventTarget & HTMLDivElement,
     color: string,
     row: number,
-    col: number
+    col: number,
   ) => {
     if (pixel.style.backgroundColor === color) return;
 
@@ -138,7 +154,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
   const handlePixelMouseMove = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     row: number,
-    col: number
+    col: number,
   ) => {
     if (mouseDown) {
       await updatePixel(e.currentTarget, color, row, col);
@@ -148,35 +164,31 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <SwatchesPicker onChangeComplete={handleColorChange} />
+
       <button
         onClick={(e) => {
-          createGrid();
-          e.currentTarget.style.display = "none";
+          saveGrid();
         }}
       >
-        Create Grid
-      </button>
-      <button onClick={(e) => { 
-        saveGrid();
-      }}>
         Save Grid
       </button>
-      <button onClick={(e) => {
-        loadGrid();
-      }}>
+      <button
+        onClick={(e) => {
+          loadGrid();
+        }}
+      >
         Load Grid
       </button>
-      <div id="pixel-grid" onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}></div>
-      <div onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
+      <div id='pixel-grid' onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
         {grid.map((row, i) => (
-          <div key={i} style={{ display: "flex" }}>
+          <div key={i} style={{ display: 'flex' }}>
             {row.map((pixel, j) => (
               <div
                 id={`pixel-${i}-${j}`}
@@ -185,7 +197,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
                   width: 25,
                   height: 25,
                   backgroundColor: pixel.color,
-                  cursor: "crosshair",
+                  cursor: 'crosshair',
                 }}
                 onClick={(e) => handlePixelChange(e, i, j)}
                 onMouseMove={(e) => handlePixelMouseMove(e, i, j)}

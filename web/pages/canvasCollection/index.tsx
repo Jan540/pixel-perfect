@@ -6,7 +6,7 @@ import CREATE_CANVAS from '../../graphql/mutations/createCanvas';
 import { useRouter } from 'next/router';
 import GET_CANVAS from '../../graphql/query/getCanvas';
 import { TCanvas } from '../../lib/Canvas/canvas';
-import { cp } from 'fs/promises';
+
 import { getAccessToken } from '../../lib/User/acesstoken';
 
 const canvasCollection: NextPage = () => {
@@ -14,7 +14,12 @@ const canvasCollection: NextPage = () => {
 
   const [createCanvas, { data, error, loading }] = useMutation(CREATE_CANVAS);
   const [canvas_id, setCanvas_id] = useState('');
-  const { data: canvasData, error: canvasError, loading: canvasLoading, refetch: canvasRefetch } = useQuery(GET_CANVAS);
+  const {
+    data: canvasData,
+    error: canvasError,
+    loading: canvasLoading,
+    refetch: canvasRefetch,
+  } = useQuery(GET_CANVAS);
   const [canvases, setCanvases] = useState<TCanvas[]>([]);
   const [oldToken, setOldToken] = useState<string | null>(null);
 
@@ -28,7 +33,7 @@ const canvasCollection: NextPage = () => {
       return false;
     }
   };
-  
+
   useEffect(() => {
     if (oldToken === getAccessToken()) {
       return;
@@ -36,7 +41,7 @@ const canvasCollection: NextPage = () => {
     setOldToken(getAccessToken());
     canvasRefetch();
   }, [getAccessToken()]);
-  
+
   useEffect(() => {
     if (!data) {
       return;
@@ -44,7 +49,7 @@ const canvasCollection: NextPage = () => {
     setCanvas_id(data.createCanvas.canvas_Model?.canvas_id!);
     router.push('canvasCollection/' + data.createCanvas.canvas_Model?.canvas_id!);
   }, [data]);
-  
+
   useEffect(() => {
     if (!canvasData) {
       return;
@@ -52,36 +57,39 @@ const canvasCollection: NextPage = () => {
     setCanvases(canvasData.getCanvas as TCanvas[]);
   }, [canvasData]);
 
-
   return (
     <>
-      <Flex pt={'150px'} pl={'150px'}  >
+      <Flex pt={'150px'} pl={'150px'}>
         <VStack>
           <>
             <Text fontSize={'5xl'}>Canvas Collection</Text>
-              {
-                /* show all canvases as a container */
-                canvases.map((canvas) => {
-                  return (
-                    <Link href={'canvasCollection/' + canvas.canvas_id}>
-                      <Button bgColor={'grey.500'} size='lg' width='300px' height='50px'>
-                        <Text>{canvas.canvas_id}</Text>
-                      </Button>
-                    </Link>
-                  );
-                })
-              }
-              <Container>
-                <Button
-                  onClick={createNewCanvas}
-                  bgColor={'grey.500'}
-                  size='lg'
-                  width='300px'
-                  height='300px'
-                >
-                  <Text fontSize={'5xl'}>+</Text>
-                </Button>
-              </Container>
+            {
+              /* show all canvases as a container */
+              canvases.map((canvas) => {
+                return (
+                  <Button
+                    onClick={() => {router.push('canvasCollection/' + canvas.canvas_id)}}
+                    bgColor={'grey.500'}
+                    size='lg'
+                    width='300px'
+                    height='50px'
+                  >
+                    <Text>{canvas.canvas_id}</Text>
+                  </Button>
+                );
+              })
+            }
+            <Container>
+              <Button
+                onClick={createNewCanvas}
+                bgColor={'grey.500'}
+                size='lg'
+                width='300px'
+                height='300px'
+              >
+                <Text fontSize={'5xl'}>+</Text>
+              </Button>
+            </Container>
           </>
         </VStack>
       </Flex>
