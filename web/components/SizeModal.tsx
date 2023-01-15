@@ -1,58 +1,88 @@
-import { ApolloClient, useMutation } from "@apollo/client";
+import { Button } from "@chakra-ui/button";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { useBoolean, useDisclosure } from "@chakra-ui/hooks";
+import { Divider, VStack } from "@chakra-ui/layout";
 import {
-  Text,
-  Input,
-  Stack,
-  Button,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  Link,
   Modal,
-  ModalBody,
-  useDisclosure,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
   ModalOverlay,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanels,
-  TabPanel,
+  ModalContent,
   ModalHeader,
-} from "@chakra-ui/react";
-import { NextPage } from "next";
-import React, { useState } from "react";
-import { FC } from "react";
-import DividerWithText from "./DividerWithText";
-import REGISTER from "../graphql/mutations/registerUser";
-import { client } from "../lib/apolloClient";
+  ModalBody,
+  ModalFooter,
+} from "@chakra-ui/modal";
+import { Switch } from "@chakra-ui/switch";
+import { FC, useState } from "react";
+import { SliderInput } from "./SliderInput";
 
-const SizeModal = ({ setUsername }: any) => {
-  const { isOpen, onOpen, onClose } = useDisclosure({defaultIsOpen: true});
-
+export const SizeModal: FC = () => {
+  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
   return (
-    <>
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Set Canvas Size</ModalHeader>
-          <ModalBody>
-            <FormControl>
-              <Input type='number' placeholder="Height:" />
-            </FormControl>
-            <FormControl mt="5">
-              <Input type='number' placeholder="Width:" />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>Set Size</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <Modal
+      closeOnOverlayClick={false}
+      closeOnEsc={false}
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      size="xs"
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Choose size</ModalHeader>
+        <ModalBody>
+          <SelectSizeForm />
+        </ModalBody>
+
+        <ModalFooter>
+          <Button colorScheme="blue" onClick={onClose} width="100%">
+            Create canvas
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 
-export default SizeModal;
+const SelectSizeForm = () => {
+  const [height, setHeight] = useState(32);
+  const [width, setWidth] = useState(32);
+  const [fixAspect, setFixAspect] = useBoolean(false);
+
+  return (
+    <VStack spacing={5}>
+      <FormControl>
+        <FormLabel>Height</FormLabel>
+        <SliderInput
+          min={2}
+          max={42}
+          step={2}
+          value={height}
+          onChange={setHeight}
+        />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Width</FormLabel>
+        <SliderInput
+          min={2}
+          max={42}
+          step={2}
+          value={fixAspect ? height : width}
+          onChange={fixAspect ? setHeight : setWidth}
+        />
+      </FormControl>
+      <FormControl
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <FormLabel mb="0">Fix aspect ratio</FormLabel>
+        <Switch
+          isChecked={fixAspect}
+          onChange={() => {
+            setWidth(height);
+            setFixAspect.toggle();
+          }}
+        />
+      </FormControl>
+    </VStack>
+  );
+};

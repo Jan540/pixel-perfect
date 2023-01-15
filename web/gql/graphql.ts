@@ -24,6 +24,33 @@ export enum ApplyPolicy {
   BeforeResolver = 'BEFORE_RESOLVER'
 }
 
+export type CanvasSubscription = {
+  __typename?: 'CanvasSubscription';
+  onPixelChange: PixelChangePayload;
+};
+
+export type Canvas_Model = {
+  __typename?: 'Canvas_Model';
+  canvas_id: Scalars['String'];
+  colors: Scalars['String'];
+  user: User;
+  user_id: Scalars['UUID'];
+};
+
+export type ChangePixelColorInput = {
+  payload: PixelChangePayloadInput;
+};
+
+export type ChangePixelColorPayload = {
+  __typename?: 'ChangePixelColorPayload';
+  boolean?: Maybe<Scalars['Boolean']>;
+};
+
+export type CreateCanvasPayload = {
+  __typename?: 'CreateCanvasPayload';
+  canvas_Model?: Maybe<Canvas_Model>;
+};
+
 export type DateTimeOperationFilterInput = {
   eq?: InputMaybe<Scalars['DateTime']>;
   gt?: InputMaybe<Scalars['DateTime']>;
@@ -63,6 +90,61 @@ export type LogoutUserPayload = {
   boolean?: Maybe<Scalars['Boolean']>;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  changePixelColor: ChangePixelColorPayload;
+  createCanvas: CreateCanvasPayload;
+  deleteUser: DeleteUserPayload;
+  loginUser: LoginUserPayload;
+  logoutUser: LogoutUserPayload;
+  refreshUser: RefreshUserPayload;
+  registerUser: RegisterUserPayload;
+  saveCanvas: SaveCanvasPayload;
+  updatePassword: UpdatePasswordPayload;
+  updateUsername: UpdateUsernamePayload;
+  uploadProfilePicture: UploadProfilePicturePayload;
+};
+
+
+export type MutationChangePixelColorArgs = {
+  input: ChangePixelColorInput;
+};
+
+
+export type MutationDeleteUserArgs = {
+  input: DeleteUserInput;
+};
+
+
+export type MutationLoginUserArgs = {
+  input: LoginUserInput;
+};
+
+
+export type MutationRegisterUserArgs = {
+  input: RegisterUserInput;
+};
+
+
+export type MutationSaveCanvasArgs = {
+  input: SaveCanvasInput;
+};
+
+
+export type MutationUpdatePasswordArgs = {
+  input: UpdatePasswordInput;
+};
+
+
+export type MutationUpdateUsernameArgs = {
+  input: UpdateUsernameInput;
+};
+
+
+export type MutationUploadProfilePictureArgs = {
+  input: UploadProfilePictureInput;
+};
+
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -74,6 +156,48 @@ export type PageInfo = {
   hasPreviousPage: Scalars['Boolean'];
   /** When paginating backwards, the cursor to continue. */
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PixelChangePayload = {
+  __typename?: 'PixelChangePayload';
+  col: Scalars['Int'];
+  color: Scalars['String'];
+  row: Scalars['Int'];
+};
+
+export type PixelChangePayloadInput = {
+  col: Scalars['Int'];
+  color: Scalars['String'];
+  row: Scalars['Int'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  getCanvas: Array<Canvas_Model>;
+  loadCanvas: Scalars['String'];
+  me?: Maybe<User>;
+  user: Array<User>;
+  users?: Maybe<UsersConnection>;
+};
+
+
+export type QueryLoadCanvasArgs = {
+  canvas_id: Scalars['String'];
+};
+
+
+export type QueryUserArgs = {
+  email: Scalars['String'];
+};
+
+
+export type QueryUsersArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Array<UserSortInput>>;
+  where?: InputMaybe<UserFilterInput>;
 };
 
 export type RefreshUserPayload = {
@@ -90,6 +214,16 @@ export type RegisterUserInput = {
 export type RegisterUserPayload = {
   __typename?: 'RegisterUserPayload';
   userResponse?: Maybe<UserResponse>;
+};
+
+export type SaveCanvasInput = {
+  canvas_id: Scalars['String'];
+  colors: Scalars['String'];
+};
+
+export type SaveCanvasPayload = {
+  __typename?: 'SaveCanvasPayload';
+  string?: Maybe<Scalars['String']>;
 };
 
 export enum SortEnumType {
@@ -161,70 +295,6 @@ export type UserFilterInput = {
   username?: InputMaybe<StringOperationFilterInput>;
 };
 
-export type UserMutation = {
-  __typename?: 'UserMutation';
-  deleteUser: DeleteUserPayload;
-  loginUser: LoginUserPayload;
-  logoutUser: LogoutUserPayload;
-  refreshUser: RefreshUserPayload;
-  registerUser: RegisterUserPayload;
-  updatePassword: UpdatePasswordPayload;
-  updateUsername: UpdateUsernamePayload;
-  uploadProfilePicture: UploadProfilePicturePayload;
-};
-
-
-export type UserMutationDeleteUserArgs = {
-  input: DeleteUserInput;
-};
-
-
-export type UserMutationLoginUserArgs = {
-  input: LoginUserInput;
-};
-
-
-export type UserMutationRegisterUserArgs = {
-  input: RegisterUserInput;
-};
-
-
-export type UserMutationUpdatePasswordArgs = {
-  input: UpdatePasswordInput;
-};
-
-
-export type UserMutationUpdateUsernameArgs = {
-  input: UpdateUsernameInput;
-};
-
-
-export type UserMutationUploadProfilePictureArgs = {
-  input: UploadProfilePictureInput;
-};
-
-export type UserQuery = {
-  __typename?: 'UserQuery';
-  me?: Maybe<User>;
-  user: Array<User>;
-  users?: Maybe<UsersConnection>;
-};
-
-
-export type UserQueryUserArgs = {
-  email: Scalars['String'];
-};
-
-
-export type UserQueryUsersArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  order?: InputMaybe<Array<UserSortInput>>;
-  where?: InputMaybe<UserFilterInput>;
-};
-
 export type UserResponse = {
   __typename?: 'UserResponse';
   token: Scalars['String'];
@@ -251,11 +321,6 @@ export type UserSortInput = {
   updatedAt?: InputMaybe<SortEnumType>;
   userId?: InputMaybe<SortEnumType>;
   username?: InputMaybe<SortEnumType>;
-};
-
-export type UserSubscription = {
-  __typename?: 'UserSubscription';
-  onUserUpdate: User;
 };
 
 /** A connection to a list of items. */
@@ -293,48 +358,90 @@ export type UuidOperationFilterInput = {
   nlte?: InputMaybe<Scalars['UUID']>;
 };
 
+export type ChangePixelMutationVariables = Exact<{
+  input: ChangePixelColorInput;
+}>;
+
+
+export type ChangePixelMutation = { __typename?: 'Mutation', changePixelColor: { __typename?: 'ChangePixelColorPayload', boolean?: boolean | null } };
+
+export type OnPixelChangeSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OnPixelChangeSubscription = { __typename?: 'CanvasSubscription', onPixelChange: { __typename?: 'PixelChangePayload', row: number, col: number, color: string } };
+
+export type CreateCanvasMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateCanvasMutation = { __typename?: 'Mutation', createCanvas: { __typename?: 'CreateCanvasPayload', canvas_Model?: { __typename?: 'Canvas_Model', user_id: any, canvas_id: string } | null } };
+
 export type LoginUserMutationVariables = Exact<{
   input: LoginUserInput;
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'UserMutation', loginUser: { __typename?: 'LoginUserPayload', userResponse?: { __typename?: 'UserResponse', token: string, user: { __typename?: 'User', username: string, email: string, userId: any } } | null } };
+export type LoginUserMutation = { __typename?: 'Mutation', loginUser: { __typename?: 'LoginUserPayload', userResponse?: { __typename?: 'UserResponse', token: string, user: { __typename?: 'User', username: string, email: string, userId: any } } | null } };
 
 export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LogoutUserMutation = { __typename?: 'UserMutation', logoutUser: { __typename?: 'LogoutUserPayload', boolean?: boolean | null } };
+export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: { __typename?: 'LogoutUserPayload', boolean?: boolean | null } };
 
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RefreshTokenMutation = { __typename?: 'UserMutation', refreshUser: { __typename?: 'RefreshUserPayload', userResponse?: { __typename?: 'UserResponse', token: string, user: { __typename?: 'User', userId: any, email: string, username: string } } | null } };
+export type RefreshTokenMutation = { __typename?: 'Mutation', refreshUser: { __typename?: 'RefreshUserPayload', userResponse?: { __typename?: 'UserResponse', token: string, user: { __typename?: 'User', userId: any, email: string, username: string } } | null } };
 
 export type RegisterUserMutationVariables = Exact<{
   input: RegisterUserInput;
 }>;
 
 
-export type RegisterUserMutation = { __typename?: 'UserMutation', registerUser: { __typename?: 'RegisterUserPayload', userResponse?: { __typename?: 'UserResponse', token: string, user: { __typename?: 'User', username: string, email: string } } | null } };
+export type RegisterUserMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegisterUserPayload', userResponse?: { __typename?: 'UserResponse', token: string, user: { __typename?: 'User', username: string, email: string } } | null } };
+
+export type SaveCanvasMutationVariables = Exact<{
+  input: SaveCanvasInput;
+}>;
+
+
+export type SaveCanvasMutation = { __typename?: 'Mutation', saveCanvas: { __typename?: 'SaveCanvasPayload', string?: string | null } };
 
 export type UpdatePasswordMutationVariables = Exact<{
   input: UpdatePasswordInput;
 }>;
 
 
-export type UpdatePasswordMutation = { __typename?: 'UserMutation', updatePassword: { __typename?: 'UpdatePasswordPayload', boolean?: boolean | null } };
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword: { __typename?: 'UpdatePasswordPayload', boolean?: boolean | null } };
 
 export type UploadProfilePictureMutationVariables = Exact<{
   input: UploadProfilePictureInput;
 }>;
 
 
-export type UploadProfilePictureMutation = { __typename?: 'UserMutation', uploadProfilePicture: { __typename?: 'UploadProfilePicturePayload', user?: { __typename?: 'User', userId: any } | null } };
+export type UploadProfilePictureMutation = { __typename?: 'Mutation', uploadProfilePicture: { __typename?: 'UploadProfilePicturePayload', user?: { __typename?: 'User', userId: any } | null } };
+
+export type GetCanvasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
+export type GetCanvasQuery = { __typename?: 'Query', getCanvas: Array<{ __typename?: 'Canvas_Model', user_id: any, canvas_id: string, colors: string }> };
+
+export type LoadCanvasQueryVariables = Exact<{
+  input: Scalars['String'];
+}>;
+
+
+export type LoadCanvasQuery = { __typename?: 'Query', loadCanvas: string };
+
+
+export const ChangePixelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"changePixel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ChangePixelColorInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"changePixelColor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boolean"}}]}}]}}]} as unknown as DocumentNode<ChangePixelMutation, ChangePixelMutationVariables>;
+export const OnPixelChangeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"OnPixelChange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"onPixelChange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"row"}},{"kind":"Field","name":{"kind":"Name","value":"col"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<OnPixelChangeSubscription, OnPixelChangeSubscriptionVariables>;
+export const CreateCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"canvas_Model"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"canvas_id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCanvasMutation, CreateCanvasMutationVariables>;
 export const LoginUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"loginUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]}}]} as unknown as DocumentNode<LoginUserMutation, LoginUserMutationVariables>;
 export const LogoutUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"logoutUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logoutUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boolean"}}]}}]}}]} as unknown as DocumentNode<LogoutUserMutation, LogoutUserMutationVariables>;
 export const RefreshTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]}}]} as unknown as DocumentNode<RefreshTokenMutation, RefreshTokenMutationVariables>;
 export const RegisterUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"registerUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RegisterUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"registerUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]}}]} as unknown as DocumentNode<RegisterUserMutation, RegisterUserMutationVariables>;
+export const SaveCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"saveCanvas"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SaveCanvasInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"saveCanvas"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"string"}}]}}]}}]} as unknown as DocumentNode<SaveCanvasMutation, SaveCanvasMutationVariables>;
 export const UpdatePasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updatePassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdatePasswordInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boolean"}}]}}]}}]} as unknown as DocumentNode<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 export const UploadProfilePictureDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"uploadProfilePICTURE"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UploadProfilePictureInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uploadProfilePicture"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}}]}}]}}]} as unknown as DocumentNode<UploadProfilePictureMutation, UploadProfilePictureMutationVariables>;
+export const GetCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"canvas_id"}},{"kind":"Field","name":{"kind":"Name","value":"colors"}}]}}]}}]} as unknown as DocumentNode<GetCanvasQuery, GetCanvasQueryVariables>;
+export const LoadCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"loadCanvas"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loadCanvas"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"canvas_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<LoadCanvasQuery, LoadCanvasQueryVariables>;
