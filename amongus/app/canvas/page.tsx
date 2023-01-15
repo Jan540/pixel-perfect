@@ -13,7 +13,7 @@ const Canvas = () => {
         height="100vh"
         width="100vw"
       >
-        <PixelArtCanvas width={32} height={32} />
+        <PixelArtCanvas width={24} height={24} />
       </Flex>
       <SizeModal />
     </>

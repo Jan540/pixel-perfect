@@ -15,7 +15,7 @@ import { FC, useState } from "react";
 import { SliderInput } from "./SliderInput";
 
 export const SizeModal: FC = () => {
-  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: false });
   return (
     <Modal
       closeOnOverlayClick={false}
