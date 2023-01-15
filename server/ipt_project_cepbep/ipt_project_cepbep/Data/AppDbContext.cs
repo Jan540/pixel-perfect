@@ -1,8 +1,6 @@
 using Bogus;
 using ipt_project_cepbep.Models;
 using Microsoft.EntityFrameworkCore;
-using ipt_project_cepbep.Components;
-using Randomizer = Bogus.Randomizer;
 
 namespace ipt_project_cepbep.Data;
 
@@ -36,7 +34,7 @@ public class AppDbContext : DbContext
             ub.HasIndex(u => u.Username)
                 .IsUnique();
         });
-
+        
         var users = new Faker<User>()
             .RuleFor(u => u.UserId, f => Guid.NewGuid())
             .RuleFor(u => u.Email, f => f.Internet.Email())
@@ -50,6 +48,4 @@ public class AppDbContext : DbContext
     }
     
     public DbSet<User> Users { get; set; }
-    public DbSet<Canvas_Model> Canvases { get; set; }
-    
 }

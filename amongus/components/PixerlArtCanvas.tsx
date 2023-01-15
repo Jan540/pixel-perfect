@@ -26,8 +26,13 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
     useMutation(CHANGE_PIXEL);
 
   const [grid, setGrid] = useState<PixelGrid>([]);
-  const [color, setColor] = useState<string>("rgb(0, 0, 0)");
+  const [color, setColor] = useState<string>("black");
   const [mouseDown, setMouseDown] = useState<boolean>(false);
+
+  useEffect(() => {
+    createGrid();
+  });
+
   const drawPixelChange = (row: number, col: number, color: string) => {
     const pixel = document.getElementById(`pixel-${row}-${col}`);
     if (!pixel) return;
@@ -42,54 +47,11 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
     for (let i = 0; i < height!; i++) {
       newGrid.push([]);
       for (let j = 0; j < width!; j++) {
-        newGrid[i].push({ color: "rgb(255,255,255)" });
+        newGrid[i].push({ color: "white" });
       }
     }
     setGrid(newGrid);
   };
-
-  const saveGrid = () => {
-    const mainDiv = document.getElementById('pixel-grid') as HTMLDivElement;
-    const rows = mainDiv.children;
-
-    let grid: string[][] = [];
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i] as HTMLDivElement;
-      const rowData: string[] = [];
-
-      for (let j = 0; j < row.children.length; j++) {
-        const cell = row.children[j] as HTMLDivElement;
-        rowData.push(cell.style.backgroundColor);
-      }
-
-      grid.push(rowData);
-    }
-    setSerializedData(JSON.stringify(grid));
-  };
-
-    const loadGrid = () => {
-      console.log(serializedData);
-      // convert the colors string into a twodimensional-array with the type string
-      const previousGrid: PixelGrid = [];
-      for (let i = 0; i < width!; i++) {
-        for (let j = 0; j < height!; j++) {
-          const pixel = document.getElementById(`pixel-${i}-${j}`) as HTMLDivElement;
-          console.log(pixel);
-          console.log(serializedData[i][j]);
-          pixel.style.backgroundColor = serializedData[i][j];
-          console.log('🚀🚀🚀🚀🚀');
-        }
-      }
-      for (let i = 0; i < width!; i++) {
-        previousGrid.push([]);
-        for (let j = 0; j < height!; j++) {
-          previousGrid[i].push({ color: serializedData[i][j] });
-          console.log(previousGrid[i][j].color);
-        }
-      }
-      setGrid(previousGrid);
-      console.log('grid loaded');
-    };
 
   const handleColorChange = (newColor: ColorResult) => {
     setColor(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
@@ -161,7 +123,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
         }}
       >
         Create Grid
-
+      </button> */}
       <div onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
         {grid.map((row, i) => (
           <div key={i} style={{ display: "flex" }}>

@@ -36,7 +36,6 @@ builder.Services
     .AddAuthorization()
     .AddQueryType(q => q.Name("Query"))
         .AddType<UserQuery>()
-        .AddType<CanvasQuery>()
     .AddFiltering()
     .AddSorting()
     .AddErrorFilter<ErrorFilter>()
