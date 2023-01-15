@@ -29,6 +29,10 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
   const [color, setColor] = useState<string>("black");
   const [mouseDown, setMouseDown] = useState<boolean>(false);
 
+  useEffect(() => {
+    createGrid();
+  });
+
   const drawPixelChange = (row: number, col: number, color: string) => {
     const pixel = document.getElementById(`pixel-${row}-${col}`);
     if (!pixel) return;
@@ -71,7 +75,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
     if (pixel.style.backgroundColor === color) return;
 
     pixel.style.backgroundColor = color;
-    await submitChange({
+    submitChange({
       variables: {
         input: {
           payload: {
@@ -112,14 +116,14 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
       }}
     >
       <SwatchesPicker onChangeComplete={handleColorChange} />
-      <button
+      {/* <button
         onClick={(e) => {
           createGrid();
           e.currentTarget.style.display = "none";
         }}
       >
         Create Grid
-      </button>
+      </button> */}
       <div onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
         {grid.map((row, i) => (
           <div key={i} style={{ display: "flex" }}>

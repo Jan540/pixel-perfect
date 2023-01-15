@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "amongus"
+		},
+		{
+			"path": "server/ipt_project_cepbep"
+		},
+		{
+			"path": "../../../asd"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "node_modules/typescript/lib",
+		"typescript.enablePromptUseWorkspaceTsdk": true
+	}
+}
