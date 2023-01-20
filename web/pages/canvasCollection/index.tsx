@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   Flex,
   Text,
@@ -20,14 +20,19 @@ import { getAccessToken } from "../../lib/User/acesstoken";
 const CanvasCollection: NextPage = () => {
   const router = useRouter();
 
-  const [createCanvas, { data, error, loading }] = useMutation(CREATE_CANVAS);
+  const [
+    createCanvas,
+    {
+      data: createCanvasData,
+      error: createCanvasError,
+      loading: createCanvasLoading,
+    },
+  ] = useMutation(CREATE_CANVAS);
   const [canvas_id, setCanvas_id] = useState("");
-  const {
-    data: canvasData,
-    error: canvasError,
-    loading: canvasLoading,
-    refetch: canvasRefetch,
-  } = useQuery(GET_CANVAS);
+  const [
+    fetchCanvases,
+    { data: canvasData, error: canvasError, loading: canvasLoading },
+  ] = useLazyQuery(GET_CANVAS);
   const [canvases, setCanvases] = useState<TCanvas[]>([]);
   const [oldToken, setOldToken] = useState("");
 
@@ -37,18 +42,27 @@ const CanvasCollection: NextPage = () => {
         variables: {},
       });
     } catch {
-      console.log(error?.message);
+      console.log(createCanvasError?.message);
       return false;
     }
   };
 
   useEffect(() => {
-    if (!data) {
+    if (getAccessToken() !== oldToken) {
+      fetchCanvases();
+      setOldToken(getAccessToken());
+    }
+  }, [getAccessToken()]);
+
+  useEffect(() => {
+    if (!createCanvasData) {
       return;
     }
-    setCanvas_id(data.createCanvas.canvas?.canvasId!);
-    router.push("canvasCollection/" + data.createCanvas.canvas?.canvasId!);
-  }, [data, router]);
+    setCanvas_id(createCanvasData.createCanvas.canvas?.canvasId!);
+    router.push(
+      "canvasCollection/" + createCanvasData.createCanvas.canvas?.canvasId!
+    );
+  }, [createCanvasData, router]);
 
   useEffect(() => {
     if (!canvasData) {

@@ -23,24 +23,24 @@ namespace iptprojectcepbep.Migrations
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("ipt_project_cepbep.Models.Canvas_Model", b =>
-                {
-                    b.Property<string>("Canvas_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
+            {
+                b.Property<string>("Canvas_id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("text");
 
-                    b.Property<string>("Colors")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Colors")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<Guid>("User_id")
-                        .HasColumnType("uuid");
+                b.Property<Guid>("User_id")
+                    .HasColumnType("uuid");
 
-                    b.HasKey("Canvas_id");
+                b.HasKey("Canvas_id");
 
-                    b.HasIndex("User_id");
+                b.HasIndex("User_id");
 
-                    b.ToTable("canvas");
-            modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
+                b.ToTable("canvas");
+                modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
                 {
                     b.Property<Guid>("FriendId")
                         .HasColumnType("uuid");
@@ -63,7 +63,7 @@ namespace iptprojectcepbep.Migrations
                     b.ToTable("friend");
                 });
 
-            modelBuilder.Entity("ipt_project_cepbep.Models.User", b =>
+                modelBuilder.Entity("ipt_project_cepbep.Models.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -104,7 +104,7 @@ namespace iptprojectcepbep.Migrations
                     b.ToTable("user");
                 });
 
-            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas_Model", b =>
+                modelBuilder.Entity("ipt_project_cepbep.Models.Canvas_Model", b =>
                 {
                     b.HasOne("ipt_project_cepbep.Models.User", "User")
                         .WithMany()
@@ -1116,7 +1116,7 @@ namespace iptprojectcepbep.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
+                modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
                 {
                     b.HasOne("ipt_project_cepbep.Models.User", "ToFriend")
                         .WithMany()
@@ -1134,7 +1134,8 @@ namespace iptprojectcepbep.Migrations
 
                     b.Navigation("User");
                 });
-#pragma warning restore 612, 618
+            });
         }
     }
 }
+

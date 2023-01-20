@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           username: result.data?.refreshUser.userResponse?.user.username!,
           role: result.data?.refreshUser.userResponse?.user.role!,
         };
-        // setAccessToken(result.data?.refreshUser.userResponse?.token!);
+        setAccessToken(result.data?.refreshUser.userResponse?.token!);
         setUser(thisUser);
       });
   }, []);

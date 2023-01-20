@@ -7,7 +7,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 
 const uploadLink = createUploadLink({
-  uri: "http://10.0.0.14:5000/graphql",
+  uri: "http://192.168.43.201:5107/graphql",
   credentials: "include",
   fetchOptions: {
     credentials: "include",
@@ -31,7 +31,7 @@ const wsLink =
   typeof window !== "undefined"
     ? new GraphQLWsLink(
         createClient({
-          url: "ws://10.0.0.14:5000/graphql",
+          url: "ws://192.168.43.201:5107/graphql",
         })
       )
     : null;

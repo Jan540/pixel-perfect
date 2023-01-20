@@ -45,7 +45,6 @@ import USERSFILTERED from "../graphql/queries/getUsersFiltered";
 import { TUser } from "../lib/User/user";
 import { render } from "react-dom";
 import { MobileContext } from "../lib/MobileContext";
-import { deleteCookie } from "cookies-next";
 
 const Navbar: FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -53,15 +52,14 @@ const Navbar: FC = () => {
   const { toggleColorMode, colorMode } = useColorMode();
   const router = useRouter();
   const isMobile = useContext(MobileContext);
-  const [logoutUser] = useMutation(LOGOUT);
+  const [logoutUser, { error: logoutError }] = useMutation(LOGOUT);
 
   const logout = async () => {
     setUser({ username: "", email: "", userId: "" });
     try {
       logoutUser();
     } catch (error) {
-      // TODO: URL should be changed to the actual URL of the server
-      deleteCookie("jid", { path: "/", domain: "10.0.0.14" });
+      console.log(logoutError?.message);
     }
     setUser({ username: "", email: "", userId: "", role: "" });
     setAccessToken("");
