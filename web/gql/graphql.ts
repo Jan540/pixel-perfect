@@ -24,17 +24,22 @@ export enum ApplyPolicy {
   BeforeResolver = 'BEFORE_RESOLVER'
 }
 
-export type CanvasSubscription = {
-  __typename?: 'CanvasSubscription';
-  onPixelChange: PixelChangePayload;
-};
-
-export type Canvas_Model = {
-  __typename?: 'Canvas_Model';
-  canvas_id: Scalars['String'];
+export type Canvas = {
+  __typename?: 'Canvas';
+  canvasId: Scalars['String'];
   colors: Scalars['String'];
   user: User;
-  user_id: Scalars['UUID'];
+  userId: Scalars['UUID'];
+};
+
+export type CanvasSubscription = {
+  __typename?: 'CanvasSubscription';
+  onPixelChange?: Maybe<PixelChangePayload>;
+};
+
+
+export type CanvasSubscriptionOnPixelChangeArgs = {
+  canvasId: Scalars['String'];
 };
 
 export type ChangePixelColorInput = {
@@ -48,7 +53,7 @@ export type ChangePixelColorPayload = {
 
 export type CreateCanvasPayload = {
   __typename?: 'CreateCanvasPayload';
-  canvas_Model?: Maybe<Canvas_Model>;
+  canvas?: Maybe<Canvas>;
 };
 
 export type DateTimeOperationFilterInput = {
@@ -160,12 +165,14 @@ export type PageInfo = {
 
 export type PixelChangePayload = {
   __typename?: 'PixelChangePayload';
+  canvasId: Scalars['String'];
   col: Scalars['Int'];
   color: Scalars['String'];
   row: Scalars['Int'];
 };
 
 export type PixelChangePayloadInput = {
+  canvasId: Scalars['String'];
   col: Scalars['Int'];
   color: Scalars['String'];
   row: Scalars['Int'];
@@ -173,7 +180,7 @@ export type PixelChangePayloadInput = {
 
 export type Query = {
   __typename?: 'Query';
-  getCanvas: Array<Canvas_Model>;
+  getCanvas: Array<Canvas>;
   loadCanvas: Scalars['String'];
   me?: Maybe<User>;
   user: Array<User>;
@@ -365,15 +372,22 @@ export type ChangePixelMutationVariables = Exact<{
 
 export type ChangePixelMutation = { __typename?: 'Mutation', changePixelColor: { __typename?: 'ChangePixelColorPayload', boolean?: boolean | null } };
 
-export type OnPixelChangeSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type OnPixelChangeSubscription = { __typename?: 'CanvasSubscription', onPixelChange: { __typename?: 'PixelChangePayload', row: number, col: number, color: string } };
+export type GetUsersQuery = { __typename?: 'Query', users?: { __typename?: 'UsersConnection', nodes?: Array<{ __typename?: 'User', username: string, email: string, role: UserRole }> | null } | null };
+
+export type OnPixelChangeSubscriptionVariables = Exact<{
+  canvasId: Scalars['String'];
+}>;
+
+
+export type OnPixelChangeSubscription = { __typename?: 'CanvasSubscription', onPixelChange?: { __typename?: 'PixelChangePayload', row: number, col: number, color: string } | null };
 
 export type CreateCanvasMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreateCanvasMutation = { __typename?: 'Mutation', createCanvas: { __typename?: 'CreateCanvasPayload', canvas_Model?: { __typename?: 'Canvas_Model', user_id: any, canvas_id: string } | null } };
+export type CreateCanvasMutation = { __typename?: 'Mutation', createCanvas: { __typename?: 'CreateCanvasPayload', canvas?: { __typename?: 'Canvas', userId: any, canvasId: string } | null } };
 
 export type LoginUserMutationVariables = Exact<{
   input: LoginUserInput;
@@ -423,7 +437,7 @@ export type UploadProfilePictureMutation = { __typename?: 'Mutation', uploadProf
 export type GetCanvasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCanvasQuery = { __typename?: 'Query', getCanvas: Array<{ __typename?: 'Canvas_Model', user_id: any, canvas_id: string, colors: string }> };
+export type GetCanvasQuery = { __typename?: 'Query', getCanvas: Array<{ __typename?: 'Canvas', userId: any, canvasId: string, colors: string }> };
 
 export type LoadCanvasQueryVariables = Exact<{
   input: Scalars['String'];
@@ -434,8 +448,9 @@ export type LoadCanvasQuery = { __typename?: 'Query', loadCanvas: string };
 
 
 export const ChangePixelDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"changePixel"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ChangePixelColorInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"changePixelColor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boolean"}}]}}]}}]} as unknown as DocumentNode<ChangePixelMutation, ChangePixelMutationVariables>;
-export const OnPixelChangeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"OnPixelChange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"onPixelChange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"row"}},{"kind":"Field","name":{"kind":"Name","value":"col"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<OnPixelChangeSubscription, OnPixelChangeSubscriptionVariables>;
-export const CreateCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"canvas_Model"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"canvas_id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCanvasMutation, CreateCanvasMutationVariables>;
+export const GetUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"10"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]}}]} as unknown as DocumentNode<GetUsersQuery, GetUsersQueryVariables>;
+export const OnPixelChangeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"OnPixelChange"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"canvasId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"onPixelChange"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"canvasId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"canvasId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"row"}},{"kind":"Field","name":{"kind":"Name","value":"col"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]} as unknown as DocumentNode<OnPixelChangeSubscription, OnPixelChangeSubscriptionVariables>;
+export const CreateCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"canvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"canvasId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCanvasMutation, CreateCanvasMutationVariables>;
 export const LoginUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"loginUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]}}]} as unknown as DocumentNode<LoginUserMutation, LoginUserMutationVariables>;
 export const LogoutUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"logoutUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logoutUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boolean"}}]}}]}}]} as unknown as DocumentNode<LogoutUserMutation, LogoutUserMutationVariables>;
 export const RefreshTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userResponse"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]}}]} as unknown as DocumentNode<RefreshTokenMutation, RefreshTokenMutationVariables>;
@@ -443,5 +458,5 @@ export const RegisterUserDocument = {"kind":"Document","definitions":[{"kind":"O
 export const SaveCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"saveCanvas"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SaveCanvasInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"saveCanvas"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"string"}}]}}]}}]} as unknown as DocumentNode<SaveCanvasMutation, SaveCanvasMutationVariables>;
 export const UpdatePasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updatePassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdatePasswordInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"boolean"}}]}}]}}]} as unknown as DocumentNode<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 export const UploadProfilePictureDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"uploadProfilePICTURE"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UploadProfilePictureInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uploadProfilePicture"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}}]}}]}}]} as unknown as DocumentNode<UploadProfilePictureMutation, UploadProfilePictureMutationVariables>;
-export const GetCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"canvas_id"}},{"kind":"Field","name":{"kind":"Name","value":"colors"}}]}}]}}]} as unknown as DocumentNode<GetCanvasQuery, GetCanvasQueryVariables>;
+export const GetCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCanvas"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"canvasId"}},{"kind":"Field","name":{"kind":"Name","value":"colors"}}]}}]}}]} as unknown as DocumentNode<GetCanvasQuery, GetCanvasQueryVariables>;
 export const LoadCanvasDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"loadCanvas"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loadCanvas"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"canvas_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<LoadCanvasQuery, LoadCanvasQueryVariables>;

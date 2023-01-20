@@ -22,11 +22,7 @@ namespace ipt_project_cepbep.GraphQL.UserCepbep
         [UseFiltering]
         [UseSorting]
         [GraphQLName("users")]
-        public IEnumerable<User> GetUsers(AppDbContext context)
-        {
-            var users = context.Users;
-            return users;
-        }
+        public IEnumerable<User> GetUsers(AppDbContext context) => context.Users;
 
         [GraphQLName("user")]
         public IQueryable<User> GetUserByEmail(AppDbContext context, string email) =>

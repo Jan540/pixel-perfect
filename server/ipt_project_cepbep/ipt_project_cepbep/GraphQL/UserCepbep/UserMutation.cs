@@ -152,7 +152,6 @@ public class UserMutation
         return true;
     }
 
-    [Authorize]
     [GraphQLName("logoutUser")]
     public async Task<bool> LogoutUser(AppDbContext context, ClaimsPrincipal claimsPrincipal, [Service] IHttpContextAccessor httpContextAccessor)
     {
@@ -160,7 +159,7 @@ public class UserMutation
         User? user = await context.Users.FindAsync(userId);
         if (user is null)
             throw new ArgumentException("User not Found!");
-        httpContextAccessor.HttpContext.Response.Cookies.Delete("jid");
+        httpContextAccessor.HttpContext?.Response.Cookies.Delete("jid");
         return true;
     }
 }

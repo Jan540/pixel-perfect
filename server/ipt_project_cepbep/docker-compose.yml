@@ -2,7 +2,7 @@ version: '1'
 
 services:
   db:
-    container_name: postgres
+    container_name: db
     image: postgres:14.1-alpine
     restart: always
     ports:
@@ -14,7 +14,7 @@ services:
     volumes:
       - ./postgres:/var/lib/postgresql/data
     networks:
-      - ipt-net
+      - amongus
 
   api:
     container_name: ipt-cebpeb
@@ -30,11 +30,10 @@ services:
     environment:
       - ConnString=User ID=postgres;Password=postgres;Server=postgres;Port=5432;Database=dharminder;Pooling=true;
     networks:
-      - ipt-net
+      - amongus
 
 networks:
-  ipt-net:
+  amongus:
     driver: bridge
-    external: true
     
     

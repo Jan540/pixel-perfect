@@ -1,31 +1,58 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache, split } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
 import { setContext } from "@apollo/client/link/context";
 import { getAccessToken } from "./User/acesstoken";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { createClient } from "graphql-ws";
 
 const uploadLink = createUploadLink({
-  uri: "http://localhost:5107/graphql",
-  credentials: "include"
+  uri: "http://10.0.0.14:5000/graphql",
+  credentials: "include",
+  fetchOptions: {
+    credentials: "include",
+  },
 });
 
 const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
-
   const token = getAccessToken();
-
-  // return the headers to the context so httpLink can read them
 
   return {
     headers: {
       ...headers,
-
       authorization: token ? `Bearer ${token}` : "",
     },
   };
 });
 
-export const client = new ApolloClient({
-  link: authLink.concat(uploadLink),
+const uploadAuthLink = authLink.concat(uploadLink);
+
+const wsLink =
+  typeof window !== "undefined"
+    ? new GraphQLWsLink(
+        createClient({
+          url: "ws://10.0.0.14:5000/graphql",
+        })
+      )
+    : null;
+
+const link =
+  typeof window !== "undefined" && wsLink != null
+    ? split(
+        ({ query }) => {
+          const definition = getMainDefinition(query);
+          return (
+            definition.kind === "OperationDefinition" &&
+            definition.operation === "subscription"
+          );
+        },
+        wsLink,
+        uploadAuthLink
+      )
+    : uploadAuthLink;
+
+const client = new ApolloClient({
+  link: link,
   cache: new InMemoryCache(),
   credentials: "include",
 });

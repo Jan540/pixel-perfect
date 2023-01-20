@@ -27,6 +27,7 @@ import { UserContext } from "../lib/User/Usercontext";
 import { setAccessToken } from "../lib/User/acesstoken";
 import { useMutation } from "@apollo/client";
 import LOGOUT from "../graphql/mutations/logoutUser";
+import { deleteCookie } from "cookies-next";
 
 const Navbar: FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -38,12 +39,13 @@ const Navbar: FC = () => {
   const [logoutUser] = useMutation(LOGOUT);
 
   const logout = async () => {
-    try {
-      await logoutUser();
-    } catch {
-      return false;
-    }
     setUser({ username: "", email: "", userId: "" });
+    try {
+      logoutUser();
+    } catch (error) {
+      // TODO: URL should be changed to the actual URL of the server
+      deleteCookie("jid", { path: "/", domain: "10.0.0.14" });
+    }
     setAccessToken("");
   };
 
@@ -81,7 +83,6 @@ const Navbar: FC = () => {
                   onClick={() => {
                     router.push("/");
                     logout();
-                    setUsername(user.username);
                     onClose();
                   }}
                   ml={3}

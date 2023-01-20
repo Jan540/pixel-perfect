@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
 import {
-  Text,
   Input,
   Stack,
   Button,
@@ -20,8 +19,10 @@ import {
   TabList,
   TabPanels,
   TabPanel,
+  useToast,
+  ToastId,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import DividerWithText from "./DividerWithText";
 import REGISTER from "../graphql/mutations/registerUser";
 import { setAccessToken } from "../lib/User/acesstoken";
@@ -30,6 +31,8 @@ import { UserContext } from "../lib/User/Usercontext";
 
 const LoginModal = ({ setUsername }: any) => {
   const { user, setUser } = useContext(UserContext);
+  const toast = useToast();
+  const toastIdRef = useRef<ToastId>();
 
   const [
     registerUser,
@@ -64,7 +67,14 @@ const LoginModal = ({ setUsername }: any) => {
     });
     setAccessToken(RegisterData?.registerUser.userResponse?.token!);
     setUsername(user.username);
-  }, [RegisterData, RegisterError, setUser, setUsername, user.username]);
+  }, [
+    LoginData?.loginUser.userResponse?.user.userId,
+    RegisterData,
+    RegisterError,
+    setUser,
+    setUsername,
+    user.username,
+  ]);
 
   const [tabIndex, setTabIndex] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,6 +88,12 @@ const LoginModal = ({ setUsername }: any) => {
   };
 
   const RegisterUser = async () => {
+    toastIdRef.current = toast({
+      title: "Trying to log in...",
+      status: "loading",
+      isClosable: false,
+      variant: "top-accent",
+    });
     try {
       await registerUser({
         variables: {
@@ -90,12 +106,38 @@ const LoginModal = ({ setUsername }: any) => {
         ignoreResults: false,
       });
     } catch {
+      if (toastIdRef.current) {
+        toast.update(toastIdRef.current, {
+          title: "Something went wrong!",
+          description: RegisterError?.message || "Please try again later",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+          variant: "top-accent",
+        });
+      }
       return false;
+    }
+    if (toastIdRef.current) {
+      toast.update(toastIdRef.current, {
+        title: "Logged in!",
+        description: "Welcome back!",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        variant: "top-accent",
+      });
     }
     return true;
   };
 
   const LoginUser = async () => {
+    toastIdRef.current = toast({
+      title: "Trying to log in...",
+      status: "loading",
+      isClosable: false,
+      variant: "top-accent",
+    });
     try {
       await loginUser({
         variables: {
@@ -106,7 +148,27 @@ const LoginModal = ({ setUsername }: any) => {
         },
       });
     } catch {
+      if (toastIdRef.current) {
+        toast.update(toastIdRef.current, {
+          title: "Something went wrong!",
+          description: LoginError?.message || "Please try again later",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+          variant: "top-accent",
+        });
+      }
       return false;
+    }
+    if (toastIdRef.current) {
+      toast.update(toastIdRef.current, {
+        title: "Logged in!",
+        description: "Welcome back!",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        variant: "top-accent",
+      });
     }
     return true;
   };
@@ -129,18 +191,6 @@ const LoginModal = ({ setUsername }: any) => {
             <TabPanels>
               <TabPanel>
                 <ModalBody>
-                  {LoginError && (
-                    <Text color={"red"}>{LoginError.message}</Text>
-                  )}
-                  {LoginLoading && <Text>Loading...</Text>}
-                  <Text
-                    color="white"
-                    fontSize="2 xl"
-                    paddingBottom={6}
-                    paddingTop={6}
-                  >
-                    Log into your Account
-                  </Text>
                   <Stack>
                     <FormControl id="email">
                       <FormLabel mb="0.5">Email</FormLabel>
@@ -148,6 +198,9 @@ const LoginModal = ({ setUsername }: any) => {
                         placeholder="XxX_BingBong_XxX"
                         type="text"
                         value={emailValue}
+                        disabled={LoginLoading}
+                        isInvalid={LoginError ? true : false}
+                        variant="filled"
                         onChange={(e) => setEmailValue(e.target.value)}
                       />
                     </FormControl>
@@ -157,6 +210,9 @@ const LoginModal = ({ setUsername }: any) => {
                         placeholder="VerySecure!"
                         type="password"
                         value={passwordValue}
+                        disabled={LoginLoading}
+                        isInvalid={LoginError ? true : false}
+                        variant="filled"
                         onChange={(e) => setPasswordValue(e.target.value)}
                       />
                     </FormControl>
@@ -166,7 +222,7 @@ const LoginModal = ({ setUsername }: any) => {
                         align={"start"}
                         justify={"space-between"}
                       >
-                        <Checkbox>Remember me</Checkbox>
+                        <Checkbox disabled={LoginLoading}>Remember me</Checkbox>
                         <Link color={"blue.400"}>Forgot password?</Link>
                       </Stack>
                       <Stack>
@@ -179,6 +235,7 @@ const LoginModal = ({ setUsername }: any) => {
                           onClick={async () => {
                             await LoginUser();
                           }}
+                          isLoading={LoginLoading}
                         >
                           Log in
                         </Button>
@@ -191,18 +248,6 @@ const LoginModal = ({ setUsername }: any) => {
               </TabPanel>
               <TabPanel>
                 <ModalBody>
-                  {RegisterError && (
-                    <Text color={"red"}>{RegisterError.message}</Text>
-                  )}
-                  {RegisterLoading && <Text>Loading...</Text>}
-                  <Text
-                    color="white"
-                    fontSize="2 xl"
-                    paddingBottom={6}
-                    paddingTop={6}
-                  >
-                    Sign up for an Account
-                  </Text>
                   <Stack>
                     <FormControl id="email">
                       <FormLabel mb="0.5">Email</FormLabel>
@@ -210,6 +255,9 @@ const LoginModal = ({ setUsername }: any) => {
                         placeholder="amongus@imposter.sus"
                         type="email"
                         value={emailValue}
+                        disabled={RegisterLoading}
+                        variant="filled"
+                        isInvalid={RegisterError ? true : false}
                         onChange={(e) => setEmailValue(e.target.value)}
                       />
                     </FormControl>
@@ -219,6 +267,9 @@ const LoginModal = ({ setUsername }: any) => {
                         placeholder="XxX_BingBong_XxX"
                         type="username"
                         value={usernameValue}
+                        disabled={RegisterLoading}
+                        variant="filled"
+                        isInvalid={RegisterError ? true : false}
                         onChange={(e) => setUsernameValue(e.target.value)}
                       />
                     </FormControl>
@@ -229,6 +280,9 @@ const LoginModal = ({ setUsername }: any) => {
                         placeholder="VerySecure!"
                         type="password"
                         value={passwordValue}
+                        disabled={RegisterLoading}
+                        variant="filled"
+                        isInvalid={RegisterError ? true : false}
                         onChange={(e) => setPasswordValue(e.target.value)}
                       />
                     </FormControl>
@@ -238,6 +292,7 @@ const LoginModal = ({ setUsername }: any) => {
                         <Button
                           bg={"blue.400"}
                           color={"white"}
+                          isLoading={RegisterLoading}
                           _hover={{
                             bg: "blue.500",
                           }}

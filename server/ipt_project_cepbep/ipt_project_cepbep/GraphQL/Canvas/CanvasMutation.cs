@@ -20,15 +20,15 @@ public class CanvasMutation
     // TODO: ERROR HANDLING
     [Authorize]
     [GraphQLName("createCanvas")]
-    public async Task<Canvas_Model> CreateCanvas(AppDbContext context ,ClaimsPrincipal claimsPrincipal)
+    public async Task<Models.Canvas> CreateCanvas(AppDbContext context ,ClaimsPrincipal claimsPrincipal)
     {
         Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
         var user = await context.Users.FindAsync(userId);
-        var canvas_id = Randomizer_AmongUs.RandomString(14);
-        Canvas_Model canvas = new Canvas_Model()
+        var canvasId = Randomizer_AmongUs.RandomString(14);
+        Models.Canvas canvas = new Models.Canvas()
         {
-            User_id = userId,
-            Canvas_id = canvas_id,
+            UserId = userId,
+            CanvasId = canvasId,
             Colors = ""
         };
         context.Canvases.Add(canvas);

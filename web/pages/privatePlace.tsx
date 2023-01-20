@@ -1,12 +1,18 @@
 import { NextPage } from "next";
 import { Flex, Text } from "@chakra-ui/react";
+import { GET_USERS } from "../graphql/code/getUsers";
+import { useQuery } from "@apollo/client";
 
-const privatePlace: NextPage = () => {
+const PrivatePlace: NextPage = () => {
+  const { data, loading, error } = useQuery(GET_USERS);
   return (
-    <>
-      <Text size={"xl"}>AMOGUS</Text>
-    </>
+    <Flex>
+      <Text>Private Place</Text>
+      {loading && <Text>Loading...</Text>}
+      {error && <Text>Error: {error.message}</Text>}
+      {data && <Text>{JSON.stringify(data)}</Text>}
+    </Flex>
   );
 };
 
-export default privatePlace;
+export default PrivatePlace;

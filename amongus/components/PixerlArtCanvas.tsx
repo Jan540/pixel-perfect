@@ -16,10 +16,13 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
       if (!onChangeData.data.data) return;
       const { onPixelChange } = onChangeData.data.data;
       drawPixelChange(
-        onPixelChange.row,
-        onPixelChange.col,
-        onPixelChange.color
+        onPixelChange!.row,
+        onPixelChange!.col,
+        onPixelChange!.color
       );
+    },
+    variables: {
+      canvasId: "asd",
     },
   });
   const [submitChange, { loading, error: submitError }] =
@@ -49,7 +52,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
   };
 
   const saveGrid = () => {
-    const mainDiv = document.getElementById('pixel-grid') as HTMLDivElement;
+    const mainDiv = document.getElementById("pixel-grid") as HTMLDivElement;
     const rows = mainDiv.children;
 
     let grid: string[][] = [];
@@ -67,29 +70,31 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
     setSerializedData(JSON.stringify(grid));
   };
 
-    const loadGrid = () => {
-      console.log(serializedData);
-      // convert the colors string into a twodimensional-array with the type string
-      const previousGrid: PixelGrid = [];
-      for (let i = 0; i < width!; i++) {
-        for (let j = 0; j < height!; j++) {
-          const pixel = document.getElementById(`pixel-${i}-${j}`) as HTMLDivElement;
-          console.log(pixel);
-          console.log(serializedData[i][j]);
-          pixel.style.backgroundColor = serializedData[i][j];
-          console.log('🚀🚀🚀🚀🚀');
-        }
+  const loadGrid = () => {
+    console.log(serializedData);
+    // convert the colors string into a twodimensional-array with the type string
+    const previousGrid: PixelGrid = [];
+    for (let i = 0; i < width!; i++) {
+      for (let j = 0; j < height!; j++) {
+        const pixel = document.getElementById(
+          `pixel-${i}-${j}`
+        ) as HTMLDivElement;
+        console.log(pixel);
+        console.log(serializedData[i][j]);
+        pixel.style.backgroundColor = serializedData[i][j];
+        console.log("🚀🚀🚀🚀🚀");
       }
-      for (let i = 0; i < width!; i++) {
-        previousGrid.push([]);
-        for (let j = 0; j < height!; j++) {
-          previousGrid[i].push({ color: serializedData[i][j] });
-          console.log(previousGrid[i][j].color);
-        }
+    }
+    for (let i = 0; i < width!; i++) {
+      previousGrid.push([]);
+      for (let j = 0; j < height!; j++) {
+        previousGrid[i].push({ color: serializedData[i][j] });
+        console.log(previousGrid[i][j].color);
       }
-      setGrid(previousGrid);
-      console.log('grid loaded');
-    };
+    }
+    setGrid(previousGrid);
+    console.log("grid loaded");
+  };
 
   const handleColorChange = (newColor: ColorResult) => {
     setColor(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
@@ -120,6 +125,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
             row,
             col,
             color,
+            canvasId: "asd",
           },
         },
       },
@@ -154,14 +160,14 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height }) => {
       }}
     >
       <SwatchesPicker onChangeComplete={handleColorChange} />
-      {/* <button
+      <button
         onClick={(e) => {
           createGrid();
           e.currentTarget.style.display = "none";
         }}
       >
         Create Grid
-
+      </button>
       <div onMouseUp={handleMouseUp} onMouseDown={handleMouseDown}>
         {grid.map((row, i) => (
           <div key={i} style={{ display: "flex" }}>

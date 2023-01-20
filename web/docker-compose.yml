@@ -1,0 +1,17 @@
+version: '1'
+
+services:
+  next-app:
+    container_name: ipt-web
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - amongus
+
+networks:
+  amongus:
+    external: true
+    

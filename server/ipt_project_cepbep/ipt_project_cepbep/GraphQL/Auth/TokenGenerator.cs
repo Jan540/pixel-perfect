@@ -22,7 +22,7 @@ public static class TokenGenerator
     private static readonly string AccessKey = Configuration["Jwt:AccessKey"] ?? throw new ConfigurationErrorsException();
     private static readonly string RefreshKey = Configuration["Jwt:RefreshKey"] ?? throw new ConfigurationErrorsException();
     
-    private static readonly int AccessTokenExpiration = 15; // minutes
+    private static readonly int AccessTokenExpiration = 500; // minutes
     private static readonly int RefreshTokenExpiration = 365; // days
 
     /// <summary>

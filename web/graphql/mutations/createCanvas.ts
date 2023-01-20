@@ -1,11 +1,11 @@
-import { graphql } from '../../gql';
+import { graphql } from "../../gql";
 
 const CREATE_CANVAS = graphql(`
   mutation createCanvas {
     createCanvas {
-      canvas_Model {
-        user_id
-        canvas_id
+      canvas {
+        userId
+        canvasId
       }
     }
   }

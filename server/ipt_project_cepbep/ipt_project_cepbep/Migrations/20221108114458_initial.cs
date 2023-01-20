@@ -40,9 +40,33 @@ namespace iptprojectcepbep.Migrations
                 column: "Username",
                 unique: true);
             
+            migrationBuilder.CreateTable(
+                name: "canvas",
+                columns: table => new
+                {
+                    Canvasid = table.Column<string>(name: "CanvasId", type: "text", nullable: false),
+                    Userid = table.Column<Guid>(name: "UserId", type: "uuid", nullable: false),
+                    Colors = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_canvas", x => x.Canvasid);
+                    table.ForeignKey(
+                        name: "FK_canvas_user_UserId",
+                        column: x => x.Userid,
+                        principalTable: "user",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_canvas_UserId",
+                table: "canvas",
+                column: "UserId");
+            
             migrationBuilder.Sql(
                 @"
-                CREATE FUNCTION ""User_Update_Timestamp_Function""() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
+                CREATE FUNCTION ""User_Update_Timestamp_Function1""() RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
                 BEGIN
                     NEW.""UpdatedAt"" := now();
                     RETURN NEW;
@@ -53,7 +77,7 @@ namespace iptprojectcepbep.Migrations
                     BEFORE INSERT OR UPDATE
                     ON ""user""
                     FOR EACH ROW
-                    EXECUTE PROCEDURE ""User_Update_Timestamp_Function""();
+                    EXECUTE PROCEDURE ""User_Update_Timestamp_Function1""();
                 "
             );
         }

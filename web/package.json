@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",
@@ -15,6 +16,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "apollo-upload-client": "^17.0.0",
+    "cookies-next": "^2.1.1",
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "graphql": "^16.6.0",
@@ -25,7 +27,8 @@
     "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
     "styled-components": "^5.3.6",
-    "typewriter-effect": "^2.19.0"
+    "typewriter-effect": "^2.19.0",
+    "ws": "^8.12.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.14.1",

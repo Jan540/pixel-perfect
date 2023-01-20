@@ -14,8 +14,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation changePixel($input: ChangePixelColorInput!) {\n    changePixelColor(input: $input) {\n      boolean\n    }\n  }\n": types.ChangePixelDocument,
-    "\n  subscription OnPixelChange {\n    onPixelChange {\n      row\n      col\n      color\n    }\n  }\n": types.OnPixelChangeDocument,
-    "\n  mutation createCanvas {\n    createCanvas {\n      canvas_Model {\n        user_id\n        canvas_id\n      }\n    }\n  }\n": types.CreateCanvasDocument,
+    "\n  query getUsers {\n    users(first: 10) {\n      nodes {\n        username\n        email\n        role\n      }\n    }\n  }\n": types.GetUsersDocument,
+    "\n  subscription OnPixelChange($canvasId: String!) {\n    onPixelChange(canvasId: $canvasId) {\n      row\n      col\n      color\n    }\n  }\n": types.OnPixelChangeDocument,
+    "\n  mutation createCanvas {\n    createCanvas {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n": types.CreateCanvasDocument,
     "\n  mutation loginUser($input: LoginUserInput!) {\n    loginUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n          userId\n        }\n        token\n      }\n    }\n  }\n": types.LoginUserDocument,
     "\n  mutation logoutUser{\n    logoutUser {\n      boolean\n    }\n  }\n": types.LogoutUserDocument,
     "\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n        }\n        token\n      }\n    }\n  }\n": types.RefreshTokenDocument,
@@ -23,7 +24,7 @@ const documents = {
     "\n    mutation saveCanvas($input: SaveCanvasInput!) {\n        saveCanvas(input: $input){\n            string\n        }\n    }\n": types.SaveCanvasDocument,
     "\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n": types.UpdatePasswordDocument,
     "\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      user {\n        userId\n      }\n    }\n  }\n": types.UploadProfilePictureDocument,
-    "\n  query getCanvas{\n    getCanvas {\n        user_id\n        canvas_id\n        colors\n    }\n  }\n": types.GetCanvasDocument,
+    "\n  query getCanvas {\n    getCanvas {\n      userId\n      canvasId\n      colors\n    }\n  }\n": types.GetCanvasDocument,
     "\n    query loadCanvas($input: String!) {\n        loadCanvas(canvas_id: $input)\n    }\n": types.LoadCanvasDocument,
 };
 
@@ -34,11 +35,15 @@ export function graphql(source: "\n  mutation changePixel($input: ChangePixelCol
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  subscription OnPixelChange {\n    onPixelChange {\n      row\n      col\n      color\n    }\n  }\n"): (typeof documents)["\n  subscription OnPixelChange {\n    onPixelChange {\n      row\n      col\n      color\n    }\n  }\n"];
+export function graphql(source: "\n  query getUsers {\n    users(first: 10) {\n      nodes {\n        username\n        email\n        role\n      }\n    }\n  }\n"): (typeof documents)["\n  query getUsers {\n    users(first: 10) {\n      nodes {\n        username\n        email\n        role\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createCanvas {\n    createCanvas {\n      canvas_Model {\n        user_id\n        canvas_id\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createCanvas {\n    createCanvas {\n      canvas_Model {\n        user_id\n        canvas_id\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  subscription OnPixelChange($canvasId: String!) {\n    onPixelChange(canvasId: $canvasId) {\n      row\n      col\n      color\n    }\n  }\n"): (typeof documents)["\n  subscription OnPixelChange($canvasId: String!) {\n    onPixelChange(canvasId: $canvasId) {\n      row\n      col\n      color\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation createCanvas {\n    createCanvas {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createCanvas {\n    createCanvas {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -70,7 +75,7 @@ export function graphql(source: "\n  mutation uploadProfilePICTURE($input: Uploa
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getCanvas{\n    getCanvas {\n        user_id\n        canvas_id\n        colors\n    }\n  }\n"): (typeof documents)["\n  query getCanvas{\n    getCanvas {\n        user_id\n        canvas_id\n        colors\n    }\n  }\n"];
+export function graphql(source: "\n  query getCanvas {\n    getCanvas {\n      userId\n      canvasId\n      colors\n    }\n  }\n"): (typeof documents)["\n  query getCanvas {\n    getCanvas {\n      userId\n      canvasId\n      colors\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

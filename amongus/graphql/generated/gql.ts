@@ -14,9 +14,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation changePixel($input: ChangePixelColorInput!) {\n    changePixelColor(input: $input) {\n      boolean\n    }\n  }\n": types.ChangePixelDocument,
-    "\n  query GetCookie {\n    cookie\n  }\n": types.GetCookieDocument,
     "\n  mutation loginUser($input: LoginUserInput!) {\n    loginUser(input: $input) {\n      userResponse {\n        user {\n          username\n          userId\n        }\n        token\n      }\n    }\n  }\n": types.LoginUserDocument,
-    "\n  subscription OnPixelChange {\n    onPixelChange {\n      row\n      col\n      color\n    }\n  }\n": types.OnPixelChangeDocument,
+    "\n  subscription OnPixelChange($canvasId: String!) {\n    onPixelChange(canvasId: $canvasId) {\n      row\n      col\n      color\n    }\n  }\n": types.OnPixelChangeDocument,
     "\n  query GetUsers($first: Int!) {\n    users(first: $first) {\n      nodes {\n        username\n      }\n    } \n  }\n": types.GetUsersDocument,
 };
 
@@ -27,15 +26,11 @@ export function graphql(source: "\n  mutation changePixel($input: ChangePixelCol
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetCookie {\n    cookie\n  }\n"): (typeof documents)["\n  query GetCookie {\n    cookie\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "\n  mutation loginUser($input: LoginUserInput!) {\n    loginUser(input: $input) {\n      userResponse {\n        user {\n          username\n          userId\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation loginUser($input: LoginUserInput!) {\n    loginUser(input: $input) {\n      userResponse {\n        user {\n          username\n          userId\n        }\n        token\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  subscription OnPixelChange {\n    onPixelChange {\n      row\n      col\n      color\n    }\n  }\n"): (typeof documents)["\n  subscription OnPixelChange {\n    onPixelChange {\n      row\n      col\n      color\n    }\n  }\n"];
+export function graphql(source: "\n  subscription OnPixelChange($canvasId: String!) {\n    onPixelChange(canvasId: $canvasId) {\n      row\n      col\n      color\n    }\n  }\n"): (typeof documents)["\n  subscription OnPixelChange($canvasId: String!) {\n    onPixelChange(canvasId: $canvasId) {\n      row\n      col\n      color\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

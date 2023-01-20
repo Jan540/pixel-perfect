@@ -1,19 +1,27 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { Flex, Text, Container, VStack, Button, Link, HStack } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import { useEffect, useState } from 'react';
-import CREATE_CANVAS from '../../graphql/mutations/createCanvas';
-import { useRouter } from 'next/router';
-import GET_CANVAS from '../../graphql/query/getCanvas';
-import { TCanvas } from '../../lib/Canvas/canvas';
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  Flex,
+  Text,
+  Container,
+  VStack,
+  Button,
+  Link,
+  HStack,
+} from "@chakra-ui/react";
+import { NextPage } from "next";
+import { useEffect, useState } from "react";
+import CREATE_CANVAS from "../../graphql/mutations/createCanvas";
+import { useRouter } from "next/router";
+import GET_CANVAS from "../../graphql/query/getCanvas";
+import { TCanvas } from "../../lib/Canvas/canvas";
 
-import { getAccessToken } from '../../lib/User/acesstoken';
+import { getAccessToken } from "../../lib/User/acesstoken";
 
-const canvasCollection: NextPage = () => {
+const CanvasCollection: NextPage = () => {
   const router = useRouter();
 
   const [createCanvas, { data, error, loading }] = useMutation(CREATE_CANVAS);
-  const [canvas_id, setCanvas_id] = useState('');
+  const [canvas_id, setCanvas_id] = useState("");
   const {
     data: canvasData,
     error: canvasError,
@@ -21,7 +29,7 @@ const canvasCollection: NextPage = () => {
     refetch: canvasRefetch,
   } = useQuery(GET_CANVAS);
   const [canvases, setCanvases] = useState<TCanvas[]>([]);
-  const [oldToken, setOldToken] = useState<string | null>(null);
+  const [oldToken, setOldToken] = useState("");
 
   const createNewCanvas = async () => {
     try {
@@ -35,20 +43,12 @@ const canvasCollection: NextPage = () => {
   };
 
   useEffect(() => {
-    if (oldToken === getAccessToken()) {
-      return;
-    }
-    setOldToken(getAccessToken());
-    canvasRefetch();
-  }, [getAccessToken()]);
-
-  useEffect(() => {
     if (!data) {
       return;
     }
-    setCanvas_id(data.createCanvas.canvas_Model?.canvas_id!);
-    router.push('canvasCollection/' + data.createCanvas.canvas_Model?.canvas_id!);
-  }, [data]);
+    setCanvas_id(data.createCanvas.canvas?.canvasId!);
+    router.push("canvasCollection/" + data.createCanvas.canvas?.canvasId!);
+  }, [data, router]);
 
   useEffect(() => {
     if (!canvasData) {
@@ -59,35 +59,39 @@ const canvasCollection: NextPage = () => {
 
   return (
     <>
-      <Flex pt={'150px'} pl={'150px'}>
+      <Flex pt={"150px"} pl={"150px"}>
         <VStack>
           <>
-            <Text fontSize={'5xl'}>Canvas Collection</Text>
+            <Text fontSize={"5xl"}>Canvas Collection</Text>
             {
               /* show all canvases as a container */
               canvases.map((canvas) => {
                 return (
-                  <Button
-                    onClick={() => {router.push('canvasCollection/' + canvas.canvas_id)}}
-                    bgColor={'grey.500'}
-                    size='lg'
-                    width='300px'
-                    height='50px'
+                  <Link
+                    key={canvas.canvasId}
+                    href={"canvasCollection/" + canvas.canvasId}
                   >
-                    <Text>{canvas.canvas_id}</Text>
-                  </Button>
+                    <Button
+                      bgColor={"grey.500"}
+                      size="lg"
+                      width="300px"
+                      height="50px"
+                    >
+                      <Text>{canvas.canvasId}</Text>
+                    </Button>
+                  </Link>
                 );
               })
             }
             <Container>
               <Button
                 onClick={createNewCanvas}
-                bgColor={'grey.500'}
-                size='lg'
-                width='300px'
-                height='300px'
+                bgColor={"grey.500"}
+                size="lg"
+                width="300px"
+                height="300px"
               >
-                <Text fontSize={'5xl'}>+</Text>
+                <Text fontSize={"5xl"}>+</Text>
               </Button>
             </Container>
           </>
@@ -97,4 +101,4 @@ const canvasCollection: NextPage = () => {
   );
 };
 
-export default canvasCollection;
+export default CanvasCollection;

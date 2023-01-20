@@ -1,11 +1,11 @@
-import { graphql } from '../../gql';
+import { graphql } from "../../gql";
 
 const GET_CANVAS = graphql(`
-  query getCanvas{
+  query getCanvas {
     getCanvas {
-        user_id
-        canvas_id
-        colors
+      userId
+      canvasId
+      colors
     }
   }
 `);

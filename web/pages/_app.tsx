@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 import { ApolloProvider } from "@apollo/client";
-import { client } from "../lib/apolloClient";
+import client from "../lib/apolloClient";
 import { UserContext } from "../lib/User/Usercontext";
 import { useEffect, useMemo, useState } from "react";
 import REFRSH from "../graphql/mutations/refreshUser";
@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           userId: result.data?.refreshUser.userResponse?.user.userId!,
           username: result.data?.refreshUser.userResponse?.user.username!,
         };
-        setAccessToken(result.data?.refreshUser.userResponse?.token!);
+        // setAccessToken(result.data?.refreshUser.userResponse?.token!);
         setUser(thisUser);
       });
   }, []);
