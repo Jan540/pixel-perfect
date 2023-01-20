@@ -19,6 +19,15 @@ export type Scalars = {
   Upload: any;
 };
 
+export type AddFriendInput = {
+  userId: Scalars['String'];
+};
+
+export type AddFriendPayload = {
+  __typename?: 'AddFriendPayload';
+  user?: Maybe<User>;
+};
+
 export enum ApplyPolicy {
   AfterResolver = 'AFTER_RESOLVER',
   BeforeResolver = 'BEFORE_RESOLVER'
@@ -78,6 +87,26 @@ export type DeleteUserInput = {
 export type DeleteUserPayload = {
   __typename?: 'DeleteUserPayload';
   user?: Maybe<User>;
+};
+
+/** A connection to a list of items. */
+export type GetFriendsConnection = {
+  __typename?: 'GetFriendsConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<GetFriendsEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<User>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type GetFriendsEdge = {
+  __typename?: 'GetFriendsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  node: User;
 };
 
 export type LoginUserInput = {
@@ -251,6 +280,15 @@ export type StringOperationFilterInput = {
   nstartsWith?: InputMaybe<Scalars['String']>;
   or?: InputMaybe<Array<StringOperationFilterInput>>;
   startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateEmailInput = {
+  newEmail: Scalars['String'];
+};
+
+export type UpdateEmailPayload = {
+  __typename?: 'UpdateEmailPayload';
+  boolean?: Maybe<Scalars['Boolean']>;
 };
 
 export type UpdatePasswordInput = {

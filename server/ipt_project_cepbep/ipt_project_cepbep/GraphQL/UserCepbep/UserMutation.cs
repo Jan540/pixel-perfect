@@ -1,7 +1,7 @@
 using System.Data;
-using System.Diagnostics;
 using System.Security.Authentication;
 using System.Security.Claims;
+using Bogus;
 using HotChocolate.AspNetCore.Authorization;
 using ipt_project_cepbep.Config;
 using ipt_project_cepbep.Data;
@@ -121,9 +121,12 @@ public class UserMutation
 
         Guid userid = Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier));
         User? user = await context.Users.FirstOrDefaultAsync(u => u.UserId == userid);
-        
+
         if (user is null)
-            throw new AuthenticationException("User does not exist!");
+        {
+            httpContextAccessor.HttpContext?.Response.Cookies.Delete("jid");
+            return new UserResponse(new User("", "", "", UserRole.User), "");
+        }
         
         return new UserResponse(user, TokenGenerator.GenAccessToken(user));
     }
@@ -152,6 +155,25 @@ public class UserMutation
         return true;
     }
 
+    [Authorize]
+    public async Task<bool> UpdateEmail(AppDbContext context, ClaimsPrincipal claimsPrincipal, string newEmail)
+    {
+        if (!newEmail.IsValidEmail())
+            throw new ArgumentException("Invalid Email");
+        
+        Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        User? user = await context.Users.FindAsync(userId);
+        
+        if (user is null)
+            throw new ArgumentException("User not Found!");
+        
+        user.Email = newEmail;
+        await context.SaveChangesAsync();
+        return true;
+    }
+    
+    [Authorize]
     [GraphQLName("logoutUser")]
     public async Task<bool> LogoutUser(AppDbContext context, ClaimsPrincipal claimsPrincipal, [Service] IHttpContextAccessor httpContextAccessor)
     {
@@ -160,6 +182,51 @@ public class UserMutation
         if (user is null)
             throw new ArgumentException("User not Found!");
         httpContextAccessor.HttpContext?.Response.Cookies.Delete("jid");
+        return true;
+    }
+    
+    [Authorize]
+    [GraphQLName("addFriend")]
+    public async Task<User> AddFriend(AppDbContext context, ClaimsPrincipal claimsPrincipal, string userId)
+    {
+        Guid id = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+        User? user = await context.Users.FindAsync(id);
+        if (user is null)
+            throw new UnauthorizedAccessException("User not authorized");
+
+        User? toFriend = await context.Users.FindAsync(Guid.Parse(userId));
+        if (toFriend is null)
+            throw new ArgumentException("User not found");
+        
+        var allFriends = from user1 in context.Users
+            join friend in context.Friends on user1.UserId equals friend.UserId
+            join real in context.Users on friend.FriendId equals real.UserId
+            where friend.UserId == id
+            select real;
+
+        bool isInValid = allFriends.Any(f => f.UserId == toFriend.UserId);
+        if(isInValid)
+            throw new BogusException("Bogus Binted: Already befriended");
+        
+        context.Friends.Add(new Friend()
+        {
+            UserId = user.UserId,
+            FriendId = toFriend.UserId
+        });
+        
+        await context.SaveChangesAsync();
+        return toFriend;
+    }
+    
+    [Authorize]
+    [GraphQLName("removeFriend")]
+    public async Task<bool> RemoveFriend(AppDbContext context, ClaimsPrincipal claimsPrincipal, string friend_Id)
+    {
+        Friend? friend = await context.Friends.FirstOrDefaultAsync(f => f.FriendId == Guid.Parse(friend_Id) && f.UserId == Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier)));
+        if (friend is null)
+            throw new ArgumentException("Not befriended with user");
+        context.Friends.Remove(friend);
+        await context.SaveChangesAsync();
         return true;
     }
 }

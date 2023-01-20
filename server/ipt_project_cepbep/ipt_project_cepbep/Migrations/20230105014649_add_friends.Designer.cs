@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ipt_project_cepbep.Data;
@@ -11,9 +12,11 @@ using ipt_project_cepbep.Data;
 namespace iptprojectcepbep.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230105014649_add_friends")]
+    partial class addfriends
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,24 +25,6 @@ namespace iptprojectcepbep.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas_Model", b =>
-                {
-                    b.Property<string>("Canvas_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Colors")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("User_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Canvas_id");
-
-                    b.HasIndex("User_id");
-
-                    b.ToTable("canvas");
             modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
                 {
                     b.Property<Guid>("FriendId")
@@ -102,17 +87,7 @@ namespace iptprojectcepbep.Migrations
                         .IsUnique();
 
                     b.ToTable("user");
-                });
 
-            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas_Model", b =>
-                {
-                    b.HasOne("ipt_project_cepbep.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                     b.HasData(
                         new
                         {

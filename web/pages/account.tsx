@@ -10,100 +10,214 @@ import {
   Input,
   Stack,
   useToast,
+  border,
+  Tooltip,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { useContext, useState } from "react";
-import UPDATEPASSWORD from "../graphql/mutations/updatePassword";
+import { FC, useContext, useEffect, useRef, useState } from "react";
+import PasswordDrawer from "../components/UpdatePasswordDrawer";
+import UPDATEEMAIL from "../graphql/mutations/updateEmail";
+import UPLOAD_PRFPIC from "../graphql/mutations/uploadProfilePicture";
 import { UserContext } from "../lib/User/Usercontext";
 
 const Account: NextPage = () => {
-  const [updatePassword, { data, error, loading }] =
-    useMutation(UPDATEPASSWORD);
+  const [
+    updateEmail,
+    { data: dataEmail, error: errorEmail, loading: loadingEmail },
+  ] = useMutation(UPDATEEMAIL);
+
+  let fileRef: HTMLInputElement | null = null;
 
   const { user, setUser } = useContext(UserContext);
-  const [name, setName] = useState(false);
-  const [inputOldPassword, setInputOldPassword] = useState("");
-  const [inputNewPassword, setInputNewPassword] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
+  const [editAccount, setEditAccount] = useState(false);
   const toast = useToast();
 
-  const GetPassword = async () => {
-    toast.closeAll();
-    try {
-      await updatePassword({
-        variables: {
-          input: {
-            oldPassword: inputOldPassword,
-            newPassword: inputNewPassword,
-          },
-        },
-      });
-    } catch {
+  useEffect(() => {
+    setInputEmail(user.email);
+  }, [user]);
+
+  const ChangesMade = () => {
+    if (inputEmail === user.email && fileRef?.value === "") {
       toast({
-        title: `${error?.message}`,
-        description: "nice try!",
-        status: "error",
+        title: `Everything is the same`,
+        description: "no changes made",
+        status: "info",
         isClosable: true,
         position: "bottom",
       });
       return false;
     }
+    return true;
+  };
+
+  const UpdateEmail = async () => {
+    toast.closeAll();
+    try {
+      await updateEmail({
+        variables: {
+          input: {
+            newEmail: inputEmail,
+          },
+        },
+      });
+    } catch {
+      return false;
+    }
     toast({
-      title: `Password changed`,
+      title: ` Account Updated`,
       description: "Success!",
       status: "success",
       isClosable: true,
       position: "bottom",
     });
+    setEditAccount(!editAccount);
   };
+  const [
+    uploadProfilePicture,
+    { data: uploadData, error: uploadError, loading: uploadLoading },
+  ] = useMutation(UPLOAD_PRFPIC);
+
+  const UploadProfilePictureHandler = async ({
+    target: {
+      validity,
+      files: [file],
+    },
+  }: any) => {
+    try {
+      if (validity.valid) {
+        await uploadProfilePicture({
+          variables: {
+            input: { file },
+          },
+        });
+      }
+    } catch {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!uploadError) return;
+    toast.closeAll();
+    fileRef!.value = "";
+    toast({
+      title: `${uploadError?.message}`,
+      description: "Ups!",
+      status: "error",
+      isClosable: true,
+      position: "bottom",
+    });
+  }, [uploadError]);
+
+  useEffect(() => {
+    if (!errorEmail) return;
+    toast.closeAll();
+    setInputEmail(user.email);
+    toast({
+      title: `${errorEmail?.message}`,
+      description: "nice try!",
+      status: "error",
+      isClosable: true,
+      position: "bottom",
+    });
+  }, [errorEmail]);
 
   return (
     <>
       <Flex
         height="100vh"
-        width={"100wv"}
+        width="100wv"
         alignItems="start"
         justifyContent="center"
       >
         <VStack width={"25"} mt={40}>
-          <Avatar
-            size="2xl"
-            name={user.username}
-            src="https://bit.ly/code-beast"
-            _hover={{
-              size: "xl",
-            }}
+          <input
+            type="file"
+            id="file"
+            ref={(ref) => (fileRef = ref)}
+            style={{ display: "none" }}
+            onChange={UploadProfilePictureHandler}
           />
+
+          <Tooltip
+            label="Change Profile Picture"
+            aria-label="tooltip"
+            placement="right"
+            hasArrow
+            isDisabled={!editAccount}
+          >
+            <Avatar
+              onClick={() => {
+                editAccount ? fileRef!.click() : null;
+              }}
+              size="2xl"
+              name={user.username}
+              src="https://bit.ly/code-beast"
+              _hover={
+                editAccount
+                  ? {
+                      border: "2px",
+                      borderColor: "green.500",
+                    }
+                  : {
+                      border: "0px",
+                    }
+              }
+            />
+          </Tooltip>
           <Text fontSize="3xl" mb={10}>
             {user.username}
           </Text>
           <Stack alignContent={"center"}>
-            <HStack></HStack>
             <Divider />
             <HStack>
-              <Text color={"gray"}>Email: </Text>
-              <Input variant={"filled"} isReadOnly value={user.email} />
+              <Input
+                isInvalid={errorEmail ? true : false}
+                placeholder="example@email.com"
+                variant="filled"
+                readOnly={!editAccount}
+                value={inputEmail}
+                defaultValue={user.email}
+                onChange={(e) => setInputEmail(e.target.value)}
+              />
             </HStack>
             <Divider />
-            <Input
-              isInvalid={error ? true : false}
-              isDisabled={loading}
-              type="password"
-              variant="filled"
-              placeholder="Old Password"
-              onChange={(e) => setInputOldPassword(e.target.value)}
-            />
-            <Input
-              isInvalid={error ? true : false}
-              isDisabled={loading}
-              type="password"
-              variant="filled"
-              placeholder="New Password"
-              value={inputNewPassword}
-              onChange={(e) => setInputNewPassword(e.target.value)}
-            />
-            <Button onClick={GetPassword} isLoading={loading}>
-              Change Password
-            </Button>
+            {editAccount ? (
+              <>
+                <PasswordDrawer />
+                <Button
+                  onClick={() => {
+                    setInputEmail(user.email);
+                    setEditAccount(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  key={"Save Acc"}
+                  colorScheme="green"
+                  onClick={() => {
+                    ChangesMade() ? UpdateEmail() : null;
+                    fileRef!.value = "";
+                    setEditAccount(false);
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </>
+            ) : (
+              <Button
+                key={"Edit Acc"}
+                colorScheme="green"
+                onClick={() => {
+                  fileRef!.value = "";
+                  setEditAccount(true);
+                }}
+              >
+                Edit Account
+              </Button>
+            )}
           </Stack>
         </VStack>
       </Flex>

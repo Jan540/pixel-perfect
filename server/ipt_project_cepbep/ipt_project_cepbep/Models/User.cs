@@ -6,6 +6,15 @@ namespace ipt_project_cepbep.Models;
 [Table("user")]
 public class User : BaseModel
 {
+    public User()
+    {
+        Email = "";
+        Username = "";
+        Password = "";
+        Role = UserRole.User;
+
+    }
+    
     public User(string email, string username, string password, UserRole role)
     {
         Email = email ?? throw new ArgumentNullException(nameof(email));
@@ -25,4 +34,5 @@ public class User : BaseModel
     public string Password { get; set; }
     
     
+
 }

@@ -68,9 +68,6 @@ const Home: NextPage = () => {
               }}
             />
           </Container>
-          <UploadPFPIC />
-          {error && <Text color={"red"}>{error.message}</Text>};
-          {loading && <Text>loading...</Text>}
         </VStack>
 
         <HStack height="150vh" width="1500px" spacing="20">

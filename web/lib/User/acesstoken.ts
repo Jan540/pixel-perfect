@@ -1,4 +1,4 @@
-let acessToken: string;
+let acessToken: string = "";
 
 export const setAccessToken = (token: string) => {
   localStorage.setItem("accessToken", token);

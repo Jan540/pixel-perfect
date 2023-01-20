@@ -9,10 +9,33 @@ import { useEffect, useMemo, useState } from "react";
 import REFRSH from "../graphql/mutations/refreshUser";
 import { setAccessToken } from "../lib/User/acesstoken";
 import { TUser } from "../lib/User/user";
+import { MobileContext } from "../lib/MobileContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  let thisUser: TUser = { email: "", userId: "", username: "" };
+  let thisUser: TUser = {
+    email: "",
+    userId: "",
+    username: "",
+    role: "",
+  };
   const [user, setUser] = useState(thisUser);
+  const [isMobile, setIsMobile] = useState(false);
+
+  //choose the screen size
+  const handleResize = () => {
+    if (window.innerWidth < 550) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
+  // create an event listener
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     client
       .mutate({
@@ -24,6 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           email: result.data?.refreshUser.userResponse?.user.email!,
           userId: result.data?.refreshUser.userResponse?.user.userId!,
           username: result.data?.refreshUser.userResponse?.user.username!,
+          role: result.data?.refreshUser.userResponse?.user.role!,
         };
         // setAccessToken(result.data?.refreshUser.userResponse?.token!);
         setUser(thisUser);
@@ -35,10 +59,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <ApolloProvider client={client}>
-        <UserContext.Provider value={providerValue}>
-          <Component {...pageProps} />
-          <Navbar />
-        </UserContext.Provider>
+        <MobileContext.Provider value={isMobile}>
+          <UserContext.Provider value={providerValue}>
+            <Component {...pageProps} />
+            <Navbar />
+          </UserContext.Provider>
+        </MobileContext.Provider>
       </ApolloProvider>
     </ChakraProvider>
   );

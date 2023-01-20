@@ -8,6 +8,7 @@ const REFRSH = graphql(`
           userId
           email
           username
+          role
         }
         token
       }

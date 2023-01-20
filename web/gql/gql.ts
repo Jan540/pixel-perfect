@@ -55,11 +55,19 @@ export function graphql(source: "\n  mutation logoutUser{\n    logoutUser {\n   
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n        }\n        token\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n          role\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation refreshToken {\n    refreshUser {\n      userResponse {\n        user {\n          userId\n          email\n          username\n          role\n        }\n        token\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          userId\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          userId\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation removeFriend($input: RemoveFriendInput!) {\n    removeFriend(input: $input) {\n      boolean\n    }\n  }\n"): (typeof documents)["\n  mutation removeFriend($input: RemoveFriendInput!) {\n    removeFriend(input: $input) {\n      boolean\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updateEmail($input: UpdateEmailInput!) {\n    updateEmail(input: $input) {\n      boolean\n    }\n  }\n"): (typeof documents)["\n  mutation updateEmail($input: UpdateEmailInput!) {\n    updateEmail(input: $input) {\n      boolean\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

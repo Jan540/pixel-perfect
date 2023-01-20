@@ -5,6 +5,7 @@ const REGISTER = graphql(`
     registerUser(input: $input) {
       userResponse {
         user {
+          userId
           username
           email
         }

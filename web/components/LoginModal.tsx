@@ -29,7 +29,7 @@ import { setAccessToken } from "../lib/User/acesstoken";
 import LOGIN from "../graphql/mutations/loginUser";
 import { UserContext } from "../lib/User/Usercontext";
 
-const LoginModal = ({ setUsername }: any) => {
+const LoginModal = () => {
   const { user, setUser } = useContext(UserContext);
   const toast = useToast();
   const toastIdRef = useRef<ToastId>();
@@ -53,8 +53,7 @@ const LoginModal = ({ setUsername }: any) => {
       userId: LoginData?.loginUser.userResponse?.user.userId!,
     });
     setAccessToken(LoginData?.loginUser.userResponse?.token!);
-    setUsername(user.username);
-  }, [LoginData, LoginError, setUser, user.username, setUsername]);
+  }, [LoginData, LoginError, setUser, user.username]);
 
   useEffect(() => {
     if (!RegisterData || RegisterError) {
@@ -66,15 +65,7 @@ const LoginModal = ({ setUsername }: any) => {
       userId: LoginData?.loginUser.userResponse?.user.userId!,
     });
     setAccessToken(RegisterData?.registerUser.userResponse?.token!);
-    setUsername(user.username);
-  }, [
-    LoginData?.loginUser.userResponse?.user.userId,
-    RegisterData,
-    RegisterError,
-    setUser,
-    setUsername,
-    user.username,
-  ]);
+  }, [RegisterData, RegisterError, setUser, user.username]);
 
   const [tabIndex, setTabIndex] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
