@@ -221,13 +221,14 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
       >
         {loading && <ComponentLoading />}
         <Flex
+          style={{ userSelect: "none" }}
           id="pixel-grid"
           onMouseUp={handleMouseUp}
           onMouseDown={handleMouseDown}
           display={loading ? "none" : "block"}
         >
           {grid.map((row, i) => (
-            <div key={i} style={{ display: "flex" }}>
+            <div key={i} style={{ display: "flex", userSelect: "none" }}>
               {row.map((pixel, j) => (
                 <div
                   id={`pixel-${i}-${j}`}
@@ -237,6 +238,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
                     height: 25,
                     backgroundColor: pixel.color,
                     cursor: "crosshair",
+                    userSelect: "none",
                   }}
                   onClick={(e) => handlePixelChange(e, i, j)}
                   onMouseMove={(e) => handlePixelMouseMove(e, i, j)}

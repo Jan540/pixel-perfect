@@ -3,6 +3,7 @@ using System.Security.Authentication;
 using System.Security.Claims;
 using Bogus;
 using HotChocolate.AspNetCore.Authorization;
+using HotChocolate.Subscriptions;
 using ipt_project_cepbep.Config;
 using ipt_project_cepbep.Data;
 using ipt_project_cepbep.GraphQL.Auth;
@@ -227,6 +228,18 @@ public class UserMutation
             throw new ArgumentException("Not befriended with user");
         context.Friends.Remove(friend);
         await context.SaveChangesAsync();
+        return true;
+    }
+
+    [Authorize]
+    public async Task<bool> SendFriendRequest([Service] ITopicEventSender sender, FriendRequestPayload payload, ClaimsPrincipal claimsPrincipal, AppDbContext context)
+    {
+        Guid id = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+        if (!await context.Users.AnyAsync(u => u.UserId == id))
+            throw new AuthenticationException("Authenticated user does not exist");
+        if (!await context.Users.AnyAsync(u => u.UserId == Guid.Parse(payload.ToFriedUserId)))
+            throw new AggregateException("User does not exist");
+        await sender.SendAsync(nameof(UserSubscription.OnAddFriend), payload);
         return true;
     }
 }

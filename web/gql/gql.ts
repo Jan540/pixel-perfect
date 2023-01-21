@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  mutation changePixel($input: ChangePixelColorInput!) {\n    changePixelColor(input: $input) {\n      boolean\n    }\n  }\n": types.ChangePixelDocument,
     "\n  query getUsers {\n    users(first: 10) {\n      nodes {\n        username\n        email\n        role\n      }\n    }\n  }\n": types.GetUsersDocument,
+    "\n  subscription OnFriendRequest($input: String!) {\n    onAddFriend(userId: $input) {\n      toFriedUserId\n      username\n    }\n  }\n": types.OnFriendRequestDocument,
     "\n  subscription OnPixelChange($canvasId: String!) {\n    onPixelChange(canvasId: $canvasId) {\n      row\n      col\n      color\n    }\n  }\n": types.OnPixelChangeDocument,
     "\n  mutation addFriend($input: AddFriendInput!) {\n    addFriend(input: $input) {\n      user {\n        username\n      }\n    }\n  }\n": types.AddFriendDocument,
     "\n  mutation createCanvas {\n    createCanvas {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n": types.CreateCanvasDocument,
@@ -24,6 +25,7 @@ const documents = {
     "\n  mutation registerUser($input: RegisterUserInput!) {\n    registerUser(input: $input) {\n      userResponse {\n        user {\n          userId\n          username\n          email\n        }\n        token\n      }\n    }\n  }\n": types.RegisterUserDocument,
     "\n  mutation removeFriend($input: RemoveFriendInput!) {\n    removeFriend(input: $input) {\n      boolean\n    }\n  }\n": types.RemoveFriendDocument,
     "\n    mutation saveCanvas($input: SaveCanvasInput!) {\n        saveCanvas(input: $input){\n            string\n        }\n    }\n": types.SaveCanvasDocument,
+    "\n  mutation SendFriendRequest($input: SendFriendRequestInput!) {\n    sendFriendRequest(input: $input) {\n      boolean\n    }\n  }\n": types.SendFriendRequestDocument,
     "\n  mutation updateEmail($input: UpdateEmailInput!) {\n    updateEmail(input: $input) {\n      boolean\n    }\n  }\n": types.UpdateEmailDocument,
     "\n  mutation updatePassword($input: UpdatePasswordInput!) {\n    updatePassword(input: $input) {\n      boolean\n    }\n  }\n": types.UpdatePasswordDocument,
     "\n  mutation uploadProfilePICTURE($input: UploadProfilePictureInput!) {\n    uploadProfilePicture(input: $input) {\n      user {\n        userId\n      }\n    }\n  }\n": types.UploadProfilePictureDocument,
@@ -44,6 +46,10 @@ export function graphql(source: "\n  mutation changePixel($input: ChangePixelCol
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query getUsers {\n    users(first: 10) {\n      nodes {\n        username\n        email\n        role\n      }\n    }\n  }\n"): (typeof documents)["\n  query getUsers {\n    users(first: 10) {\n      nodes {\n        username\n        email\n        role\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  subscription OnFriendRequest($input: String!) {\n    onAddFriend(userId: $input) {\n      toFriedUserId\n      username\n    }\n  }\n"): (typeof documents)["\n  subscription OnFriendRequest($input: String!) {\n    onAddFriend(userId: $input) {\n      toFriedUserId\n      username\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -80,6 +86,10 @@ export function graphql(source: "\n  mutation removeFriend($input: RemoveFriendI
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    mutation saveCanvas($input: SaveCanvasInput!) {\n        saveCanvas(input: $input){\n            string\n        }\n    }\n"): (typeof documents)["\n    mutation saveCanvas($input: SaveCanvasInput!) {\n        saveCanvas(input: $input){\n            string\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation SendFriendRequest($input: SendFriendRequestInput!) {\n    sendFriendRequest(input: $input) {\n      boolean\n    }\n  }\n"): (typeof documents)["\n  mutation SendFriendRequest($input: SendFriendRequestInput!) {\n    sendFriendRequest(input: $input) {\n      boolean\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

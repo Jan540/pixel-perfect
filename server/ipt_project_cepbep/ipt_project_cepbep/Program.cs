@@ -44,7 +44,9 @@ builder.Services
         .AddType<UserMutation>()
         .AddType<CanvasMutation>()
     .AddMutationConventions()
-    .AddSubscriptionType<CanvasSubscription>()
+    .AddSubscriptionType(s => s.Name("Subscription"))
+        .AddType<CanvasSubscription>()
+        .AddType<UserSubscription>()
     .AddInMemorySubscriptions()
     .RegisterDbContext<AppDbContext>()
     .AddType<UploadType>();

@@ -1,5 +1,6 @@
 namespace ipt_project_cepbep.GraphQL.Canvas;
 
+[ExtendObjectType(Name = "Subscription")]
 public class CanvasSubscription
 {
     [Subscribe]

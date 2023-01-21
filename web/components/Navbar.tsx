@@ -45,6 +45,7 @@ import USERSFILTERED from "../graphql/queries/getUsersFiltered";
 import { TUser } from "../lib/User/user";
 import { render } from "react-dom";
 import { MobileContext } from "../lib/MobileContext";
+import MessageDrawer from "./MessagesDrawer";
 
 const Navbar: FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -251,27 +252,30 @@ const Navbar: FC = () => {
       </VStack>
       <div>
         {user.username ? (
-          <Menu>
-            <MenuButton as={Button} mr={"1.5"}>
-              <HStack>
-                <Text>{user.username}</Text>
-                <Avatar
-                  size="sm"
-                  name={user.username}
-                  src="https://avatars.githubusercontent.com/u/1"
-                />
-              </HStack>
-            </MenuButton>
-            <MenuList>
-              <Link href={user.userId}>
-                <MenuItem>Profile</MenuItem>
-              </Link>
-              <Link href="/account">
-                <MenuItem>Account</MenuItem>
-              </Link>
-              <LogoutDialog />
-            </MenuList>
-          </Menu>
+          <>
+            <MessageDrawer />
+            <Menu>
+              <MenuButton as={Button} mr={"1.5"} ml="1.5">
+                <HStack>
+                  <Text>{user.username}</Text>
+                  <Avatar
+                    size="sm"
+                    name={user.username}
+                    src="https://avatars.githubusercontent.com/u/1"
+                  />
+                </HStack>
+              </MenuButton>
+              <MenuList>
+                <Link href={user.userId}>
+                  <MenuItem>Profile</MenuItem>
+                </Link>
+                <Link href="/account">
+                  <MenuItem>Account</MenuItem>
+                </Link>
+                <LogoutDialog />
+              </MenuList>
+            </Menu>
+          </>
         ) : (
           <LoginModal />
         )}

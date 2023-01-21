@@ -9,7 +9,7 @@ public static class CookieConfig
         Secure = false,
         IsEssential = true,
         Expires = DateTime.Now.AddDays(365),
-        Domain = "192.168.43.201",
+        Domain = "localhost",
         Path = "/",
     };
 }

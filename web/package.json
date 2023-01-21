@@ -26,6 +26,7 @@
     "react-color": "^2.19.3",
     "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
+    "react-icons": "^4.7.1",
     "styled-components": "^5.3.6",
     "typewriter-effect": "^2.19.0",
     "ws": "^8.12.0"

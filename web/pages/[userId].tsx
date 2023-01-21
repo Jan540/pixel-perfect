@@ -30,6 +30,7 @@ import {
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
+import { SEND_FRIENDREQUEST } from "../graphql/mutations/sendFriendrequest";
 import ADD_FRIEND from "../graphql/mutations/addFriend";
 import REMOVE_FRIEND from "../graphql/mutations/removeFriends";
 import GET_FIRSTFRIENDS from "../graphql/queries/getFirstFriends";
@@ -100,11 +101,37 @@ const Profile: NextPage = () => {
   ] = useLazyQuery(GET_FIRSTFRIENDS, {
     fetchPolicy: "no-cache",
   });
-
   const [
-    addFriend,
-    { data: addFriendData, error: addFriendError, loading: addfriendLoading },
-  ] = useMutation(ADD_FRIEND);
+    sendFriendRequest,
+    {
+      data: friendRequestData,
+      loading: friendRequestLoading,
+      error: friendRequestError,
+    },
+  ] = useMutation(SEND_FRIENDREQUEST);
+
+  const SendFriendRequestHandler = async () => {
+    try {
+      await sendFriendRequest({
+        variables: {
+          input: {
+            payload: {
+              toFriedUserId: displayedUser.userId,
+              username: user.username,
+            },
+          },
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    showToast("Friend request sent!", "success" as UseToastOptions);
+  };
+
+  useEffect(() => {
+    if (!friendRequestError) return;
+    showToast("Something went wrong!", "error" as UseToastOptions);
+  }, [friendRequestError]);
 
   const [
     removeFriend,
@@ -187,9 +214,6 @@ const Profile: NextPage = () => {
     } catch {
       return false;
     }
-    //remove friend from friends array
-    // const newFriends = friends.filter((f) => f.userId !== friend.userId);
-    // setFriends(newFriends);
     getFirstFriends();
 
     showToast("Friend removed", "success" as UseToastOptions);
@@ -199,23 +223,6 @@ const Profile: NextPage = () => {
     if (!removeFriendError) return;
     showToast(removeFriendError?.message!, "error" as UseToastOptions);
   }, [removeFriendError]);
-
-  const addFriendHandler = async () => {
-    toast.closeAll();
-    try {
-      await addFriend({
-        variables: { input: { userId: displayedUser.userId } },
-      });
-    } catch {
-      return false;
-    }
-    showToast("Friend added", "success" as UseToastOptions);
-  };
-
-  useEffect(() => {
-    if (!addFriendError) return;
-    showToast(addFriendError?.message!, "error" as UseToastOptions);
-  }, [addFriendError]);
 
   return displayedUser.userId === userId ? (
     <>
@@ -249,7 +256,7 @@ const Profile: NextPage = () => {
                 icon={<AddIcon />}
                 colorScheme="green"
                 onClick={() => {
-                  addFriendHandler();
+                  SendFriendRequestHandler();
                 }}
               />
             </HStack>
