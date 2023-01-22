@@ -119,6 +119,7 @@ namespace iptprojectcepbep.Migrations
                     { new Guid("f7ffa913-bd35-40cb-8fb1-a52adab2df11"), "Ward.Johns42@hotmail.com", "gfblgAAWWX", 2, new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(2711), "Kyleigh.Kautzer" },
                     { new Guid("fe537b31-39d5-4fcf-8703-c2248a2ecae9"), "Josefa99@gmail.com", "R3jPXIUAvH", 1, new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(8386), "Jakayla_Renner49" }
                 });
+            
         }
 
         /// <inheritdoc />

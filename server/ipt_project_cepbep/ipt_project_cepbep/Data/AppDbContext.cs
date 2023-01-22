@@ -40,7 +40,7 @@ public class AppDbContext : DbContext
             ub.HasIndex(u => u.Username)
                 .IsUnique();
         });
-        
+
         var users = new Faker<User>()
             .RuleFor(u => u.UserId, f => Guid.NewGuid())
             .RuleFor(u => u.Email, f => f.Internet.Email())
@@ -51,10 +51,28 @@ public class AppDbContext : DbContext
 
         // TODO: muss auskommentiert sein aus irgendeinem Grund
         modelBuilder.Entity<User>().HasData(users.Generate(100));
+        
+        /*
+        modelBuilder.Entity<PublicCanvas>(ub =>
+        {
+            ub.Property(u => u.PublicCanvasId)
+                .HasDefaultValue("publicCanvas");
+        });
+        */
+        
+        PublicCanvas sussyCanvas = new PublicCanvas()
+        {
+            PublicCanvasId = "publicCanvas",
+            Colors = Randomizer_AmongUs.RandomArray(200, 200)
+        };
+        
+        
+        modelBuilder.Entity<PublicCanvas>().HasData(sussyCanvas);
     }
     
     public DbSet<User> Users { get; set; }
     public DbSet<Friend> Friends { get; set; }
     public DbSet<Canvas> Canvases { get; set; }
+    public DbSet<PublicCanvas> PublicCanvases { get; set; }
     
 }

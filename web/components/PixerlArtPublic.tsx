@@ -17,7 +17,7 @@ type PixelArtCanvasProps = {
   id: string;
 };
 
-const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
+const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
   const { user } = useContext(UserContext);
   const toast = useToast();
 
@@ -42,6 +42,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
 
   const [grid, setGrid] = useState<PixelGrid>([]);
   const [color, setColor] = useState<string>("rgb(0, 0, 0)");
+  // TODO: testing
   const [mouseDown, setMouseDown] = useState<boolean>(false);
   const [saveCanvas, { data: saveData, error: saveError }] =
     useMutation(SAVE_CANVAS);
@@ -107,6 +108,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
       grid.push(rowData);
     }
     try {
+      // Remove Authorize
       saveCanvas({
         variables: { input: { canvas_id: id, colors: JSON.stringify(grid) } },
       });
@@ -176,7 +178,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
             col,
             color,
             canvasId: id,
-          },
+          },  
         },
       },
     });
@@ -191,39 +193,34 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
     if (user.username) saveGrid();
   };
 
-  const handlePixelMouseMove = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    row: number,
-    col: number
-  ) => {
-    if (mouseDown && user.username) {
-      updatePixel(e.currentTarget, color, row, col);
-    }
-  };
-
   return (
     <Grid
-      h='100%'
-      w='100%'
+      h="100%"
+      w="100%"
       templateAreas={`"navbar navbar"
                       "toolbar canvas"`}
-      gridTemplateColumns={'20rem 1fr'}
-      gridTemplateRows={'6.25rem 1fr'}
+      gridTemplateColumns={"20rem 1fr"}
+      gridTemplateRows={"6.25rem 1fr"}
     >
-      <GridItem area='toolbar'>
+      <GridItem area="toolbar">
         <DrawingToolbar onColorChange={handleColorChange} />
       </GridItem>
-      <GridItem area='canvas' justifyContent='center' alignItems='center' display='flex'>
+      <GridItem
+        area="canvas"
+        justifyContent="center"
+        alignItems="center"
+        display="flex"
+      >
         {loading && <ComponentLoading />}
         <Flex
-          style={{ userSelect: 'none' }}
-          id='pixel-grid'
+          style={{ userSelect: "none" }}
+          id="pixel-grid"
           onMouseUp={handleMouseUp}
           onMouseDown={handleMouseDown}
-          display={loading ? 'none' : 'block'}
+          display={loading ? "none" : "block"}
         >
           {grid.map((row, i) => (
-            <div key={i} style={{ display: 'flex', userSelect: 'none' }}>
+            <div key={i} style={{ display: "flex", userSelect: "none" }}>
               {row.map((pixel, j) => (
                 <div
                   id={`pixel-${i}-${j}`}
@@ -232,11 +229,12 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
                     width: 25,
                     height: 25,
                     backgroundColor: pixel.color,
-                    cursor: 'crosshair',
-                    userSelect: 'none',
+                    cursor: "crosshair",
+                    userSelect: "none",
                   }}
                   onClick={(e) => handlePixelChange(e, i, j)}
-                  onMouseMove={(e) => handlePixelMouseMove(e, i, j)}
+                  // Dont need for the public version
+                  //onMouseMove={(e) => handlePixelMouseMove(e, i, j)}
                 />
               ))}
             </div>
@@ -247,4 +245,4 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
   );
 };
 
-export default PixelArtCanvas;
+export default PixelArtPublic;

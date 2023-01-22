@@ -59,6 +59,8 @@ namespace iptprojectcepbep.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+
+            
             migrationBuilder.CreateIndex(
                 name: "IX_canvas_UserId",
                 table: "canvas",
