@@ -39,6 +39,7 @@ public class AppDbContext : DbContext
 
             ub.HasIndex(u => u.Username)
                 .IsUnique();
+            
         });
 
         var users = new Faker<User>()
@@ -63,7 +64,7 @@ public class AppDbContext : DbContext
         PublicCanvas sussyCanvas = new PublicCanvas()
         {
             PublicCanvasId = "publicCanvas",
-            Colors = Randomizer_AmongUs.RandomArray(200, 200)
+            Colors = Randomizer_AmongUs.RandomArray(100, 100)
         };
         
         

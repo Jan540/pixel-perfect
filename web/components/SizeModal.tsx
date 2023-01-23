@@ -61,6 +61,8 @@ export const SizeModal: FC<SizeModalProps> = ({ isOpen, onClose }) => {
             placeholder='Name of your Canvas'
             type='text'
             value={canvasName}
+            variant='filled'
+            mb={5}
             onChange={(e) => setCanvasName(e.target.value)}
           />
           <SelectSizeForm />

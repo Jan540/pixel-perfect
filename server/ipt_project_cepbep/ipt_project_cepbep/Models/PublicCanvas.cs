@@ -10,4 +10,6 @@ public class PublicCanvas
     public string PublicCanvasId { get; set; }
     public string Colors { get; set; }
     
+    
+    
 }

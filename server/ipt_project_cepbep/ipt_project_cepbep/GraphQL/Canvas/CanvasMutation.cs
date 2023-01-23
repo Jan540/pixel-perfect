@@ -12,8 +12,19 @@ namespace ipt_project_cepbep.GraphQL.Canvas;
 [ExtendObjectType(Name = "Mutation")]
 public class CanvasMutation
 {
-    public async Task<bool> ChangePixelColor(PixelChangePayload payload, [Service] ITopicEventSender sender)
+    [Authorize]
+    public async Task<bool> ChangePixelColor(AppDbContext context, ClaimsPrincipal claimsPrincipal, PixelChangePayload payload, [Service] ITopicEventSender sender)
     {
+        if (payload.CanvasId == "publicCanvas")
+        {
+            Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+            User user = await context.Users.FindAsync(userId);
+            if (user.LastPlaced.ToUniversalTime().AddSeconds(30) > DateTime.UtcNow && user.LastPlaced != DateTime.MinValue)
+                throw new UnauthorizedAccessException("You can only place a pixel every 30 seconds.");
+            
+            user.LastPlaced = DateTime.UtcNow; 
+            await context.SaveChangesAsync();
+        }
         await sender.SendAsync(nameof(CanvasSubscription.OnPixelChange), payload);
         return true;
     }
@@ -22,7 +33,7 @@ public class CanvasMutation
     [Authorize]
     [GraphQLName("createCanvas")]
     [SuppressMessage("ReSharper.DPA", "DPA0006: Large number of DB commands", MessageId = "count: 108")]
-    public async Task<Models.Canvas> CreateCanvas(AppDbContext context ,ClaimsPrincipal claimsPrincipal, string name)
+    public async Task<Models.Canvas> CreateCanvas(AppDbContext context, ClaimsPrincipal claimsPrincipal, string name)
     {
         Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
         var canvasId = Randomizer_AmongUs.RandomString(14);
