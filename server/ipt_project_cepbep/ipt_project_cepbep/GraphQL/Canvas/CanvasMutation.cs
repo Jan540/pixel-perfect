@@ -54,17 +54,17 @@ public class CanvasMutation
     public async Task<string> SaveCanvas(AppDbContext context, string canvas_id, string colors)
     {
         var canvas = await context.Canvases.FindAsync(canvas_id);
-        canvas.Colors = colors;
+        if (canvas != null) canvas.Colors = colors;
         await context.SaveChangesAsync();
         return colors;
     }
     [GraphQLName("savePublicCanvas")]
     public async Task<string> SavePublicCanvas(AppDbContext context, string canvas_id, string colors)
     {
+
         var canvas = await context.PublicCanvases.FindAsync(canvas_id);
-        canvas.Colors = colors;
+        if (canvas != null) canvas.Colors = colors;
         await context.SaveChangesAsync();
         return colors;
     }
-
 }

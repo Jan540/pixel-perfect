@@ -46,7 +46,8 @@ namespace iptprojectcepbep.Migrations
                 {
                     Canvasid = table.Column<string>(name: "CanvasId", type: "text", nullable: false),
                     Userid = table.Column<Guid>(name: "UserId", type: "uuid", nullable: false),
-                    Colors = table.Column<string>(type: "text", nullable: false)
+                    Colors = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

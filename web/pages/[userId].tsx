@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { SEND_FRIENDREQUEST } from "../graphql/mutations/sendFriendrequest";
 import ADD_FRIEND from "../graphql/mutations/addFriend";
 import REMOVE_FRIEND from "../graphql/mutations/removeFriends";
@@ -130,8 +130,13 @@ const Profile: NextPage = () => {
 
   useEffect(() => {
     if (!friendRequestError) return;
-    showToast("Something went wrong!", "error" as UseToastOptions);
-  }, [friendRequestError]);
+    toast({
+      title: 'Something went wrong!',
+      status: "error",
+      isClosable: true,
+      variant: "top-accent"
+    });
+  }, [friendRequestError, toast]);
 
   const [
     removeFriend,
@@ -195,15 +200,15 @@ const Profile: NextPage = () => {
     if (oldToken === getAccessToken()) return;
     getFirstFriends();
     setOldToken(getAccessToken());
-  }, [getAccessToken()]);
+  }, [getFirstFriends, oldToken]);
 
-  const showToast = (message: string, type: any) => {
+  const showToast = useCallback((message: string, type: any) => {
     toast({
       title: message,
       status: type,
       isClosable: true,
     });
-  };
+  }, [toast]);
 
   const removeFriendHandler = async (friend: TUser) => {
     toast.closeAll();
@@ -222,7 +227,7 @@ const Profile: NextPage = () => {
   useEffect(() => {
     if (!removeFriendError) return;
     showToast(removeFriendError?.message!, "error" as UseToastOptions);
-  }, [removeFriendError]);
+  }, [removeFriendError, showToast]);
 
   return displayedUser.userId === userId ? (
     <>

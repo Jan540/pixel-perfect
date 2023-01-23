@@ -1,4 +1,4 @@
-import { useMutation, useSubscription } from "@apollo/client";
+import { useMutation, useSubscription } from '@apollo/client';
 import {
   useDisclosure,
   Button,
@@ -12,14 +12,14 @@ import {
   DrawerFooter,
   IconButton,
   Text,
-} from "@chakra-ui/react";
-import { userAgent } from "next/server";
-import { type } from "os";
-import React, { useContext, useState } from "react";
-import { IoMailOutline, IoMailUnreadOutline } from "react-icons/io5";
-import { ON_FRIENDREQUEST } from "../graphql/code/onFriendRequest";
-import { SEND_FRIENDREQUEST } from "../graphql/mutations/sendFriendrequest";
-import { UserContext } from "../lib/User/Usercontext";
+} from '@chakra-ui/react';
+import { userAgent } from 'next/server';
+import { type } from 'os';
+import React, { useContext, useState } from 'react';
+import { IoMailOutline, IoMailUnreadOutline } from 'react-icons/io5';
+import { ON_FRIENDREQUEST } from '../graphql/code/onFriendRequest';
+import { SEND_FRIENDREQUEST } from '../graphql/mutations/sendFriendrequest';
+import { UserContext } from '../lib/User/Usercontext';
 
 type AddFriendProps = {
   userId: string;
@@ -51,16 +51,11 @@ const MessageDrawer = () => {
   return (
     <>
       <IconButton
-        aria-label={"Messages"}
+        aria-label={'Messages'}
         as={true ? IoMailOutline : IoMailUnreadOutline}
         onClick={onOpen}
       />
-      <Drawer
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        finalFocusRef={btnRef}
-      >
+      <Drawer isOpen={isOpen} placement='left' onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -68,12 +63,12 @@ const MessageDrawer = () => {
 
           <DrawerBody>
             {requests.map((request) => (
-              <Text>{request.username}</Text>
+              <Text key={request.userId}>{request.username}</Text>
             ))}
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+            <Button variant='outline' mr={3} onClick={onClose}>
               Cancel
             </Button>
           </DrawerFooter>

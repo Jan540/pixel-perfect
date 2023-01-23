@@ -6,6 +6,7 @@ const GET_CANVAS = graphql(`
       userId
       canvasId
       colors
+      name
     }
   }
 `);

@@ -4,7 +4,7 @@ const CREATE_PUBLIC_CANVAS = graphql(`
   mutation createPublicCanvas {
     createPublicCanvas {
       publicCanvas {
-        publicCanvasID
+        publicCanvasId
         colors
       }
     }

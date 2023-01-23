@@ -43,6 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         variables: {},
       })
       .then((result) => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         thisUser = {
           email: result.data?.refreshUser.userResponse?.user.email!,
           userId: result.data?.refreshUser.userResponse?.user.userId!,

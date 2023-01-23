@@ -1,4 +1,4 @@
-import { MoonIcon, SearchIcon, SunIcon } from "@chakra-ui/icons";
+import { MoonIcon, SearchIcon, SunIcon } from '@chakra-ui/icons';
 import {
   Text,
   Avatar,
@@ -33,19 +33,19 @@ import {
   useControllableState,
   Spinner,
   Tooltip,
-} from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { FC, RefObject, useContext, useEffect, useRef, useState } from "react";
-import LoginModal from "./LoginModal";
-import { UserContext } from "../lib/User/Usercontext";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import LOGOUT from "../graphql/mutations/logoutUser";
-import { setAccessToken } from "../lib/User/acesstoken";
-import USERSFILTERED from "../graphql/queries/getUsersFiltered";
-import { TUser } from "../lib/User/user";
-import { render } from "react-dom";
-import { MobileContext } from "../lib/MobileContext";
-import MessageDrawer from "./MessagesDrawer";
+} from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { FC, RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import LoginModal from './LoginModal';
+import { UserContext } from '../lib/User/Usercontext';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import LOGOUT from '../graphql/mutations/logoutUser';
+import { setAccessToken } from '../lib/User/acesstoken';
+import USERSFILTERED from '../graphql/queries/getUsersFiltered';
+import { TUser } from '../lib/User/user';
+import { render } from 'react-dom';
+import { MobileContext } from '../lib/MobileContext';
+import MessageDrawer from './MessagesDrawer';
 
 const Navbar: FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -56,58 +56,55 @@ const Navbar: FC = () => {
   const [logoutUser, { error: logoutError }] = useMutation(LOGOUT);
 
   const logout = async () => {
-    setUser({ username: "", email: "", userId: "" });
+    setUser({ username: '', email: '', userId: '' });
     try {
       logoutUser();
     } catch (error) {
       console.log(logoutError?.message);
     }
-    setUser({ username: "", email: "", userId: "", role: "" });
-    setAccessToken("");
+    setUser({ username: '', email: '', userId: '', role: '' });
+    setAccessToken('');
   };
 
   function OpenModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [filterOptions, setFilterOptions] = useControllableState({
-      defaultValue: "",
+      defaultValue: '',
     });
     const [filteredUser, setFilteredUser] = useControllableState<TUser[]>({
       defaultValue: [] as TUser[],
     });
     const [
       getUseresFiltered,
-      {
-        data: filteredUsersData,
-        loading: filteredUsersLoading,
-        error: filteredUsersError,
-      },
+      { data: filteredUsersData, loading: filteredUsersLoading, error: filteredUsersError },
     ] = useLazyQuery(USERSFILTERED, {
-      nextFetchPolicy: "standby",
-      fetchPolicy: "no-cache",
+      nextFetchPolicy: 'standby',
+      fetchPolicy: 'no-cache',
       variables: { input: filterOptions },
     });
 
-    useEffect(() => {
-      if (filterOptions === "") return;
-      getFilteredUsersHandler();
-    }, [filterOptions]);
-
-    useEffect(() => {
-      if (!filteredUsersData) return;
-      setFilteredUser(filteredUsersData.usersFiltered as TUser[]);
-    }, [filteredUsersData]);
-    const getFilteredUsersHandler = async () => {
+    const getFilteredUsersHandler = useCallback(async () => {
       try {
         await getUseresFiltered();
       } catch {
         return false;
       }
-    };
+    }, [getUseresFiltered]);
+
+    useEffect(() => {
+      if (filterOptions === '') return;
+      getFilteredUsersHandler();
+    }, [filterOptions, getFilteredUsersHandler]);
+
+    useEffect(() => {
+      if (!filteredUsersData) return;
+      setFilteredUser(filteredUsersData.usersFiltered as TUser[]);
+    }, [filteredUsersData, setFilteredUser]);
     return (
       <>
         {isMobile ? (
           <IconButton
-            aria-label="Search for User"
+            aria-label='Search for User'
             icon={<SearchIcon />}
             onClick={async () => {
               onOpen();
@@ -115,11 +112,11 @@ const Navbar: FC = () => {
           />
         ) : (
           <Input
-            width={"100%"}
-            placeholder="Search for User"
-            variant="filled"
-            size="md"
-            type="text"
+            width={'100%'}
+            placeholder='Search for User'
+            variant='filled'
+            size='md'
+            type='text'
             isReadOnly={true}
             onClick={async () => {
               onOpen();
@@ -131,7 +128,7 @@ const Navbar: FC = () => {
           isOpen={isOpen}
           onClose={onClose}
           onCloseComplete={() => {
-            setFilterOptions("");
+            setFilterOptions('');
             setFilteredUser([] as TUser[]);
           }}
         >
@@ -141,9 +138,9 @@ const Navbar: FC = () => {
               <HStack>
                 <SearchIcon />
                 <Input
-                  variant="unstyled"
-                  placeholder="Search for Users"
-                  type="text"
+                  variant='unstyled'
+                  placeholder='Search for Users'
+                  type='text'
                   value={filterOptions}
                   onChange={async (e) => {
                     setFilterOptions(e.target.value);
@@ -153,19 +150,14 @@ const Navbar: FC = () => {
               <>
                 {filteredUser.length !== 0 ? <Divider mb={2} /> : null}
                 {filteredUsersLoading ? (
-                  <Spinner
-                    position="relative"
-                    left="50%"
-                    transform="translate(-50%, 0)"
-                    mt={3}
-                  />
+                  <Spinner position='relative' left='50%' transform='translate(-50%, 0)' mt={3} />
                 ) : null}
                 {filteredUser.map((user) => (
                   <Link key={user.userId} href={`/${user.userId}`}>
                     <Text
                       _hover={{}}
                       padding={1}
-                      color={user.role === "PREMIUM_USER" ? "purple.500" : ""}
+                      color={user.role === 'PREMIUM_USER' ? 'purple.500' : ''}
                     >
                       {user.username}
                     </Text>
@@ -184,7 +176,7 @@ const Navbar: FC = () => {
 
     return (
       <>
-        <MenuItem onClick={onOpen} color="red">
+        <MenuItem onClick={onOpen} color='red'>
           Log out
         </MenuItem>
 
@@ -195,23 +187,21 @@ const Navbar: FC = () => {
         >
           <AlertDialogOverlay>
             <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              <AlertDialogHeader fontSize='lg' fontWeight='bold'>
                 Log out!
               </AlertDialogHeader>
 
-              <AlertDialogBody>
-                Are you sure you want to log out?
-              </AlertDialogBody>
+              <AlertDialogBody>Are you sure you want to log out?</AlertDialogBody>
 
               <AlertDialogFooter>
                 <Button ref={cancelRef as RefObject<any>} onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
-                  colorScheme="red"
+                  colorScheme='red'
                   onClick={() => {
                     logout();
-                    router.push("/");
+                    router.push('/');
                     onClose();
                   }}
                   ml={3}
@@ -228,25 +218,25 @@ const Navbar: FC = () => {
 
   return (
     <Flex
-      position="absolute"
+      position='absolute'
       top={0}
       height={75}
-      width="100vw"
-      justifyContent="space-between"
-      alignItems="center"
+      width='100vw'
+      justifyContent='space-between'
+      alignItems='center'
       px={30}
     >
       <HStack>
-        <Link href="/">
+        <Link href='/'>
           <Button>Place</Button>
         </Link>
       </HStack>
       <VStack
-        position={isMobile ? "relative" : "absolute"}
-        left={isMobile ? "" : "50%"}
-        transform={isMobile ? "" : "translate(-50%, 0)"}
-        w={"20vw"}
-        justifyContent="center"
+        position={isMobile ? 'relative' : 'absolute'}
+        left={isMobile ? '' : '50%'}
+        transform={isMobile ? '' : 'translate(-50%, 0)'}
+        w={'20vw'}
+        justifyContent='center'
       >
         <OpenModal />
       </VStack>
@@ -255,13 +245,13 @@ const Navbar: FC = () => {
           <>
             <MessageDrawer />
             <Menu>
-              <MenuButton as={Button} mr={"1.5"} ml="1.5">
+              <MenuButton as={Button} mr={'1.5'} ml='1.5'>
                 <HStack>
                   <Text>{user.username}</Text>
                   <Avatar
-                    size="sm"
+                    size='sm'
                     name={user.username}
-                    src="https://avatars.githubusercontent.com/u/1"
+                    src='https://avatars.githubusercontent.com/u/1'
                   />
                 </HStack>
               </MenuButton>
@@ -269,7 +259,7 @@ const Navbar: FC = () => {
                 <Link href={user.userId}>
                   <MenuItem>Profile</MenuItem>
                 </Link>
-                <Link href="/account">
+                <Link href='/account'>
                   <MenuItem>Account</MenuItem>
                 </Link>
                 <LogoutDialog />
@@ -281,8 +271,8 @@ const Navbar: FC = () => {
         )}
         <IconButton
           onClick={toggleColorMode}
-          aria-label="Search database"
-          icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
+          aria-label='Search database'
+          icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
         />
       </div>
     </Flex>

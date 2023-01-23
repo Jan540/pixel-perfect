@@ -30,6 +30,10 @@ public class CanvasQuery
     public async Task<string> LoadPublicCanvas(AppDbContext context, string canvas_id)
     {
         var canvas = await context.PublicCanvases.FindAsync(canvas_id);
+
+        if (canvas == null)
+            throw new ArgumentException("Canvas not found!");
+
         return canvas.Colors;
     }
 }

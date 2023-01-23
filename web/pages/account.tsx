@@ -108,7 +108,7 @@ const Account: NextPage = () => {
       isClosable: true,
       position: "bottom",
     });
-  }, [uploadError]);
+  }, [fileRef, toast, uploadError]);
 
   useEffect(() => {
     if (!errorEmail) return;
@@ -121,7 +121,7 @@ const Account: NextPage = () => {
       isClosable: true,
       position: "bottom",
     });
-  }, [errorEmail]);
+  }, [errorEmail, toast, user.email]);
 
   return (
     <>

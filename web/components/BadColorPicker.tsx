@@ -13,7 +13,7 @@ type ColorPickerProps = {
   onColorChange: ColorChangeHandler;
 };
 
-const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
+const BadColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
   const [color, setColor] = useState("");
 
   function hexToRgb(hex: string): RGBColor {
@@ -120,4 +120,4 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
   );
 };
 
-export default ColorPicker;
+export default BadColorPicker;
