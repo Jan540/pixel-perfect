@@ -1,18 +1,27 @@
-import { useMutation, useQuery, useSubscription } from '@apollo/client';
-import { FC, MouseEventHandler, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { CHANGE_PIXEL } from '../graphql/code/changePixel';
-import { ON_PIXEL_CHANGE } from '../graphql/code/onPixelChange';
-import { PixelGrid } from '../types/PixelArtCanvasTypes';
-import { ColorResult } from 'react-color';
-import SAVE_CANVAS from '../graphql/mutations/saveCanvas';
-import LOAD_CANVAS from '../graphql/query/loadCanvas';
-import ComponentLoading from './componentLoading';
-import { Box, Flex, Grid, GridItem, useToast } from '@chakra-ui/react';
-import DrawingToolbar from './DrawingToolbar';
-import { UserContext } from '../lib/User/Usercontext';
-import SAVE_PUBLIC_CANVAS from '../graphql/mutations/savePublicCanvas';
-import LOAD_PUBLIC_CANVAS from '../graphql/query/loadPublicCanvas';
-import ColorPicker from './ColorPicker';
+import { useMutation, useQuery, useSubscription } from "@apollo/client";
+import {
+  FC,
+  MouseEventHandler,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { CHANGE_PIXEL } from "../graphql/code/changePixel";
+import { ON_PIXEL_CHANGE } from "../graphql/code/onPixelChange";
+import { PixelGrid } from "../types/PixelArtCanvasTypes";
+import { ColorResult } from "react-color";
+import SAVE_CANVAS from "../graphql/mutations/saveCanvas";
+import LOAD_CANVAS from "../graphql/query/loadCanvas";
+import ComponentLoading from "./componentLoading";
+import { Box, Flex, Grid, GridItem, useToast } from "@chakra-ui/react";
+import DrawingToolbar from "./DrawingToolbar";
+import { UserContext } from "../lib/User/Usercontext";
+import SAVE_PUBLIC_CANVAS from "../graphql/mutations/savePublicCanvas";
+import LOAD_PUBLIC_CANVAS from "../graphql/query/loadPublicCanvas";
+import ColorPicker from "./ColorPicker";
+import panzoom from "panzoom";
 
 type PixelArtCanvasProps = {
   width?: number;
@@ -23,46 +32,69 @@ type PixelArtCanvasProps = {
 const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
   //useStates
   const [grid, setGrid] = useState<PixelGrid>([]);
-  const [color, setColor] = useState<string>('rgb(0, 0, 0)');
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [dragging, setDragging] = useState(false);
+  const [color, setColor] = useState<string>("rgb(0, 0, 0)");
   const [loading, setLoading] = useState(true);
   const [mouseDown, setMouseDown] = useState<boolean>(false);
   const [loadedColors, setLoadedColors] = useState<string>();
-  const [scale, setScale] = useState(0.15);
   const [mouseOver, setMouseOver] = useState(false);
-  const minScale = 0.1;
-  const [initialCursorPosition, setInitialCursorPosition] = useState({ x: 0, y: 0 });
   //useContext
   const { user } = useContext(UserContext);
 
   //useRef
-  const ref = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   //useToast
   const toast = useToast();
 
   //useMutation
-  const [submitChange, { loading: submitLoading, error: submitError }] = useMutation(CHANGE_PIXEL);
+  const [submitChange, { loading: submitLoading, error: submitError }] =
+    useMutation(CHANGE_PIXEL);
   const [savePublic, { data: savePublicData, error: savePublicError }] =
     useMutation(SAVE_PUBLIC_CANVAS);
 
   //useQuery
-  const { data: colorsData, error: colorsError } = useQuery(LOAD_PUBLIC_CANVAS, {
-    variables: { input: id },
-  });
+  const { data: colorsData, error: colorsError } = useQuery(
+    LOAD_PUBLIC_CANVAS,
+    {
+      variables: { input: id },
+    }
+  );
 
   const { data, error } = useSubscription(ON_PIXEL_CHANGE, {
     onData: (onChangeData) => {
       if (!onChangeData.data.data) return;
       const { onPixelChange } = onChangeData.data.data;
       if (!onPixelChange) return;
-      drawPixelChange(onPixelChange!.row, onPixelChange!.col, onPixelChange!.color);
+      drawPixelChange(
+        onPixelChange!.row,
+        onPixelChange!.col,
+        onPixelChange!.color
+      );
     },
     variables: {
       canvasId: id,
     },
   });
+
+  useEffect(() => {
+    // add panzoom to canvas
+    if (canvasRef.current) {
+      panzoom(canvasRef.current, {
+        smoothScroll: false,
+        maxZoom: 1,
+        minZoom: 0.1,
+        beforeWheel: (e) => {
+          // allow wheel zoom only when mouse is over canvas
+          return mouseOver;
+        },
+        beforeMouseDown: (e) => {
+          // allow drag only when control key is pressed
+          return !e.ctrlKey;
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // functions
   const drawPixelChange = (row: number, col: number, color: string) => {
@@ -79,7 +111,7 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
     for (let i = 0; i < height!; i++) {
       newGrid.push([]);
       for (let j = 0; j < width!; j++) {
-        newGrid[i].push({ color: 'rgb(255,255,255)' });
+        newGrid[i].push({ color: "rgb(255,255,255)" });
       }
     }
     setGrid(newGrid);
@@ -95,7 +127,9 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
     // TODO: maybe change?
     for (let i = 0; i < width!; i++) {
       for (let j = 0; j < height!; j++) {
-        const pixel = document.getElementById(`pixel-${i}-${j}`) as HTMLDivElement;
+        const pixel = document.getElementById(
+          `pixel-${i}-${j}`
+        ) as HTMLDivElement;
         pixel.style.backgroundColor = colorData[i][j];
       }
     }
@@ -104,7 +138,7 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
   }, [loadedColors, width, height]);
 
   const saveGrid = () => {
-    const mainDiv = document.getElementById('pixel-grid') as HTMLDivElement;
+    const mainDiv = document.getElementById("pixel-grid") as HTMLDivElement;
     const rows = mainDiv.children;
 
     let grid: string[][] = [];
@@ -124,20 +158,10 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
         variables: { input: { canvas_id: id, colors: JSON.stringify(grid) } },
       });
     } catch {
-      console.log('error saving canvas');
+      console.log("error saving canvas");
     }
   };
 
-  function handleWheel(event: any) {
-    if (!mouseOver) return;
-    if (event.deltaY < 0) {
-      const newScale = scale + 0.1;
-      setScale(newScale > minScale ? newScale : minScale);
-    } else {
-      const newScale = scale - 0.1;
-      setScale(newScale > minScale ? newScale : minScale);
-    }
-  }
   const handleColorChange = (newColor: ColorResult) => {
     setColor(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
   };
@@ -145,7 +169,7 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
   const handlePixelChange = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     row: number,
-    col: number,
+    col: number
   ) => {
     let pixel = e.currentTarget;
 
@@ -156,17 +180,16 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
     pixel: EventTarget & HTMLDivElement,
     color: string,
     row: number,
-    col: number,
+    col: number
   ) => {
     if (!user.username) {
       toast({
-        title: 'Error',
-        description: 'You must be logged in to place a pixel! 📉📉📉📉',
-        status: 'error',
+        title: "Error",
+        description: "You must be logged in to place a pixel! 📉📉📉📉",
+        status: "error",
         duration: 5000,
         isClosable: true,
-        variant: 'top-accent',
-        position: 'bottom-right',
+        position: "bottom-right",
       });
     }
     if (pixel.style.backgroundColor === color) {
@@ -196,52 +219,35 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
     if (!submitError) return;
     toast.closeAll();
     toast({
-      title: 'Error',
+      title: "Error",
       description: submitError.message,
-      status: 'error',
+      status: "error",
       duration: 5000,
       isClosable: true,
-      variant: 'top-accent',
-      position: 'bottom-right',
+      position: "bottom-right",
     });
   }, [submitError, toast]);
 
   const handleMouseDown = (e: any) => {
-    if (e.button === 1) {
-      setDragging(true);
-      setInitialCursorPosition({ x: e.clientX, y: e.clientY });
-    }
     setMouseDown(true);
-    setDragging(true);
   };
 
   const handleMouseUp = (e: any) => {
     setMouseDown(false);
-    setDragging(false);
-    saveGrid();
-  };
-
-  const handleMouseMove = (e: any) => {
-    if (dragging) {
-      setPosition({
-        x: ref.current?.offsetLeft! + (initialCursorPosition.x - e.clientX),
-        y: ref.current?.offsetTop! + (initialCursorPosition.y - e.clientY)
-      });
-  
-    }
+    if (user.username) saveGrid();
   };
 
   //useEffect
   useEffect(() => {
     createGrid();
     if (!colorsData) {
-      if (typeof window !== 'undefined') setLoading(false);
+      if (typeof window !== "undefined") setLoading(false);
       return;
     }
     setLoadedColors(colorsData.loadPublicCanvas);
-    console.log('loaded colors', loadedColors);
+    console.log("loaded colors", loadedColors);
     if (!loadedColors) {
-      if (typeof window !== 'undefined') setLoading(false);
+      if (typeof window !== "undefined") setLoading(false);
       return;
     }
 
@@ -251,52 +257,54 @@ const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
 
   // styles
   const styles: React.CSSProperties = {
-    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-    userSelect: 'none',
-    overflow: 'hidden',
+    userSelect: "none",
+    overflow: "hidden",
   };
 
   return (
-    <Flex
-      justifyContent='center'
-      alignContent='center'
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
-    >
-      {loading && <ComponentLoading />}
-      <ColorPicker onColorChange={handleColorChange} />
+    <>
       <Flex
-        ref={ref}
-        style={styles}
-        id='pixel-grid'
-        onMouseOver={() => setMouseOver(true)}
-        onMouseOut={() => setMouseOver(false)}
-        onMouseDown={handleMouseDown}
-        onWheel={handleWheel}
-        display={loading ? 'none' : 'block'}
+        justifyContent="center"
+        alignContent="center"
+        onMouseUp={handleMouseUp}
       >
-        {grid.map((row, i) => (
-          <div key={i} style={{ display: 'flex', userSelect: 'none' }}>
-            {row.map((pixel, j) => (
-              <Flex
-                id={`pixel-${i}-${j}`}
-                key={j}
-                style={{
-                  width: 25,
-                  height: 25,
-                  backgroundColor: pixel.color,
-                  cursor: 'crosshair',
-                  userSelect: 'none',
-                }}
-                onClick={(e) => handlePixelChange(e, i, j)}
-                // Dont need for the public version
-                // onMouseMove={(e) => handlePixelMouseMove(e, i, j)}
-              />
-            ))}
-          </div>
-        ))}
+        {loading && <ComponentLoading />}
+        <ColorPicker onColorChange={handleColorChange} />
+        <Flex
+          ref={canvasRef}
+          style={styles}
+          id="pixel-grid"
+          onMouseOver={() => setMouseOver(true)}
+          onMouseOut={() => setMouseOver(false)}
+          onMouseDown={handleMouseDown}
+          display={loading ? "none" : "block"}
+          boxShadow="xl"
+        >
+          {grid.map((row, i) => (
+            <div key={i} style={{ display: "flex", userSelect: "none" }}>
+              {row.map((pixel, j) => (
+                <Flex
+                  id={`pixel-${i}-${j}`}
+                  key={j}
+                  style={{
+                    width: 25,
+                    height: 25,
+                    backgroundColor: pixel.color,
+                    cursor: "crosshair",
+                    userSelect: "none",
+                  }}
+                  onClick={(e) => {
+                    if (!e.ctrlKey) handlePixelChange(e, i, j);
+                  }}
+                  // Dont need for the public version
+                  // onMouseMove={(e) => handlePixelMouseMove(e, i, j)}
+                />
+              ))}
+            </div>
+          ))}
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 

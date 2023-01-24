@@ -1,14 +1,24 @@
-import { EditIcon } from '@chakra-ui/icons';
-import { Box, Button, ButtonGroup, Divider, HStack, IconButton, Input, useRadio, useRadioGroup } from '@chakra-ui/react';
-import { FC, useState } from 'react';
-import { ColorChangeHandler, RGBColor } from 'react-color';
+import { EditIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  HStack,
+  IconButton,
+  Input,
+  useRadio,
+  useRadioGroup,
+} from "@chakra-ui/react";
+import { FC, useState } from "react";
+import { ColorChangeHandler, RGBColor } from "react-color";
 
 type ColorPickerProps = {
   onColorChange: ColorChangeHandler;
 };
 
 const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
-  const [color, setColor] = useState('');
+  const [color, setColor] = useState("");
   let colorRef: HTMLInputElement | null = null;
 
   function hexToRgb(hex: string): RGBColor {
@@ -29,18 +39,18 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
   }
 
   const swatches = [
-    '#000000',
-    '#FFFFFF',
-    '#ED333B',
-    '#33D17A',
-    '#3584E4',
-    '#FFD700',
-    '#FF69B4',
-    '#FFA500',
+    "#000000",
+    "#FFFFFF",
+    "#ED333B",
+    "#33D17A",
+    "#3584E4",
+    "#FFD700",
+    "#FF69B4",
+    "#FFA500",
   ];
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'color',
-    defaultValue: '#000000',
+    name: "color",
+    defaultValue: "#000000",
   });
 
   const group = getRootProps();
@@ -52,20 +62,20 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
     const checkbox = getCheckboxProps();
 
     return (
-      <Box as='label'>
+      <Box as="label">
         <input {...input} />
         <Box
           {...checkbox}
-          cursor='pointer'
-          borderWidth='2px'
-          borderRadius='md'
-          boxShadow='md'
+          cursor="pointer"
+          borderWidth="2px"
+          borderRadius="md"
+          boxShadow="md"
           background={color}
           _checked={{
-            borderColor: 'teal.600',
+            borderColor: "teal.600",
           }}
           _focus={{
-            boxShadowhexToRgb: 'outline',
+            boxShadowhexToRgb: "outline",
           }}
           p={4}
           onClick={(e) => {
@@ -75,10 +85,11 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
                 rgb: hexToRgb(color),
                 hsl: { h: 255, s: 255, l: 255 },
               },
-              e as any,
+              e as any
             );
 
             setColor(color);
+            console.log(color);
           }}
         ></Box>
       </Box>
@@ -87,41 +98,47 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
 
   return (
     <Box
-      w='fit-content'
-      position='absolute'
-      bottom='0'
-      mx='auto'
-      mb='7'
+      w="fit-content"
+      position="absolute"
+      bottom="0"
+      mx="auto"
+      mb="7"
       p={2}
-      borderRadius='md'
+      borderRadius="md"
       zIndex={1}
-      _dark={{ bg: '#161b24' }}
+      _dark={{ bg: "#161b24" }}
     >
-      <HStack spacing={2} w='100%' {...group} justifyContent='center' alignItems='center'>
+      <HStack
+        spacing={2}
+        w="100%"
+        {...group}
+        justifyContent="center"
+        alignItems="center"
+      >
         {swatches.map((color) => {
           const radio = getRadioProps({ value: color });
           return <RadioCard key={color} {...radio} color={color} />;
         })}
 
         <IconButton
-          aria-label='color-picker'
+          aria-label="color-picker"
           icon={<EditIcon />}
-          variant='unstyled'
+          variant="unstyled"
           bg={color}
-          borderWidth='2px'
-          borderRadius='md'
-          boxShadow='md'
-          display='flex'
+          borderWidth="2px"
+          borderRadius="md"
+          boxShadow="md"
+          display="flex"
           p={4}
-          justifyContent='center'
-          alignItems='center'
+          justifyContent="center"
+          alignItems="center"
           onClick={() => colorRef?.click()}
         />
         <Input
-          type='color'
+          type="color"
           mt={2}
           value={color}
-          display='none'
+          display="none"
           ref={(ref) => (colorRef = ref)}
           onChange={(e) => {
             onColorChange(
@@ -130,7 +147,7 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
                 rgb: hexToRgb(e.target.value),
                 hsl: { h: 255, s: 255, l: 255 },
               },
-              e,
+              e
             );
 
             setColor(e.target.value);
