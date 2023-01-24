@@ -65,7 +65,13 @@ const LoginModal = () => {
       userId: LoginData?.loginUser.userResponse?.user.userId!,
     });
     setAccessToken(RegisterData?.registerUser.userResponse?.token!);
-  }, [LoginData?.loginUser.userResponse?.user.userId, RegisterData, RegisterError, setUser, user.username]);
+  }, [
+    LoginData?.loginUser.userResponse?.user.userId,
+    RegisterData,
+    RegisterError,
+    setUser,
+    user.username,
+  ]);
 
   const [tabIndex, setTabIndex] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();

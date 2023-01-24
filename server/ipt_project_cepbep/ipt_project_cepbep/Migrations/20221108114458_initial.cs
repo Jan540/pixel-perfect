@@ -60,10 +60,58 @@ namespace iptprojectcepbep.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-
             
-            migrationBuilder.CreateIndex(
+            migrationBuilder.CreateTable(
+                name: "friend",
+                columns: table => new
+                {
+                    UserId1 = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId2 = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_friend", x => new { x.UserId1, x.UserId2 });
+                    table.ForeignKey(
+                        name: "FK_friend_user_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "user",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_friend_user_UserId2",
+                        column: x => x.UserId2,
+                        principalTable: "user",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "friend_request",
+                columns: table => new
+                {
+                    SenderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ReceiverId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_friend_request", x => new { x.ReceiverId, x.SenderId });
+                    table.ForeignKey(
+                        name: "FK_friend_request_user_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "user",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_friend_request_user_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "user",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });            migrationBuilder.CreateIndex(
                 name: "IX_canvas_UserId",
                 table: "canvas",
                 column: "UserId");

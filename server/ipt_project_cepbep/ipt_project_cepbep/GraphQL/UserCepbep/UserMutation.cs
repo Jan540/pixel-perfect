@@ -185,52 +185,75 @@ public class UserMutation
         httpContextAccessor.HttpContext?.Response.Cookies.Delete("jid");
         return true;
     }
-    
-    [Authorize]
-    [GraphQLName("addFriend")]
-    public async Task<User> AddFriend(AppDbContext context, ClaimsPrincipal claimsPrincipal, string userId)
-    {
-        Guid id = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
-        User? user = await context.Users.FindAsync(id);
-        if (user is null)
-            throw new UnauthorizedAccessException("User not authorized");
 
-        User? toFriend = await context.Users.FindAsync(Guid.Parse(userId));
-        if (toFriend is null)
-            throw new ArgumentException("User not found");
-        
-        var allFriends = from user1 in context.Users
-            join friend in context.Friends on user1.UserId equals friend.UserId
-            join real in context.Users on friend.FriendId equals real.UserId
-            where friend.UserId == id
-            select real;
-
-        bool isInValid = allFriends.Any(f => f.UserId == toFriend.UserId);
-        if(isInValid)
-            throw new BogusException("Bogus Binted: Already befriended");
-        
-        context.Friends.Add(new Friend()
-        {
-            UserId = user.UserId,
-            FriendId = toFriend.UserId
-        });
-        
-        await context.SaveChangesAsync();
-        return toFriend;
-    }
-    
     [Authorize]
     [GraphQLName("removeFriend")]
     public async Task<bool> RemoveFriend(AppDbContext context, ClaimsPrincipal claimsPrincipal, string friend_Id)
     {
-        Friend? friend = await context.Friends.FirstOrDefaultAsync(f => f.FriendId == Guid.Parse(friend_Id) && f.UserId == Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier)));
+        Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+        Friend? friend = await context.Friends.FirstOrDefaultAsync(f =>
+            (f.UserId1 == Guid.Parse(friend_Id) && f.UserId2 == userId)
+            || (f.UserId1 == userId && f.UserId2 == Guid.Parse(friend_Id)));
+        
         if (friend is null)
             throw new ArgumentException("Not befriended with user");
+        
         context.Friends.Remove(friend);
         await context.SaveChangesAsync();
         return true;
     }
 
+    
+    [Authorize]
+    [GraphQLName("acceptFriendRequest")]
+    public async Task<bool> AcceptFriendRequest(ClaimsPrincipal claimsPrincipal, AppDbContext context, string friendId)
+    {
+        Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier)); 
+        if (await context.Users.FindAsync(userId) is null)
+            throw new AuthenticationException("Authenticated User does not exist");
+        if (await context.Users.FindAsync(Guid.Parse(friendId)) is null)
+            throw new AuthenticationException("Friend User does not exist");
+        
+        var requestConnection = await context.FriendRequests.FirstOrDefaultAsync(fr => 
+            fr.ReceiverId == userId 
+            && fr.SenderId == Guid.Parse(friendId));
+        if (requestConnection is null)
+            throw new NullReferenceException("you have no friend request from this user");
+        
+        context.FriendRequests.Remove(requestConnection);
+        
+        context.Friends.Add(new Friend()
+        {
+            UserId1 = Guid.Parse(friendId),
+            UserId2 = userId
+        });
+        
+        await context.SaveChangesAsync();
+        
+        return true;
+    }
+    
+    [Authorize]
+    [GraphQLName("rejectFriendRequest")]
+    public async Task<bool> RejectFriendRequest(ClaimsPrincipal claimsPrincipal, AppDbContext context, string friendId)
+    {
+        Guid userId = Guid.Parse(claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier));
+        if (await context.Users.FindAsync(userId) is null)
+            throw new AuthenticationException("Authenticated User does not exist");
+        if (await context.Users.FindAsync(Guid.Parse(friendId)) is null)
+            throw new AuthenticationException("Friend User does not exist");
+        
+        var requestConnection = await context.FriendRequests.FirstOrDefaultAsync(fr => 
+            fr.ReceiverId == userId 
+            && fr.SenderId == Guid.Parse(friendId));
+        if (requestConnection is null)
+            throw new NullReferenceException("you have no friend request from this user");
+        context.FriendRequests.Remove(requestConnection);
+        
+        await context.SaveChangesAsync();
+        return true;
+    }
+    
     [Authorize]
     public async Task<bool> SendFriendRequest([Service] ITopicEventSender sender, FriendRequestPayload payload, ClaimsPrincipal claimsPrincipal, AppDbContext context)
     {
@@ -239,6 +262,22 @@ public class UserMutation
             throw new AuthenticationException("Authenticated user does not exist");
         if (!await context.Users.AnyAsync(u => u.UserId == Guid.Parse(payload.ToFriedUserId)))
             throw new AggregateException("User does not exist");
+        if (await context.FriendRequests.AnyAsync(fr => fr.ReceiverId == Guid.Parse(payload.ToFriedUserId) && fr.SenderId == id))
+            throw new ArgumentException("Already sent friend request");
+        if (await context.FriendRequests.AnyAsync(fr => fr.ReceiverId == id && fr.SenderId == Guid.Parse(payload.ToFriedUserId)))
+            throw new ArgumentException("User already sent a friend request");
+        if (await context.Friends.AnyAsync(fr => 
+                (fr.UserId1 == Guid.Parse(payload.ToFriedUserId) && fr.UserId2 == id) 
+                || (fr.UserId1 == id && fr.UserId2 == Guid.Parse(payload.ToFriedUserId))))
+            throw new ArgumentException("Already befriended");
+        
+        context.FriendRequests.Add(new Friend_Request()
+        {
+            SenderId = id,
+            ReceiverId = Guid.Parse(payload.ToFriedUserId)
+        });
+
+        await context.SaveChangesAsync();
         await sender.SendAsync(nameof(UserSubscription.OnAddFriend), payload);
         return true;
     }

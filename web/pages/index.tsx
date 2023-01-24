@@ -5,6 +5,8 @@ import {
   Container,
   Text,
   HStack,
+  useToast,
+  ToastPosition,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -22,6 +24,7 @@ const Home: NextPage = () => {
   //const { user, setUser } = useContext(UserContext);
   // const client = ...
   const isLoggedIn = !!getAccessToken();
+  const toast = useToast();
   const [uploadProfilePicture, { data, error, loading }] =
     useMutation(UPLOAD_PRFPIC);
   const UploadPFPIC: FC = () => {
@@ -47,6 +50,31 @@ const Home: NextPage = () => {
     return <input type="file" required onChange={onChange} />;
   };
 
+  const ToastButton = async () => {
+    toast.closeAll();
+    for (let i = 0; i < 25; i++) {
+      const pos = [
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "top-left",
+        "top-right",
+        "bottom-left",
+        "bottom-right",
+      ];
+      let num = Math.floor(Math.random() * 8);
+      toast({
+        title: "He is cooking",
+        description: "We've made some Toasts!",
+        status: "success",
+        duration: 1500,
+        position: pos[num] as ToastPosition,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Flex height="100vh" justifyContent="center">
       <Head>
@@ -68,6 +96,7 @@ const Home: NextPage = () => {
               }}
             />
           </Container>
+          <Button onClick={async () => await ToastButton()}>Toasts?</Button>
         </VStack>
 
         <HStack height="150vh" width="1500px" spacing="20">
