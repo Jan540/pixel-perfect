@@ -22,6 +22,53 @@ namespace iptprojectcepbep.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ipt_project_cepbep.Models.Canvas", b =>
+                {
+                    b.Property<string>("CanvasId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Colors")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("CanvasId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("canvas");
+                });
+
+            modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
+                {
+                    b.Property<Guid>("FriendId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("FriendId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("friend");
+                });
+
             modelBuilder.Entity("ipt_project_cepbep.Models.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -60,1011 +107,1031 @@ namespace iptprojectcepbep.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("user", (string)null);
+                    b.ToTable("user");
+                });
 
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("4f51c82b-3d10-425f-83a7-372ca7e78c4a"),
+                            UserId = new Guid("22133462-db54-4cb5-ac09-866ad5c8558b"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Jadyn.Ratke0@gmail.com",
-                            Password = "5ywNKo71uw",
+                            Email = "Elizabeth.Bailey96@yahoo.com",
+                            Password = "lFE6N55uYI",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 915, DateTimeKind.Utc).AddTicks(9732),
+                            Username = "Arnold83"
+                        },
+                        new
+                        {
+                            UserId = new Guid("73af5318-6ef9-41b5-bf0d-d07387df9715"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Darryl55@gmail.com",
+                            Password = "6E017C6tnb",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 915, DateTimeKind.Utc).AddTicks(9936),
+                            Username = "Tatum_Boyle"
+                        },
+                        new
+                        {
+                            UserId = new Guid("cdaddb4a-ec5d-4d25-8ecb-33558668ec91"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Maida_Block@yahoo.com",
+                            Password = "nCVCShw5ns",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(108),
+                            Username = "Odell.Leannon"
+                        },
+                        new
+                        {
+                            UserId = new Guid("d2ab8713-f34a-4f49-9b4b-abd3b121fd1f"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Brendan95@yahoo.com",
+                            Password = "0vRXaVSz_g",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(246),
+                            Username = "Shania85"
+                        },
+                        new
+                        {
+                            UserId = new Guid("6a9802a8-604b-4c3e-b342-854304a75c01"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Jabari_Boyer81@gmail.com",
+                            Password = "dL49zpOEzb",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(442),
+                            Username = "Lincoln69"
+                        },
+                        new
+                        {
+                            UserId = new Guid("1d578ac1-9e30-41cc-b3f8-dfacb6abb279"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Destin.Lowe@yahoo.com",
+                            Password = "1W1s8DFMYt",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(4597),
-                            Username = "Mabelle6"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(590),
+                            Username = "Orrin12"
                         },
                         new
                         {
-                            UserId = new Guid("f2ad530d-7363-4c04-a617-6ce7393c2077"),
+                            UserId = new Guid("f926de78-afcd-4bde-8d5d-84453c84e86f"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Wilhelmine_Wilderman21@yahoo.com",
-                            Password = "LjbrMObVgL",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(5021),
-                            Username = "Ellis.Erdman"
-                        },
-                        new
-                        {
-                            UserId = new Guid("91de404c-0460-4b3d-855e-bb68208f9669"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Alek97@yahoo.com",
-                            Password = "JlzsQPCKfd",
+                            Email = "Burley.Ortiz86@gmail.com",
+                            Password = "P9GR1jNE4_",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(5389),
-                            Username = "Henriette_Mraz"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(760),
+                            Username = "Vicente_Barrows"
                         },
                         new
                         {
-                            UserId = new Guid("0a82ec1c-7603-48da-bc6b-b1be8c03b051"),
+                            UserId = new Guid("ee1330b2-906a-4fc8-9110-0651ec5591e6"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Gwen75@yahoo.com",
-                            Password = "wuemtCZXB6",
+                            Email = "Cynthia.Tromp@gmail.com",
+                            Password = "rn4iu8a5XS",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(904),
+                            Username = "Camilla_Olson95"
+                        },
+                        new
+                        {
+                            UserId = new Guid("b00e09ab-3802-461e-8de0-f61315698857"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Margaret_Hauck18@hotmail.com",
+                            Password = "gPPILaVfD1",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(1061),
+                            Username = "Ivah.Cummerata"
+                        },
+                        new
+                        {
+                            UserId = new Guid("d77a7959-40e9-4bda-8a6f-89e0c2439aaf"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Dale_Thiel94@gmail.com",
+                            Password = "LoisWnY6eU",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(5617),
-                            Username = "Ettie_Bogisich"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(1185),
+                            Username = "Sylvan.Frami"
                         },
                         new
                         {
-                            UserId = new Guid("952bad3c-99b5-443d-b7e8-79d2cd235bfe"),
+                            UserId = new Guid("ed626b5d-c2dc-4de3-af9c-e7004a79d841"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Destin.Ernser64@gmail.com",
-                            Password = "m7P6zxVXs6",
+                            Email = "Kenna_Dicki0@gmail.com",
+                            Password = "dwABsWZbkH",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(5883),
-                            Username = "Alexandrea81"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(1344),
+                            Username = "Keely57"
                         },
                         new
                         {
-                            UserId = new Guid("81bf6dff-2a29-4546-9579-fe40b3192235"),
+                            UserId = new Guid("222b535b-e81a-4a38-84e1-a5f6def2e9b1"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Leonora89@gmail.com",
-                            Password = "tle0jByNto",
+                            Email = "Harmon44@yahoo.com",
+                            Password = "RK3cTn_GDc",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(6098),
-                            Username = "Alfred40"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(1486),
+                            Username = "Franco81"
                         },
                         new
                         {
-                            UserId = new Guid("e1057784-e5cb-4810-bcba-6f50a25103cc"),
+                            UserId = new Guid("c609d793-8737-4c3e-9038-4d7e4b5f4d1c"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Dominique.Bechtelar14@gmail.com",
-                            Password = "nJ6WiOYHMV",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(6465),
-                            Username = "Reggie91"
-                        },
-                        new
-                        {
-                            UserId = new Guid("aab4d5da-5c6f-4ada-86c6-2c5d06afa408"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Maybelle_Rogahn93@yahoo.com",
-                            Password = "6jdvJCA3Nk",
+                            Email = "Jaylon0@hotmail.com",
+                            Password = "ht5CJbY37L",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(6685),
-                            Username = "Antwon.Bergnaum98"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(1681),
+                            Username = "Lloyd.Schuppe"
                         },
                         new
                         {
-                            UserId = new Guid("ed2842b2-adef-43f4-8051-f892f3856668"),
+                            UserId = new Guid("1da6977f-c8d9-4828-8767-fb2f1a823637"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Keara73@hotmail.com",
-                            Password = "uGr1pU9qg1",
+                            Email = "Vince_Botsford@yahoo.com",
+                            Password = "mH0ZrqAkAG",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(6990),
-                            Username = "Meagan51"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(1814),
+                            Username = "Kaleb61"
                         },
                         new
                         {
-                            UserId = new Guid("ce5a388c-3162-4935-8782-d098d62fada0"),
+                            UserId = new Guid("3d053b0b-3663-4314-bf57-e7fcfd3ca472"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Erin.Nitzsche@yahoo.com",
-                            Password = "6Yjl6F6zT3",
+                            Email = "Eloisa.Murazik@hotmail.com",
+                            Password = "znMH3mGPIE",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(7218),
-                            Username = "Kylee75"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(1952),
+                            Username = "Jaquelin.Jast"
                         },
                         new
                         {
-                            UserId = new Guid("6a391a8a-0e51-4769-86f1-0de2021ce188"),
+                            UserId = new Guid("4150ddd9-8140-4e7a-b8c0-ef9e23642b30"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Rocky_Wuckert59@hotmail.com",
-                            Password = "8jc3xi9dHU",
+                            Email = "Virgie13@hotmail.com",
+                            Password = "CJO0sX5BV8",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(7575),
-                            Username = "Ebony_Gutmann58"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(2111),
+                            Username = "Onie_Hickle"
                         },
                         new
                         {
-                            UserId = new Guid("70baa0a0-0989-420e-9673-5210922244bb"),
+                            UserId = new Guid("ade9e8d5-9783-4e29-a893-4dbacc34defe"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Joanny47@hotmail.com",
-                            Password = "qhiqZYexcj",
+                            Email = "Jennings_Koss@hotmail.com",
+                            Password = "2fDWxvNO2C",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(7915),
-                            Username = "Reta.Olson22"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(2251),
+                            Username = "Ryder_Mueller1"
                         },
                         new
                         {
-                            UserId = new Guid("033faa2c-9e2c-405c-9890-81e96bb18f09"),
+                            UserId = new Guid("a5b1530a-c85d-4d55-a377-bb5a9f0d242d"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Derick58@gmail.com",
-                            Password = "EbbUSs38zv",
+                            Email = "Karolann.Stark1@yahoo.com",
+                            Password = "qKkAU2TH4f",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(8326),
-                            Username = "Dorothy_Hills96"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(2478),
+                            Username = "Aimee_Kohler77"
                         },
                         new
                         {
-                            UserId = new Guid("8ef15684-c0c2-4366-af69-caf46faccce3"),
+                            UserId = new Guid("8ae8b69d-40bb-41e7-97a7-3020f8b49783"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Jairo_Treutel@hotmail.com",
-                            Password = "9tXToEtG3b",
+                            Email = "Arvel.Hartmann@yahoo.com",
+                            Password = "9diHg3w8i7",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(8803),
-                            Username = "Tyree_Jacobs23"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(2608),
+                            Username = "Rex82"
                         },
                         new
                         {
-                            UserId = new Guid("c80c9f27-964c-42b7-95df-4775631429d8"),
+                            UserId = new Guid("71ba835a-a6c6-4380-ba20-cefc874abd75"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Carmine.Lesch@yahoo.com",
-                            Password = "U16qWtIL3G",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(9222),
-                            Username = "Billie.Windler41"
-                        },
-                        new
-                        {
-                            UserId = new Guid("3fa1ff7e-611c-4e17-bac1-eaba1c969562"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Ressie57@hotmail.com",
-                            Password = "6p44mW9bge",
+                            Email = "Jewel.Reinger3@gmail.com",
+                            Password = "Pyc26bCNZX",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 115, DateTimeKind.Utc).AddTicks(9623),
-                            Username = "Tito_Moen"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(2793),
+                            Username = "Donavon_Nicolas37"
                         },
                         new
                         {
-                            UserId = new Guid("d5e321fd-5747-448a-aa8c-7599ddc416fd"),
+                            UserId = new Guid("8659bed5-6f44-4c37-81cd-47c491e41bc4"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Ephraim_Ernser74@hotmail.com",
-                            Password = "xRKbUhwmX2",
+                            Email = "Lori_Murray36@gmail.com",
+                            Password = "6Q9qFn6J8t",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(52),
-                            Username = "Dayton_Metz"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(2946),
+                            Username = "Lura15"
                         },
                         new
                         {
-                            UserId = new Guid("368c9011-dafc-4fc5-a09a-8404a73e65f5"),
+                            UserId = new Guid("42adb523-a241-4b0c-8850-485c004aa97e"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Mitchell_Mayert@gmail.com",
-                            Password = "brZnxpr8Vh",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(472),
-                            Username = "Palma.Cruickshank42"
-                        },
-                        new
-                        {
-                            UserId = new Guid("dc0f65dc-3c06-46d2-b9b0-c4712bafcb93"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Tre88@hotmail.com",
-                            Password = "pbAuWjVv1f",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(729),
-                            Username = "Efrain56"
-                        },
-                        new
-                        {
-                            UserId = new Guid("c2871310-163b-441e-b679-8b62270d3966"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Margarett.Hagenes79@gmail.com",
-                            Password = "gzRF3uR_jt",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(1275),
-                            Username = "Una74"
-                        },
-                        new
-                        {
-                            UserId = new Guid("97970d82-a59e-48cf-98f3-bab9fdd9a003"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Tristian.Thiel87@yahoo.com",
-                            Password = "NqTvSgkgvM",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(1702),
-                            Username = "Hilbert76"
-                        },
-                        new
-                        {
-                            UserId = new Guid("b5cb2117-8065-4c06-be66-b79f699c164e"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Lucie.Swaniawski@yahoo.com",
-                            Password = "cA9daz6uO3",
+                            Email = "Tyrique76@hotmail.com",
+                            Password = "ivccelW9_V",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(2084),
-                            Username = "Abdullah.Klocko"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(3098),
+                            Username = "Solon.Ward"
                         },
                         new
                         {
-                            UserId = new Guid("c03aa894-ff21-45ed-878d-11d35416de35"),
+                            UserId = new Guid("dbbe53ed-4941-45a1-88a2-517834b03a8e"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Mya_Reichel45@hotmail.com",
-                            Password = "v6AS9RKVEn",
-                            Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(2289),
-                            Username = "Jackie65"
-                        },
-                        new
-                        {
-                            UserId = new Guid("2be4bf4f-5b1f-42a9-8ea0-c4f2cf7184f9"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Josiane47@yahoo.com",
-                            Password = "4EUaBQR5Z3",
+                            Email = "Estrella.Tillman@yahoo.com",
+                            Password = "DXMKgXg15l",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(2547),
-                            Username = "Rahul_Towne"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(3233),
+                            Username = "Oral96"
                         },
                         new
                         {
-                            UserId = new Guid("e9b72981-3976-4cf4-8e95-3eb8e3763840"),
+                            UserId = new Guid("2782efb8-3aa6-437d-8aae-b46732db9e23"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Fredy.Grady@hotmail.com",
-                            Password = "wPqTPIyyYF",
-                            Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 116, DateTimeKind.Utc).AddTicks(2753),
-                            Username = "Rupert58"
-                        },
-                        new
-                        {
-                            UserId = new Guid("f0612c96-eec0-48c6-b5a3-9727894ad03d"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Joanny.OKeefe@gmail.com",
-                            Password = "Ga4jl_eAUQ",
-                            Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 120, DateTimeKind.Utc).AddTicks(9655),
-                            Username = "Nicklaus.Gerlach"
-                        },
-                        new
-                        {
-                            UserId = new Guid("b3d3f31f-f123-45e4-9086-32da16fee8fd"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Lewis_Cole28@gmail.com",
-                            Password = "KZ2MTM9VFH",
-                            Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(90),
-                            Username = "Helene20"
-                        },
-                        new
-                        {
-                            UserId = new Guid("48c74d5a-f71f-4648-bb52-2688b9456ac7"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Markus9@hotmail.com",
-                            Password = "xMmmEMTSEv",
-                            Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(366),
-                            Username = "Maya_Gaylord"
-                        },
-                        new
-                        {
-                            UserId = new Guid("46bbd1a4-e52b-4f98-a5a4-e77d71be72b7"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Isabella_Kuhic@gmail.com",
-                            Password = "CqL_E9YxSz",
+                            Email = "Alexane.Skiles64@hotmail.com",
+                            Password = "g6yWqKXiUq",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(802),
-                            Username = "Yolanda.Wunsch"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(3408),
+                            Username = "Alize.Trantow4"
                         },
                         new
                         {
-                            UserId = new Guid("694005fc-e69d-4985-84f9-04d8c4a12dbf"),
+                            UserId = new Guid("d3c6be15-1d26-46d2-af23-71803104b4ad"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Phyllis42@yahoo.com",
-                            Password = "PrnOFmcoGA",
+                            Email = "Diego50@hotmail.com",
+                            Password = "vhJw7AmCVX",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(1224),
-                            Username = "Nona_Koelpin"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(3548),
+                            Username = "Brandt51"
                         },
                         new
                         {
-                            UserId = new Guid("29f0b770-71ff-49cd-a6c5-477b90b80b60"),
+                            UserId = new Guid("fd64c5c6-3e44-4435-9887-ec7f38c8b282"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Lottie.Gerlach@hotmail.com",
-                            Password = "7hlnmuUlJO",
+                            Email = "Alba91@hotmail.com",
+                            Password = "krzBa2c5S1",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(1712),
-                            Username = "Shaun74"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(3714),
+                            Username = "Aidan_Kuhic"
                         },
                         new
                         {
-                            UserId = new Guid("395dbe24-ef20-4f49-9256-809add0edff3"),
+                            UserId = new Guid("91de3057-0ab9-468d-92dd-09b070ae7c0f"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Diana40@hotmail.com",
-                            Password = "7TfDtb4br_",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(1998),
-                            Username = "Name_Kassulke58"
-                        },
-                        new
-                        {
-                            UserId = new Guid("e612f89c-1ddb-4da2-a7a8-2fc4f4b9c099"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Lon25@yahoo.com",
-                            Password = "4xVeqmcbXI",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(2390),
-                            Username = "Brock97"
-                        },
-                        new
-                        {
-                            UserId = new Guid("d9275464-1712-424a-a3d1-4856fa5e58d2"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Vernon.Beatty11@hotmail.com",
-                            Password = "rqcVODpHPq",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(2705),
-                            Username = "Torrey33"
-                        },
-                        new
-                        {
-                            UserId = new Guid("a3f1e9eb-de73-4a1b-bf26-068f85d16715"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Verlie82@yahoo.com",
-                            Password = "RrvDMPIREr",
+                            Email = "Nettie_Rodriguez@gmail.com",
+                            Password = "pR2S7BxCTi",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(3200),
-                            Username = "Joel17"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(4519),
+                            Username = "Bailey.OReilly"
                         },
                         new
                         {
-                            UserId = new Guid("39ef9485-f103-475b-9aa3-a5d42a4b3c18"),
+                            UserId = new Guid("a512feb8-1a16-4f39-ac24-cd7c50530ac1"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Edwin.Reinger@yahoo.com",
-                            Password = "fHaJs2_PjU",
+                            Email = "Lucy.Huel@gmail.com",
+                            Password = "RffU1Jz3Ty",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(3539),
-                            Username = "Lorenza.Leannon"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(4697),
+                            Username = "Lilyan.Hermann"
                         },
                         new
                         {
-                            UserId = new Guid("99bbec75-2161-44ec-88ed-c7822750917c"),
+                            UserId = new Guid("a510bfac-004d-4d4e-8182-2e3d52aaf994"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Yasmin.Kerluke@gmail.com",
-                            Password = "t5R5jmX421",
+                            Email = "Emory65@hotmail.com",
+                            Password = "jgFN56g_BG",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(4827),
+                            Username = "Lavern.Kub59"
+                        },
+                        new
+                        {
+                            UserId = new Guid("4b9a6a5d-acdf-49c6-9a74-d2db3e020151"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Eulalia_Corkery@gmail.com",
+                            Password = "V7wUVNniRV",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(3962),
-                            Username = "Vicky.Kuvalis61"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(4955),
+                            Username = "Keara.Ryan12"
                         },
                         new
                         {
-                            UserId = new Guid("b9af0bd8-2c67-4200-8012-ecbd293fd094"),
+                            UserId = new Guid("821bb529-c2e1-423e-ba61-8a98d6cdbc1b"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Jalyn_McCullough@yahoo.com",
-                            Password = "PxsNUl92kw",
+                            Email = "Alexanne.Thompson4@hotmail.com",
+                            Password = "mNpPqHKZFu",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(4361),
-                            Username = "Era_Gislason"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(5123),
+                            Username = "Russell65"
                         },
                         new
                         {
-                            UserId = new Guid("85efc1f6-cab7-462c-9f84-7ade52f3a275"),
+                            UserId = new Guid("2dbbd163-7842-4c1a-a6d9-efe758f665b7"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Larue_Wehner@yahoo.com",
-                            Password = "gzjGaQMva1",
+                            Email = "Jaren.Tremblay@hotmail.com",
+                            Password = "DBVQQSARmR",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(5274),
+                            Username = "Verona37"
+                        },
+                        new
+                        {
+                            UserId = new Guid("68fe3a70-846b-4f6d-ad4c-e62127d66036"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Kyleigh30@yahoo.com",
+                            Password = "9QTA2kf_jB",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(5428),
+                            Username = "Maryse47"
+                        },
+                        new
+                        {
+                            UserId = new Guid("55619707-5eaf-4bf6-a14f-14837ea0982e"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Barry42@yahoo.com",
+                            Password = "SecyphLptJ",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(5641),
+                            Username = "Walker50"
+                        },
+                        new
+                        {
+                            UserId = new Guid("fae1ea8f-fc07-4b99-8436-69dfcbf432ca"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Granville7@hotmail.com",
+                            Password = "XtbiTjKhPT",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(5776),
+                            Username = "Greyson.Lang"
+                        },
+                        new
+                        {
+                            UserId = new Guid("fe9b1208-a636-461b-b9d9-bab6ba5a7311"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Maximo.Schuppe@yahoo.com",
+                            Password = "NS00J_xhEm",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(4846),
-                            Username = "Monique.Haag"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(5904),
+                            Username = "Yolanda85"
                         },
                         new
                         {
-                            UserId = new Guid("21921a63-8e79-4dcf-8eca-e806c11aa9a1"),
+                            UserId = new Guid("5c538e8c-28ad-4fce-bfc9-3f950c260592"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Thomas.Kunde@yahoo.com",
-                            Password = "CZMmyDxY2W",
+                            Email = "Daryl_Daugherty@hotmail.com",
+                            Password = "C_UB3ymtWV",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(5243),
-                            Username = "Dominic.Ledner"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(6072),
+                            Username = "Kim_Hodkiewicz"
                         },
                         new
                         {
-                            UserId = new Guid("4e249934-92ea-4f86-9a03-7ab5a7b44273"),
+                            UserId = new Guid("29acb5cc-51f6-4917-80db-10d727b9ea25"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Mireille27@gmail.com",
-                            Password = "nwA5ptGl1j",
+                            Email = "Kailyn_Robel85@gmail.com",
+                            Password = "kbqfOew2Sh",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(6237),
+                            Username = "Valerie_Vandervort32"
+                        },
+                        new
+                        {
+                            UserId = new Guid("d8b927fe-00f9-435c-8f3e-f562a49dd72f"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Parker.Abbott@gmail.com",
+                            Password = "q0pC5trNoj",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(5753),
-                            Username = "Leonardo_Klocko"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(6377),
+                            Username = "Verna_Hamill21"
                         },
                         new
                         {
-                            UserId = new Guid("4c18b3f3-e8c2-456e-aec5-1b5f3959c2ab"),
+                            UserId = new Guid("272f2c71-e859-4804-96da-f44e56abb8de"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Florian.Lemke@gmail.com",
-                            Password = "AeNKRvgsli",
+                            Email = "Lucio_Jacobi27@yahoo.com",
+                            Password = "hGz1981sES",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(6519),
+                            Username = "Cole_Marquardt"
+                        },
+                        new
+                        {
+                            UserId = new Guid("87c7f901-ac55-4ea1-8a70-8177391c2e7c"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Lourdes74@hotmail.com",
+                            Password = "abzQrBGLGv",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(6663),
+                            Username = "Gabriel.Marks"
+                        },
+                        new
+                        {
+                            UserId = new Guid("1ba310df-2553-4406-a270-9417068e049a"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Tania.Schinner83@yahoo.com",
+                            Password = "evH6LSjQdz",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(5991),
-                            Username = "Margret_Koch88"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(6800),
+                            Username = "Lauren.Schulist"
                         },
                         new
                         {
-                            UserId = new Guid("efffd255-b983-43fd-90ed-edaeee0933c1"),
+                            UserId = new Guid("565b1726-0a05-486b-bdcf-37b367a45d87"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Alysha55@gmail.com",
-                            Password = "cgs3DR0LVZ",
+                            Email = "Duane_Effertz30@gmail.com",
+                            Password = "n4yuiM2QYw",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(6428),
-                            Username = "Camylle.Bosco"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(6973),
+                            Username = "America_Collier42"
                         },
                         new
                         {
-                            UserId = new Guid("ea48c879-37b2-4840-89ef-a9771bafc904"),
+                            UserId = new Guid("e31549e6-9c2e-4e46-915f-c9d5e2a99e0e"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Jamey38@gmail.com",
-                            Password = "TSfdkteR86",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(6679),
-                            Username = "Marvin.Dickinson8"
-                        },
-                        new
-                        {
-                            UserId = new Guid("f628bdb7-7d33-4228-902f-d70d72c00835"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Idella.Gutmann68@gmail.com",
-                            Password = "32DNrWIwnC",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(6941),
-                            Username = "Stephon.Jacobi74"
-                        },
-                        new
-                        {
-                            UserId = new Guid("7d73c446-3578-477a-a0a5-fc67dea0d0a8"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Pietro_Flatley@yahoo.com",
-                            Password = "BZNSHvwFtS",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(7175),
-                            Username = "Jeremy20"
-                        },
-                        new
-                        {
-                            UserId = new Guid("303cfa50-b87e-41e9-b15c-633a801b2679"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Violette.Conn@yahoo.com",
-                            Password = "rNlmyVwf1O",
+                            Email = "Florence52@gmail.com",
+                            Password = "breRtbGddV",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(7456),
-                            Username = "Jasmin.Nitzsche"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(7125),
+                            Username = "Braxton.Gaylord"
                         },
                         new
                         {
-                            UserId = new Guid("ad9b95ad-fd0a-4820-85a0-8ff43cf7d8be"),
+                            UserId = new Guid("92197a3e-cdce-470f-b28d-4dd20b9a1e24"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Mia70@yahoo.com",
-                            Password = "VbXqUr5iMd",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(7666),
-                            Username = "Shanie.Fisher"
-                        },
-                        new
-                        {
-                            UserId = new Guid("5a23605c-7103-4c33-a995-43a5de429889"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Carley.Emmerich95@gmail.com",
-                            Password = "akCnJ2727e",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(7927),
-                            Username = "Randi_Champlin"
-                        },
-                        new
-                        {
-                            UserId = new Guid("9953c2cd-7a9f-44b9-9c7e-a9d2bdf8c7cd"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Jamison.Thiel@hotmail.com",
-                            Password = "sFnhmWZqkR",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(8143),
-                            Username = "Mikayla_Kunde"
-                        },
-                        new
-                        {
-                            UserId = new Guid("fe537b31-39d5-4fcf-8703-c2248a2ecae9"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Josefa99@gmail.com",
-                            Password = "R3jPXIUAvH",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(8386),
-                            Username = "Jakayla_Renner49"
-                        },
-                        new
-                        {
-                            UserId = new Guid("697be740-eb9b-45e3-90a4-5f3f9f5607b9"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Ramona_Rosenbaum51@hotmail.com",
-                            Password = "19rd8TzDRy",
+                            Email = "Danielle.Heathcote64@yahoo.com",
+                            Password = "Md5avQlcM8",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(8609),
-                            Username = "Andres64"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(7270),
+                            Username = "Carter54"
                         },
                         new
                         {
-                            UserId = new Guid("57a013ee-3140-41dd-9ec0-32fdfd0f3cc7"),
+                            UserId = new Guid("0b53ea6a-343e-4de9-9503-61b9d846a5b8"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Micaela24@gmail.com",
-                            Password = "Lqt54cNyJv",
+                            Email = "Marietta_Zemlak1@hotmail.com",
+                            Password = "2z2heLNdcm",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(8868),
-                            Username = "Casimer_Schmeler"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(7444),
+                            Username = "Tomas_Langosh75"
                         },
                         new
                         {
-                            UserId = new Guid("e133ac99-5081-430f-9355-731ad14c3652"),
+                            UserId = new Guid("14d477fb-6a80-4c1a-8016-62bb928fb1d4"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Clotilde.Huels@gmail.com",
-                            Password = "txD4zcAZHU",
+                            Email = "Porter.Jerde82@gmail.com",
+                            Password = "nimlgc4jpA",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(9098),
-                            Username = "Murphy42"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(7576),
+                            Username = "Ellen_Miller"
                         },
                         new
                         {
-                            UserId = new Guid("0d395174-1d0a-45b9-b907-a969a176c59c"),
+                            UserId = new Guid("5386f960-de96-41ac-95ce-ae437503c378"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Emiliano75@hotmail.com",
-                            Password = "dB9lycF6EV",
+                            Email = "Marge99@yahoo.com",
+                            Password = "ni8NkwRwQi",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(7730),
+                            Username = "Bradly_Larkin"
+                        },
+                        new
+                        {
+                            UserId = new Guid("4b9417f4-8543-4237-872d-96c2dd802782"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Sophie_Anderson68@yahoo.com",
+                            Password = "G8tMHatuKS",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(9367),
-                            Username = "Marjolaine.Cruickshank2"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(7877),
+                            Username = "Marielle_Wilkinson"
                         },
                         new
                         {
-                            UserId = new Guid("34ec56c9-e261-4ef2-a1c6-b97da67ee41c"),
+                            UserId = new Guid("182bcb8b-c6f6-49c6-891d-9d5342f2126e"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Arianna_Beier@gmail.com",
-                            Password = "eTrVSM_DN_",
+                            Email = "Vito79@yahoo.com",
+                            Password = "MYexEsM_H7",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(9572),
-                            Username = "Luz85"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(8035),
+                            Username = "Beatrice40"
                         },
                         new
                         {
-                            UserId = new Guid("9724c144-0d3c-40f5-92cf-640a0a311b27"),
+                            UserId = new Guid("a73dff94-8f4b-475b-8715-d2451f50bd72"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Toby33@yahoo.com",
-                            Password = "dx_KL4D_Lm",
+                            Email = "Warren.Hoppe44@gmail.com",
+                            Password = "gT2YlboJOt",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 121, DateTimeKind.Utc).AddTicks(9849),
-                            Username = "Payton_Goldner"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(8172),
+                            Username = "Gunnar.Little"
                         },
                         new
                         {
-                            UserId = new Guid("332e05c4-657a-4ac8-ad34-5f5efb5d13e2"),
+                            UserId = new Guid("24d15854-5a04-483b-b6f8-91c66309c19b"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Calista.Schroeder@hotmail.com",
-                            Password = "dtMb7bMPep",
+                            Email = "Keely_Adams@yahoo.com",
+                            Password = "4_XPw8KDYB",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(74),
-                            Username = "Corene.Padberg4"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(8288),
+                            Username = "Thad21"
                         },
                         new
                         {
-                            UserId = new Guid("b0c2de93-e8ea-4bf1-aceb-7013b48263c8"),
+                            UserId = new Guid("2a48f2d4-a4d2-41c1-b403-dd59880e0001"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Roy36@gmail.com",
-                            Password = "qxakdsg9ca",
+                            Email = "Olin41@gmail.com",
+                            Password = "mNeyy9D70B",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(8435),
+                            Username = "Kelli80"
+                        },
+                        new
+                        {
+                            UserId = new Guid("0f7a8f91-16a0-444b-a923-ad37a9ece2b0"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Clement16@hotmail.com",
+                            Password = "qtrXElTyCv",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(8573),
+                            Username = "Josefina28"
+                        },
+                        new
+                        {
+                            UserId = new Guid("cff6251a-77c8-4015-821c-446b4b220dba"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Jailyn96@hotmail.com",
+                            Password = "UQTLsDwbSu",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(464),
-                            Username = "Chadrick.Gottlieb53"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(8725),
+                            Username = "Thad_Collins"
                         },
                         new
                         {
-                            UserId = new Guid("f6e6a7a6-f7ec-4f0d-aca5-baf47a8a1f38"),
+                            UserId = new Guid("48e39d82-2f79-4db2-b217-141681457520"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Judson.Yost19@hotmail.com",
-                            Password = "iQYK2ywCht",
+                            Email = "Federico_Morissette@hotmail.com",
+                            Password = "vFm2aspqho",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(679),
-                            Username = "Veda23"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(8863),
+                            Username = "Ryder93"
                         },
                         new
                         {
-                            UserId = new Guid("937cf337-42e0-4ea2-9fa3-8ce0439d454e"),
+                            UserId = new Guid("174463d1-bf48-47c6-b3dc-7104cad680bd"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Arlene6@yahoo.com",
-                            Password = "evByafUR9S",
+                            Email = "Amya.Cummerata78@yahoo.com",
+                            Password = "HiyL9cwtPo",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(9017),
+                            Username = "Harmon.Abbott"
+                        },
+                        new
+                        {
+                            UserId = new Guid("465f0c6f-d279-4209-bc20-627b80d6842b"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Jamison_Reynolds8@hotmail.com",
+                            Password = "w8vM3hj4_c",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(9155),
+                            Username = "Sylvia_Langosh"
+                        },
+                        new
+                        {
+                            UserId = new Guid("47658408-4bae-4266-b23b-453847bb04a1"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Rosendo36@yahoo.com",
+                            Password = "MF2NGUDmZu",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(917),
-                            Username = "Emily84"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(9308),
+                            Username = "Maxie18"
                         },
                         new
                         {
-                            UserId = new Guid("f31821f7-29ad-4976-82ef-b0081baa216e"),
+                            UserId = new Guid("c6a77a45-c00f-4cfb-b040-a1a157639b38"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "River_Huels@hotmail.com",
-                            Password = "RzPdrYUgAz",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(1136),
-                            Username = "Francesca_Wilderman"
-                        },
-                        new
-                        {
-                            UserId = new Guid("6d80333a-21e7-4b08-a279-a24409056d80"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Jeanette.Abernathy43@yahoo.com",
-                            Password = "0P0_JJ15l6",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(1503),
-                            Username = "Kurtis0"
-                        },
-                        new
-                        {
-                            UserId = new Guid("b5870cee-0c32-46b7-b08d-fac2dd432610"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Jakob_Boyer64@yahoo.com",
-                            Password = "aYeqLmpTx9",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(1700),
-                            Username = "Ryann63"
-                        },
-                        new
-                        {
-                            UserId = new Guid("a50434ac-4b74-4349-8428-0ea80b1d53d4"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Nick93@yahoo.com",
-                            Password = "2ply5zh185",
+                            Email = "Lionel.Hodkiewicz@hotmail.com",
+                            Password = "iJjSQprmiP",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(1912),
-                            Username = "Susana_McCullough46"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(9445),
+                            Username = "Albina_Hagenes"
                         },
                         new
                         {
-                            UserId = new Guid("c1e8194a-f2d3-46da-bc6c-99bff44e59d8"),
+                            UserId = new Guid("debf1ece-0842-46f7-9c23-46aece3225a0"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Eulah_Murphy@yahoo.com",
-                            Password = "StCMIeOHHz",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(2191),
-                            Username = "Princess.Johnson"
-                        },
-                        new
-                        {
-                            UserId = new Guid("2c3e6c2d-2675-46c8-9985-a6ada51af66d"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Nora12@yahoo.com",
-                            Password = "KD4bXgtviD",
+                            Email = "Rhiannon.Waelchi45@hotmail.com",
+                            Password = "gUaIRJ7UlX",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(2406),
-                            Username = "Karen_Mante"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(9604),
+                            Username = "Monroe_Walsh"
                         },
                         new
                         {
-                            UserId = new Guid("f7ffa913-bd35-40cb-8fb1-a52adab2df11"),
+                            UserId = new Guid("777bb37b-78a8-4a06-a330-1eeec2bf74ab"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Ward.Johns42@hotmail.com",
-                            Password = "gfblgAAWWX",
+                            Email = "Bettie_Bauch82@gmail.com",
+                            Password = "zbl7qm0Xp8",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(2711),
-                            Username = "Kyleigh.Kautzer"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(9745),
+                            Username = "Alia_Parker"
                         },
                         new
                         {
-                            UserId = new Guid("4422352c-dd99-4c1e-9bd1-4dc31d0f9a7b"),
+                            UserId = new Guid("3616b50a-d4bd-4e61-8164-865e9e3c1871"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Melisa.Strosin93@hotmail.com",
-                            Password = "EnsVngp6Fw",
+                            Email = "Kristina_Gutmann5@yahoo.com",
+                            Password = "hGtBxeBwfg",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(2912),
-                            Username = "Nova_Steuber"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 916, DateTimeKind.Utc).AddTicks(9908),
+                            Username = "Roosevelt_Mayer43"
                         },
                         new
                         {
-                            UserId = new Guid("d094ab21-1d73-4c9e-9682-c340f8f456bd"),
+                            UserId = new Guid("d250c35d-9760-408e-8d8d-1c463ff9dc58"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Fae67@hotmail.com",
-                            Password = "kOoQfh5Fra",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(3163),
-                            Username = "Maximus_Crist"
-                        },
-                        new
-                        {
-                            UserId = new Guid("c640bb7e-5545-43d4-b66c-76ba417b8cb9"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Clementine.Hickle79@gmail.com",
-                            Password = "1CdUp1NZLO",
+                            Email = "Pablo.Fay54@yahoo.com",
+                            Password = "OG9yWDJ34A",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(3402),
-                            Username = "Krystel37"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(53),
+                            Username = "Mandy71"
                         },
                         new
                         {
-                            UserId = new Guid("6089c57d-f9fe-461b-aca1-2cd6e373b39f"),
+                            UserId = new Guid("68561321-71b7-4409-8596-6e501a1986ef"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Mohamed.Pacocha76@hotmail.com",
-                            Password = "9UY9xGo9zs",
+                            Email = "Virgil77@hotmail.com",
+                            Password = "KI2b5DLrAh",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(3770),
-                            Username = "Brycen_Konopelski74"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(220),
+                            Username = "Ferne.Kshlerin"
                         },
                         new
                         {
-                            UserId = new Guid("445ee21c-3d7f-43d7-abc4-3c4a892e0637"),
+                            UserId = new Guid("9b258e08-5615-4da2-b979-3eb451529b5f"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Laisha_Vandervort@yahoo.com",
-                            Password = "4uUnmQv7Dg",
+                            Email = "Kaci_Schulist30@gmail.com",
+                            Password = "dRUXeUTCBY",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(4031),
-                            Username = "Trisha.Okuneva31"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(349),
+                            Username = "Omari.Hudson"
                         },
                         new
                         {
-                            UserId = new Guid("3390f409-fb49-4176-ab81-7eaed2dbaa5e"),
+                            UserId = new Guid("778193ac-0dd7-4aa1-935b-e8cc8b503db5"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Reggie.Olson2@gmail.com",
-                            Password = "zmqFxgrPp9",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(4261),
-                            Username = "Jovanny_Murray"
-                        },
-                        new
-                        {
-                            UserId = new Guid("163b83a0-31aa-48d3-9df5-0b4c5ab651de"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Trey.Walsh86@gmail.com",
-                            Password = "SXJA8C6HCC",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(4537),
-                            Username = "Cathrine.Casper18"
-                        },
-                        new
-                        {
-                            UserId = new Guid("ad7d9728-c9cf-4413-a408-fa9fe018600e"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Bud.Feil@gmail.com",
-                            Password = "RvMZkMI8ip",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(4738),
-                            Username = "Jamar24"
-                        },
-                        new
-                        {
-                            UserId = new Guid("ad2be316-9198-416e-9850-e94145ec0a44"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Aiden.Vandervort@hotmail.com",
-                            Password = "HPo2jQ7oZn",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(4949),
-                            Username = "Carli_Nikolaus95"
-                        },
-                        new
-                        {
-                            UserId = new Guid("3fe6575e-dba0-499d-8ef2-289c44057472"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Kiera_Kuhlman19@hotmail.com",
-                            Password = "CHD_rzQ5np",
+                            Email = "Colby.Kutch@yahoo.com",
+                            Password = "NMNj8JVv8Q",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(5226),
-                            Username = "Valerie_Mueller"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(520),
+                            Username = "Katheryn_Reinger"
                         },
                         new
                         {
-                            UserId = new Guid("1df7853e-1bb1-4c06-8d66-a5b1da0b92b8"),
+                            UserId = new Guid("954d355e-be33-43a8-a3c8-a53901224d33"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Wendell_Wolf@gmail.com",
-                            Password = "WUJii6TODG",
+                            Email = "Jessie0@yahoo.com",
+                            Password = "ce051CwlVP",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(658),
+                            Username = "Johnpaul11"
+                        },
+                        new
+                        {
+                            UserId = new Guid("a94cbcc0-a805-44e4-a15d-4f6d6828d2e4"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Justus96@gmail.com",
+                            Password = "nCZsURhsCr",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(806),
+                            Username = "Yadira.Mills"
+                        },
+                        new
+                        {
+                            UserId = new Guid("994bb89b-244e-4051-ae64-97bedbae0975"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Ryann.Smith@hotmail.com",
+                            Password = "xe5kO3tQ5u",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(5430),
-                            Username = "Novella.Goyette80"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(935),
+                            Username = "Angie_Pagac"
                         },
                         new
                         {
-                            UserId = new Guid("f2b19a1e-0e4c-409a-8a73-697fd9088e1d"),
+                            UserId = new Guid("65434d8c-9b01-47e4-88bf-c320179c59e2"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Estell87@yahoo.com",
-                            Password = "GVVzdWwAiC",
+                            Email = "Meda_Pagac49@yahoo.com",
+                            Password = "fv_IvapAi1",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(1049),
+                            Username = "Lew_Huel8"
+                        },
+                        new
+                        {
+                            UserId = new Guid("0a8fc1d5-446e-473a-9d9f-275939608fbf"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Erin_Tremblay36@hotmail.com",
+                            Password = "0lDcvVwqEx",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(1231),
+                            Username = "Freida.Gleichner90"
+                        },
+                        new
+                        {
+                            UserId = new Guid("0f7b091f-0838-4aa9-8e67-cc56ecff358e"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Bartholome1@yahoo.com",
+                            Password = "5LpExZ70yV",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(5669),
-                            Username = "Kale.Wuckert"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(1364),
+                            Username = "Hazel68"
                         },
                         new
                         {
-                            UserId = new Guid("120a6e58-3b90-4337-9269-035107d261f6"),
+                            UserId = new Guid("7990a3fa-2ac1-4626-a4a2-b965d6fb9584"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Conor.Crooks19@gmail.com",
-                            Password = "yhZ_ZhXJdC",
+                            Email = "Kamron.Kohler23@yahoo.com",
+                            Password = "D7pxKJ0ib5",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(1517),
+                            Username = "Jaunita.Rutherford76"
+                        },
+                        new
+                        {
+                            UserId = new Guid("34f36fa0-dde4-4b76-b168-a8561330dab9"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Kris.Predovic20@gmail.com",
+                            Password = "_7cYarrzBB",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(5865),
-                            Username = "Thalia.Trantow98"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(1678),
+                            Username = "Green_Gerhold"
                         },
                         new
                         {
-                            UserId = new Guid("92710910-61a5-420d-93de-66f83e6bf65e"),
+                            UserId = new Guid("e2f706ea-304b-4374-8fec-056feb366c2b"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Derrick31@yahoo.com",
-                            Password = "s3Twg9_XZI",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(6108),
-                            Username = "Kristy.Denesik40"
-                        },
-                        new
-                        {
-                            UserId = new Guid("1935832b-4fe3-4505-918f-1f9dc584bcf8"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Orpha79@hotmail.com",
-                            Password = "dU3FzXJqUL",
+                            Email = "Abagail_Ferry73@yahoo.com",
+                            Password = "ABc9Rd1j2K",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(6322),
-                            Username = "Rebekah_Hermann"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(1809),
+                            Username = "Eloy55"
                         },
                         new
                         {
-                            UserId = new Guid("f23d71d7-720d-43dc-b45d-521df91357d7"),
+                            UserId = new Guid("748f66eb-dcbd-48d0-a61d-898e23fb7728"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Andreane40@gmail.com",
-                            Password = "BPKkSXzGgl",
+                            Email = "Queenie.Mann39@gmail.com",
+                            Password = "nZVDOqRlZ9",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(6565),
-                            Username = "Brook24"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(1945),
+                            Username = "Milton_Muller81"
                         },
                         new
                         {
-                            UserId = new Guid("e06155c0-2186-4612-bd55-19468238a091"),
+                            UserId = new Guid("6159cb17-349a-47a1-a3dc-501313acf0d7"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Donavon.Block72@gmail.com",
-                            Password = "qpUEx4eh8d",
+                            Email = "Bud.Robel11@hotmail.com",
+                            Password = "_oxuTTQqCw",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(6776),
-                            Username = "Linnie.Johnston"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(2099),
+                            Username = "Humberto_Batz"
                         },
                         new
                         {
-                            UserId = new Guid("3f52c848-460c-4623-8a65-b8427d8dcde2"),
+                            UserId = new Guid("7b0164b5-a22d-42b4-ae8d-c710daa46010"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Werner_Treutel@yahoo.com",
-                            Password = "Z7YT8AetYE",
+                            Email = "Trevor34@hotmail.com",
+                            Password = "BFD5OSNAmB",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(7035),
-                            Username = "Allan25"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(2241),
+                            Username = "Catalina.Corwin99"
                         },
                         new
                         {
-                            UserId = new Guid("774ee7ad-d6af-4042-a37f-78fb85869b0b"),
+                            UserId = new Guid("69f90e8a-9b6b-4028-902f-ff9217f6fc09"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Lance.Schaefer59@hotmail.com",
-                            Password = "pAzAwi03NE",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(7239),
-                            Username = "Diego_Moen81"
-                        },
-                        new
-                        {
-                            UserId = new Guid("8e24743a-5a16-430a-b7e0-5769f8777572"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Saul_Pfeffer@yahoo.com",
-                            Password = "UzmMwEeHLf",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(7496),
-                            Username = "Ashleigh.Lang"
-                        },
-                        new
-                        {
-                            UserId = new Guid("85e9bd3d-d193-4a20-af79-8ba555c9b3ed"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Margarita.Dibbert48@hotmail.com",
-                            Password = "36WBwHCjwe",
+                            Email = "Robin_DAmore53@hotmail.com",
+                            Password = "TmUFfQZX28",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(7740),
-                            Username = "Benedict3"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(2460),
+                            Username = "Wilford.Herman75"
                         },
                         new
                         {
-                            UserId = new Guid("3d625867-66c1-483a-9f29-ffd6ad87c1b2"),
+                            UserId = new Guid("e5ac3a67-6333-4bf7-8602-b998e2b63356"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Delbert2@hotmail.com",
-                            Password = "xtuxm068SY",
+                            Email = "Skyla33@gmail.com",
+                            Password = "UFlZvjq0ia",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(8026),
-                            Username = "Amara42"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(2629),
+                            Username = "Bryce.Pollich29"
                         },
                         new
                         {
-                            UserId = new Guid("52d51ce6-b663-4b77-b4d3-d0b51d15fb53"),
+                            UserId = new Guid("9693dc45-9ee4-433c-bb5d-9205e90e6099"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Octavia13@gmail.com",
-                            Password = "r3Bn7aFbnn",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(8235),
-                            Username = "Fern_Kreiger27"
-                        },
-                        new
-                        {
-                            UserId = new Guid("1d673fa1-8fce-422a-913a-069dcc2254da"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Ramona77@yahoo.com",
-                            Password = "CUKabHwfhf",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(8497),
-                            Username = "Elyse88"
-                        },
-                        new
-                        {
-                            UserId = new Guid("9ad25683-ba1e-4e43-99b7-3f9949c6d5b1"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Bart33@hotmail.com",
-                            Password = "6Yzh_n7mbj",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(8703),
-                            Username = "Juvenal.Balistreri9"
-                        },
-                        new
-                        {
-                            UserId = new Guid("69379d81-d86d-4cdc-8c63-377b2eaf7fdc"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Edwina30@gmail.com",
-                            Password = "hhtvvH8LK4",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(8955),
-                            Username = "Anita58"
-                        },
-                        new
-                        {
-                            UserId = new Guid("13fc9d80-1d1b-4c7a-bd55-d99563a560c1"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Lera_Hayes25@yahoo.com",
-                            Password = "EK3iVRXr0u",
-                            Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(9164),
-                            Username = "Everette.Ryan"
-                        },
-                        new
-                        {
-                            UserId = new Guid("f51b8c76-8c77-4fba-bad7-59a5d4894857"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Coby.Little@yahoo.com",
-                            Password = "OqZcMBKsnP",
+                            Email = "Rowland.Wilderman@gmail.com",
+                            Password = "4MIQet_kYp",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(9428),
-                            Username = "Norene36"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(2844),
+                            Username = "Cathrine_Jones"
                         },
                         new
                         {
-                            UserId = new Guid("532dcb92-aa0d-4559-88c3-907ae3283639"),
+                            UserId = new Guid("091e5e9e-5f92-482f-b808-d65eed7bb8ed"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Joseph75@gmail.com",
-                            Password = "2KD0hTPgB_",
-                            Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(9615),
-                            Username = "Emory.Stark"
-                        },
-                        new
-                        {
-                            UserId = new Guid("a3daaebb-2fc7-4616-822f-7d7eac2ecaad"),
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Francisco87@gmail.com",
-                            Password = "GdHINQEKa8",
+                            Email = "May.Stoltenberg45@gmail.com",
+                            Password = "CuccTGyL8W",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 122, DateTimeKind.Utc).AddTicks(9888),
-                            Username = "Bryce32"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(3053),
+                            Username = "Sebastian_Sporer48"
                         },
                         new
                         {
-                            UserId = new Guid("ce1cf96a-a7d3-49a1-808a-c4b212c86da2"),
+                            UserId = new Guid("7c4eec42-a9c7-4c04-af73-66c0ac97ceb1"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Ernestina47@hotmail.com",
-                            Password = "FvuFIgHMc2",
+                            Email = "Wiley.Lynch10@yahoo.com",
+                            Password = "pavIkbmJ5C",
                             Role = 1,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 123, DateTimeKind.Utc).AddTicks(118),
-                            Username = "Keenan.Zieme89"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(3187),
+                            Username = "Sofia_Streich83"
                         },
                         new
                         {
-                            UserId = new Guid("3d37f44e-25d7-40a4-ba41-2950bf6a0a9f"),
+                            UserId = new Guid("22b7465a-4730-4270-8115-8eaf53edc910"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "Alfonso.Gutmann@yahoo.com",
-                            Password = "y6MK48UBdz",
+                            Email = "Ladarius_Paucek@gmail.com",
+                            Password = "m5Y7YKDCfj",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(3387),
+                            Username = "Samson.Macejkovic33"
+                        },
+                        new
+                        {
+                            UserId = new Guid("03e065f9-1e3b-405b-a9e5-2dd3d50ac373"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Nikki.Breitenberg@gmail.com",
+                            Password = "klcDCU7nxZ",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(3564),
+                            Username = "Thora44"
+                        },
+                        new
+                        {
+                            UserId = new Guid("81344f17-cc77-4b87-9ed9-400290a46025"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Janick84@gmail.com",
+                            Password = "rZMn0hD6L4",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(3707),
+                            Username = "Adeline.Fadel57"
+                        },
+                        new
+                        {
+                            UserId = new Guid("3ae0680e-2b0f-4dbf-a7db-1177570a44e4"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Freda.Spencer@gmail.com",
+                            Password = "KmBaAuVpJo",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(3878),
+                            Username = "Rebecca_Larkin89"
+                        },
+                        new
+                        {
+                            UserId = new Guid("c8d288ff-0e2a-42c6-ae5b-af8300cb18dc"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Abner.Batz@hotmail.com",
+                            Password = "cwqhu1tBee",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(4017),
+                            Username = "Mia63"
+                        },
+                        new
+                        {
+                            UserId = new Guid("3fb94ecc-b2e0-4a3e-a5e3-3b61c5ee3bc0"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Mavis.Bechtelar@hotmail.com",
+                            Password = "qMOBSJVZ_s",
                             Role = 2,
-                            UpdatedAt = new DateTime(2022, 11, 8, 11, 49, 43, 123, DateTimeKind.Utc).AddTicks(400),
-                            Username = "Deshaun.Hessel"
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(4173),
+                            Username = "Ken_Denesik86"
+                        },
+                        new
+                        {
+                            UserId = new Guid("5ad38550-dc72-43b6-9cd2-9e7b99676bab"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Cynthia_Littel@hotmail.com",
+                            Password = "uhuYfVnSrS",
+                            Role = 2,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(4308),
+                            Username = "Josefa10"
+                        },
+                        new
+                        {
+                            UserId = new Guid("a67dfb22-e579-43b1-a110-bfcb44b0b53b"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Rosemarie_Connelly27@hotmail.com",
+                            Password = "sMHnGKMk_n",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(4488),
+                            Username = "Jasmin.Moen"
+                        },
+                        new
+                        {
+                            UserId = new Guid("69661be0-3d64-4e30-b7f7-66063f699f04"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Eldridge_Kiehn@gmail.com",
+                            Password = "zvGmgvUz1q",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(4622),
+                            Username = "Ernest80"
+                        },
+                        new
+                        {
+                            UserId = new Guid("4c4f9b08-2a35-4fd1-8931-c546c73b2fe3"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Isidro46@yahoo.com",
+                            Password = "by8Wjja1ne",
+                            Role = 2,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(4794),
+                            Username = "Brionna87"
+                        },
+                        new
+                        {
+                            UserId = new Guid("193747a6-72e7-49f4-8e4e-64d56a468a9c"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Heidi_Schuppe@hotmail.com",
+                            Password = "k3JIYGoGsz",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(4978),
+                            Username = "Ellie.OKeefe29"
+                        },
+                        new
+                        {
+                            UserId = new Guid("cc8c2dcd-1e38-4b67-9132-1671ee7ee4ce"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Yasmin.Dietrich@yahoo.com",
+                            Password = "R9tCOwiNQn",
+                            Role = 2,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(5134),
+                            Username = "Graham1"
+                        },
+                        new
+                        {
+                            UserId = new Guid("adda5d30-242a-49c9-9656-6f2eb859fabc"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Genevieve23@gmail.com",
+                            Password = "NK4ShwGIOc",
+                            Role = 1,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(5266),
+                            Username = "Scottie_Hauck"
+                        },
+                        new
+                        {
+                            UserId = new Guid("bac49b08-6b5c-452d-b0cb-eb65a09cbea8"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Jaqueline40@yahoo.com",
+                            Password = "nxcsGKt73Y",
+                            Role = 2,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(5415),
+                            Username = "Billy_Lehner36"
+                        },
+                        new
+                        {
+                            UserId = new Guid("f8eaf74d-b312-4169-939d-22fb1778af5a"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Grant.Terry84@gmail.com",
+                            Password = "J3_ZXvNmWR",
+                            Role = 2,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(5557),
+                            Username = "Elnora_Stiedemann62"
+                        },
+                        new
+                        {
+                            UserId = new Guid("a53c89cd-5bba-4f8a-8a4e-06f53f4eae23"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "Connor.Schaden92@hotmail.com",
+                            Password = "UpEPhZgx5z",
+                            Role = 2,
+                            UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(5810),
+                            Username = "Jeremy_Rodriguez18"
                         });
                 });
-#pragma warning restore 612, 618
+
+                modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
+                {
+                    b.HasOne("ipt_project_cepbep.Models.User", "ToFriend")
+                        .WithMany()
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ipt_project_cepbep.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ToFriend");
+
+                    b.Navigation("User");
+                });
+            });
         }
     }
 }

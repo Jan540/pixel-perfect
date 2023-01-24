@@ -1,8 +1,8 @@
 import { graphql } from "../../gql";
 
 const CREATE_CANVAS = graphql(`
-  mutation createCanvas {
-    createCanvas {
+  mutation createCanvas($input: CreateCanvasInput!) {
+    createCanvas(input: $input) {
       canvas {
         userId
         canvasId

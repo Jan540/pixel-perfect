@@ -26,5 +26,14 @@ public class CanvasQuery
         return canvas.Colors;
     }
     // write a LoadCanvas method that takes in a canvas id and returns the canvas
+    [GraphQLName("loadPublicCanvas")]
+    public async Task<string> LoadPublicCanvas(AppDbContext context, string canvas_id)
+    {
+        var canvas = await context.PublicCanvases.FindAsync(canvas_id);
 
+        if (canvas == null)
+            throw new ArgumentException("Canvas not found!");
+
+        return canvas.Colors;
+    }
 }

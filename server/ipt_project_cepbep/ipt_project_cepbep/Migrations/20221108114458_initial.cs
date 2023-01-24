@@ -20,6 +20,7 @@ namespace iptprojectcepbep.Migrations
                     Username = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
+                    LastPlaced = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -46,7 +47,8 @@ namespace iptprojectcepbep.Migrations
                 {
                     Canvasid = table.Column<string>(name: "CanvasId", type: "text", nullable: false),
                     Userid = table.Column<Guid>(name: "UserId", type: "uuid", nullable: false),
-                    Colors = table.Column<string>(type: "text", nullable: false)
+                    Colors = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

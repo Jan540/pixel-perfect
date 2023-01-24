@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useSubscription } from "@apollo/client";
 import {
   FC,
+  MouseEventHandler,
   useCallback,
   useContext,
   useEffect,
@@ -10,13 +11,15 @@ import {
 import { CHANGE_PIXEL } from "../graphql/code/changePixel";
 import { ON_PIXEL_CHANGE } from "../graphql/code/onPixelChange";
 import { PixelGrid } from "../types/PixelArtCanvasTypes";
-import { ColorResult, SwatchesPicker } from "react-color";
+import { ColorResult } from "react-color";
 import SAVE_CANVAS from "../graphql/mutations/saveCanvas";
 import LOAD_CANVAS from "../graphql/query/loadCanvas";
 import ComponentLoading from "./componentLoading";
 import { Box, Flex, Grid, GridItem, useToast } from "@chakra-ui/react";
 import DrawingToolbar from "./DrawingToolbar";
 import { UserContext } from "../lib/User/Usercontext";
+import SAVE_PUBLIC_CANVAS from "../graphql/mutations/savePublicCanvas";
+import LOAD_PUBLIC_CANVAS from "../graphql/query/loadPublicCanvas";
 import ColorPicker from "./ColorPicker";
 import panzoom from "panzoom";
 
@@ -26,29 +29,37 @@ type PixelArtCanvasProps = {
   id: string;
 };
 
-const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
+const PixelArtPublic: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
+  //useStates
+  const [grid, setGrid] = useState<PixelGrid>([]);
+  const [color, setColor] = useState<string>("rgb(0, 0, 0)");
+  const [loading, setLoading] = useState(true);
+  const [mouseDown, setMouseDown] = useState<boolean>(false);
+  const [loadedColors, setLoadedColors] = useState<string>();
+  const [mouseOver, setMouseOver] = useState(false);
+  //useContext
   const { user } = useContext(UserContext);
-  const toast = useToast();
 
+  //useRef
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // add panzoom to canvas
-    if (canvasRef.current) {
-      panzoom(canvasRef.current, {
-        smoothScroll: false,
-        maxZoom: 5,
-        minZoom: 0.1,
-        beforeMouseDown: (e) => {
-          // allow drag only when control key is pressed
-          return !e.ctrlKey;
-        },
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //useToast
+  const toast = useToast();
 
-  const [loading, setLoading] = useState(true);
+  //useMutation
+  const [submitChange, { loading: submitLoading, error: submitError }] =
+    useMutation(CHANGE_PIXEL);
+  const [savePublic, { data: savePublicData, error: savePublicError }] =
+    useMutation(SAVE_PUBLIC_CANVAS);
+
+  //useQuery
+  const { data: colorsData, error: colorsError } = useQuery(
+    LOAD_PUBLIC_CANVAS,
+    {
+      variables: { input: id },
+    }
+  );
+
   const { data, error } = useSubscription(ON_PIXEL_CHANGE, {
     onData: (onChangeData) => {
       if (!onChangeData.data.data) return;
@@ -64,19 +75,28 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
       canvasId: id,
     },
   });
-  const [submitChange, { loading: submitLoading, error: submitError }] =
-    useMutation(CHANGE_PIXEL);
 
-  const [grid, setGrid] = useState<PixelGrid>([]);
-  const [color, setColor] = useState<string>("rgb(0, 0, 0)");
-  const [mouseDown, setMouseDown] = useState<boolean>(false);
-  const [saveCanvas, { data: saveData, error: saveError }] =
-    useMutation(SAVE_CANVAS);
-  const { data: colorsData, error: colorsError } = useQuery<any>(LOAD_CANVAS, {
-    variables: { input: id },
-  });
-  const [loadedColors, setLoadedColors] = useState<string>();
+  useEffect(() => {
+    // add panzoom to canvas
+    if (canvasRef.current) {
+      panzoom(canvasRef.current, {
+        smoothScroll: false,
+        maxZoom: 1,
+        minZoom: 0.1,
+        beforeWheel: (e) => {
+          // allow wheel zoom only when mouse is over canvas
+          return mouseOver;
+        },
+        beforeMouseDown: (e) => {
+          // allow drag only when control key is pressed
+          return !e.ctrlKey;
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // functions
   const drawPixelChange = (row: number, col: number, color: string) => {
     const pixel = document.getElementById(`pixel-${row}-${col}`);
     if (!pixel) return;
@@ -111,7 +131,6 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
           `pixel-${i}-${j}`
         ) as HTMLDivElement;
         pixel.style.backgroundColor = colorData[i][j];
-        pixel.style.backgroundColor = colorData[i][j];
       }
     }
 
@@ -134,32 +153,14 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
       grid.push(rowData);
     }
     try {
-      saveCanvas({
+      // Remove Authorize
+      savePublic({
         variables: { input: { canvas_id: id, colors: JSON.stringify(grid) } },
       });
     } catch {
       console.log("error saving canvas");
     }
   };
-
-  useEffect(() => {
-    if (!colorsData) {
-      if (typeof window !== "undefined") setLoading(false);
-      return;
-    }
-    setLoadedColors(colorsData.loadCanvas as string);
-  }, [colorsData]);
-
-  useEffect(() => {
-    createGrid();
-
-    if (!loadedColors) {
-      if (typeof window !== "undefined") setLoading(false);
-      return;
-    }
-    loadGrid();
-    setLoading(false);
-  }, [createGrid, loadGrid, loadedColors]);
 
   const handleColorChange = (newColor: ColorResult) => {
     setColor(`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b})`);
@@ -171,6 +172,7 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
     col: number
   ) => {
     let pixel = e.currentTarget;
+
     await updatePixel(pixel, color, row, col);
   };
 
@@ -181,43 +183,79 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
     col: number
   ) => {
     if (!user.username) {
-      toast.closeAll();
       toast({
-        title: "You must be logged in to draw",
+        title: "Error",
+        description: "You must be logged in to place a pixel! 📉📉📉📉",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
-        variant: "solid",
+        position: "bottom-right",
       });
+    }
+    if (pixel.style.backgroundColor === color) {
       return;
     }
 
-    if (pixel.style.backgroundColor === color) return;
-
-    pixel.style.backgroundColor = color;
-    submitChange({
-      variables: {
-        input: {
-          payload: {
-            row,
-            col,
-            color,
-            canvasId: id,
+    try {
+      await submitChange({
+        variables: {
+          input: {
+            payload: {
+              row,
+              col,
+              color,
+              canvasId: id,
+            },
           },
         },
-      },
-    });
+      });
+      pixel.style.backgroundColor = color;
+    } catch (err) {
+      return;
+    }
   };
 
-  const handleMouseDown = () => {
+  useEffect(() => {
+    if (!submitError) return;
+    toast.closeAll();
+    toast({
+      title: "Error",
+      description: submitError.message,
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom-right",
+    });
+  }, [submitError, toast]);
+
+  const handleMouseDown = (e: any) => {
     setMouseDown(true);
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: any) => {
     setMouseDown(false);
     if (user.username) saveGrid();
   };
 
+  //useEffect
+  useEffect(() => {
+    createGrid();
+    if (!colorsData) {
+      if (typeof window !== "undefined") setLoading(false);
+      return;
+    }
+    setLoadedColors(colorsData.loadPublicCanvas);
+    console.log("loaded colors", loadedColors);
+    if (!loadedColors) {
+      if (typeof window !== "undefined") setLoading(false);
+      return;
+    }
+
+    loadGrid();
+    setLoading(false);
+  }, [colorsData, createGrid, loadGrid, loadedColors]);
+
+  // styles
   const styles: React.CSSProperties = {
     userSelect: "none",
     overflow: "hidden",
@@ -225,30 +263,27 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
 
   return (
     <>
-      <Flex w="100vw" justifyContent="center">
-        <ColorPicker onColorChange={handleColorChange} />
-      </Flex>
       <Flex
-        h="100vh"
-        w="100vw"
         justifyContent="center"
-        alignItems="center"
+        alignContent="center"
         onMouseUp={handleMouseUp}
       >
         {loading && <ComponentLoading />}
+        <ColorPicker onColorChange={handleColorChange} />
         <Flex
           ref={canvasRef}
           style={styles}
           id="pixel-grid"
+          onMouseOver={() => setMouseOver(true)}
+          onMouseOut={() => setMouseOver(false)}
           onMouseDown={handleMouseDown}
           display={loading ? "none" : "block"}
           boxShadow="xl"
-          overflow="hidden"
         >
           {grid.map((row, i) => (
             <div key={i} style={{ display: "flex", userSelect: "none" }}>
               {row.map((pixel, j) => (
-                <div
+                <Flex
                   id={`pixel-${i}-${j}`}
                   key={j}
                   style={{
@@ -261,9 +296,8 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
                   onClick={(e) => {
                     if (!e.ctrlKey) handlePixelChange(e, i, j);
                   }}
-                  onMouseMove={(e) => {
-                    if (!e.ctrlKey && mouseDown) handlePixelChange(e, i, j);
-                  }}
+                  // Dont need for the public version
+                  // onMouseMove={(e) => handlePixelMouseMove(e, i, j)}
                 />
               ))}
             </div>
@@ -274,4 +308,4 @@ const PixelArtCanvas: FC<PixelArtCanvasProps> = ({ width, height, id }) => {
   );
 };
 
-export default PixelArtCanvas;
+export default PixelArtPublic;

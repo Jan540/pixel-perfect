@@ -1,4 +1,4 @@
-import { useMutation } from "@apollo/client";
+import { useMutation } from '@apollo/client';
 import {
   useDisclosure,
   Button,
@@ -12,23 +12,21 @@ import {
   DrawerFooter,
   useToast,
   HStack,
-} from "@chakra-ui/react";
-import { BREAK } from "graphql";
-import React, { useEffect, useState } from "react";
-import UPDATEPASSWORD from "../graphql/mutations/updatePassword";
-import updatePassword from "../graphql/mutations/updatePassword";
+} from '@chakra-ui/react';
+import { BREAK } from 'graphql';
+import React, { useEffect, useState } from 'react';
+import UPDATEPASSWORD from '../graphql/mutations/updatePassword';
+import updatePassword from '../graphql/mutations/updatePassword';
 
 const PasswordDrawer = () => {
-  const [
-    updatePassword,
-    { data: dataPassword, error: errorPassword, loading: loadingPassword },
-  ] = useMutation(UPDATEPASSWORD);
+  const [updatePassword, { data: dataPassword, error: errorPassword, loading: loadingPassword }] =
+    useMutation(UPDATEPASSWORD);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef: any = React.useRef();
   const toast = useToast();
-  const [inputOldPassword, setInputOldPassword] = useState("");
-  const [inputNewPassword, setInputNewPassword] = useState("");
+  const [inputOldPassword, setInputOldPassword] = useState('');
+  const [inputNewPassword, setInputNewPassword] = useState('');
 
   const UpdatePassword = async () => {
     toast.closeAll();
@@ -46,10 +44,10 @@ const PasswordDrawer = () => {
     }
     toast({
       title: `Password changed`,
-      description: "Success!",
-      status: "success",
+      description: 'Success!',
+      status: 'success',
       isClosable: true,
-      position: "bottom",
+      position: 'bottom',
     });
     onClose();
   };
@@ -58,24 +56,19 @@ const PasswordDrawer = () => {
     if (!errorPassword) return;
     toast({
       title: `${errorPassword?.message}`,
-      description: "nice try!",
-      status: "error",
+      description: 'nice try!',
+      status: 'error',
       isClosable: true,
-      position: "bottom",
+      position: 'bottom',
     });
-  }, [errorPassword]);
+  }, [errorPassword, toast]);
 
   return (
     <>
       <Button ref={btnRef} onClick={onOpen}>
         Change Password
       </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
-        onClose={onClose}
-        finalFocusRef={btnRef}
-      >
+      <Drawer isOpen={isOpen} placement='right' onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -84,30 +77,25 @@ const PasswordDrawer = () => {
             <Input
               isInvalid={errorPassword ? true : false}
               isDisabled={loadingPassword}
-              type="password"
-              variant="filled"
-              placeholder="Old Password"
+              type='password'
+              variant='filled'
+              placeholder='Old Password'
               onChange={(e) => setInputOldPassword(e.target.value)}
             />
             <Input
               mt={3}
               isInvalid={errorPassword ? true : false}
               isDisabled={loadingPassword}
-              type="password"
-              variant="filled"
-              placeholder="New Password"
+              type='password'
+              variant='filled'
+              placeholder='New Password'
               onChange={(e) => setInputNewPassword(e.target.value)}
             />
             <HStack mt={5}>
-              <Button
-                variant="outline"
-                mr={3}
-                colorScheme="red"
-                onClick={onClose}
-              >
+              <Button variant='outline' mr={3} colorScheme='red' onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="green" onClick={UpdatePassword}>
+              <Button colorScheme='green' onClick={UpdatePassword}>
                 Save
               </Button>
             </HStack>

@@ -1,43 +1,22 @@
 import {
-  Button,
   Flex,
-  RangeSlider,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  RangeSliderTrack,
-  useColorMode,
-  VStack,
-  Text,
-  Container,
-  Box,
-} from "@chakra-ui/react";
-import type { NextPage } from "next";
-
+} from '@chakra-ui/react';
+import type { NextPage } from 'next';
+import PixelArtPublic from '../components/PixerlArtPublic';
 const publicPlace: NextPage = () => {
   return (
     <>
       <Flex
-        height="100vh"
-        width="100vw"
-        justifyContent="center"
-        alignItems="center"
-      ></Flex>
+        height='100vh'
+        width='100vw'
+        justifyContent='center'
+        alignItems='center'
+        style={{ overflow: 'hidden'}}
+      >
+        <PixelArtPublic width={100} height={100} id={'publicCanvas'} />
+      </Flex>
     </>
   );
 };
-
-<>
-  {Array(250)
-    .fill(0)
-    .map((_, i) => (
-      <Box
-        key={i}
-        border="1px"
-        borderColor="black"
-        width="10px"
-        height="10px"
-      />
-    ))}
-</>;
 
 export default publicPlace;

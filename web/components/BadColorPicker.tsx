@@ -1,11 +1,7 @@
-import { EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  ButtonGroup,
-  Divider,
   HStack,
-  IconButton,
   Input,
   useRadio,
   useRadioGroup,
@@ -17,9 +13,8 @@ type ColorPickerProps = {
   onColorChange: ColorChangeHandler;
 };
 
-const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
+const BadColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
   const [color, setColor] = useState("");
-  let colorRef: HTMLInputElement | null = null;
 
   function hexToRgb(hex: string): RGBColor {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -31,6 +26,7 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
         b: 255,
       };
     }
+
     return {
       r: parseInt(result[1], 16),
       g: parseInt(result[2], 16),
@@ -38,16 +34,8 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
     };
   }
 
-  const swatches = [
-    "#000000",
-    "#FFFFFF",
-    "#ED333B",
-    "#33D17A",
-    "#3584E4",
-    "#FFD700",
-    "#FF69B4",
-    "#FFA500",
-  ];
+  const swatches = ["#000000", "#FFFFFF", "#ED333B", "#33D17A", "#3584E4"];
+
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "color",
     defaultValue: "#000000",
@@ -77,7 +65,8 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
           _focus={{
             boxShadowhexToRgb: "outline",
           }}
-          p={4}
+          px={6}
+          py={4}
           onClick={(e) => {
             onColorChange(
               {
@@ -89,7 +78,6 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
             );
 
             setColor(color);
-            console.log(color);
           }}
         ></Box>
       </Box>
@@ -97,21 +85,12 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
   }
 
   return (
-    <Box
-      w="fit-content"
-      position="absolute"
-      bottom="0"
-      mx="auto"
-      mb="7"
-      p={2}
-      borderRadius="md"
-      zIndex={1}
-      _dark={{ bg: "#161b24" }}
-    >
+    <Box w="100%">
       <HStack
         spacing={2}
         w="100%"
         {...group}
+        wrap="wrap"
         justifyContent="center"
         alignItems="center"
       >
@@ -119,43 +98,26 @@ const ColorPicker: FC<ColorPickerProps> = ({ onColorChange }) => {
           const radio = getRadioProps({ value: color });
           return <RadioCard key={color} {...radio} color={color} />;
         })}
-
-        <IconButton
-          aria-label="color-picker"
-          icon={<EditIcon />}
-          variant="unstyled"
-          bg={color}
-          borderWidth="2px"
-          borderRadius="md"
-          boxShadow="md"
-          display="flex"
-          p={4}
-          justifyContent="center"
-          alignItems="center"
-          onClick={() => colorRef?.click()}
-        />
-        <Input
-          type="color"
-          mt={2}
-          value={color}
-          display="none"
-          ref={(ref) => (colorRef = ref)}
-          onChange={(e) => {
-            onColorChange(
-              {
-                hex: e.target.value,
-                rgb: hexToRgb(e.target.value),
-                hsl: { h: 255, s: 255, l: 255 },
-              },
-              e
-            );
-
-            setColor(e.target.value);
-          }}
-        />
       </HStack>
+      <Input
+        type="color"
+        mt={2}
+        value={color}
+        onChange={(e) => {
+          onColorChange(
+            {
+              hex: e.target.value,
+              rgb: hexToRgb(e.target.value),
+              hsl: { h: 255, s: 255, l: 255 },
+            },
+            e
+          );
+
+          setColor(e.target.value);
+        }}
+      />
     </Box>
   );
 };
 
-export default ColorPicker;
+export default BadColorPicker;

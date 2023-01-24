@@ -30,7 +30,7 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { SEND_FRIENDREQUEST } from "../graphql/mutations/sendFriendrequest";
 import REMOVE_FRIEND from "../graphql/mutations/removeFriends";
 import GET_FIRSTFRIENDS from "../graphql/queries/getFirstFriends";

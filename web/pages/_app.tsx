@@ -11,6 +11,8 @@ import { setAccessToken } from "../lib/User/acesstoken";
 import { TUser } from "../lib/User/user";
 import { MobileContext } from "../lib/MobileContext";
 import { ON_FRIENDREQUEST } from "../graphql/code/onFriendRequest";
+import { extendTheme } from "@chakra-ui/react";
+import theme from "../lib/theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
   let thisUser: TUser = {
@@ -59,7 +61,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <ApolloProvider client={client}>
         <MobileContext.Provider value={isMobile}>
           <UserContext.Provider value={providerValue}>
