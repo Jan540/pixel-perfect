@@ -4,6 +4,7 @@ import {
   ArrowBackIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
+  MinusIcon,
   PlusSquareIcon,
 } from "@chakra-ui/icons";
 import {
@@ -31,7 +32,6 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import { SEND_FRIENDREQUEST } from "../graphql/mutations/sendFriendrequest";
-import ADD_FRIEND from "../graphql/mutations/addFriend";
 import REMOVE_FRIEND from "../graphql/mutations/removeFriends";
 import GET_FIRSTFRIENDS from "../graphql/queries/getFirstFriends";
 import GET_NEXTFRIENDS from "../graphql/queries/getNextFriends";
@@ -40,20 +40,17 @@ import GET_USERBYID from "../graphql/queries/getUserById";
 import { getAccessToken } from "../lib/User/acesstoken";
 import { defaultUser, TUser } from "../lib/User/user";
 import { UserContext } from "../lib/User/Usercontext";
+import DisplayFriends from "../components/FriendsModal";
+import ISBEFRIENED from "../graphql/queries/isBefriended";
 
 const Profile: NextPage = () => {
   const router = useRouter();
   const { userId }: any = router.query;
   const { user, setUser } = useContext(UserContext);
   const toast = useToast();
-
-  const [displayedUser, setDisplayedUser] = useState<TUser>(defaultUser);
-  const [friends, setFriends] = useState<TUser[]>([]);
-  const endCursor = useRef("");
-  const startCurser = useRef("");
-  const hasNextPage = useRef(false);
-  const hasPerviousPage = useRef(false);
   const [oldToken, setOldToken] = useState("");
+  const [displayedUser, setDisplayedUser] = useState<TUser>(defaultUser);
+  const [isBefriended, setIsBefriended] = useState(false);
 
   const {
     error: userByIDError,
@@ -64,44 +61,6 @@ const Profile: NextPage = () => {
   });
 
   const [
-    getNextFriends,
-    {
-      data: getNextFriendsData,
-      error: getNextFriendsError,
-      loading: getNextFriendsLoading,
-    },
-  ] = useLazyQuery(GET_NEXTFRIENDS, {
-    nextFetchPolicy: "standby",
-    fetchPolicy: "no-cache",
-
-    variables: { input: endCursor.current },
-  });
-
-  const [
-    getPerviousFriends,
-    {
-      data: getPerviousFriendsData,
-      error: getPerviousFriendsError,
-      loading: getPerviousFriendsLoading,
-    },
-  ] = useLazyQuery(GET_PREVIOUSFRIENDS, {
-    nextFetchPolicy: "standby",
-    fetchPolicy: "no-cache",
-
-    variables: { input: startCurser.current },
-  });
-
-  const [
-    getFirstFriends,
-    {
-      error: firstFriendsError,
-      data: firstFriendsData,
-      loading: firstFriendsLoading,
-    },
-  ] = useLazyQuery(GET_FIRSTFRIENDS, {
-    fetchPolicy: "no-cache",
-  });
-  const [
     sendFriendRequest,
     {
       data: friendRequestData,
@@ -110,123 +69,81 @@ const Profile: NextPage = () => {
     },
   ] = useMutation(SEND_FRIENDREQUEST);
 
+  const [
+    getIsBefriended,
+    {
+      data: isBefriendedData,
+      loading: isBefriendedLoading,
+      error: isBefriendedError,
+    },
+  ] = useLazyQuery(ISBEFRIENED, {
+    variables: {
+      input: displayedUser.userId,
+    },
+    nextFetchPolicy: "standby",
+    fetchPolicy: "no-cache",
+  });
+
+  useEffect(() => {
+    if (oldToken === getAccessToken()) return;
+    getIsBefriended();
+    setOldToken(getAccessToken());
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getAccessToken(),
+    oldToken,
+    getIsBefriended,
+    displayedUser.userId,
+    user.userId,
+  ]);
+
+  useEffect(() => {
+    if (!isBefriendedData) return;
+    setIsBefriended(isBefriendedData.isBefriended);
+  }, [isBefriendedData]);
+
   const SendFriendRequestHandler = async () => {
+    toast.closeAll();
     try {
       await sendFriendRequest({
         variables: {
           input: {
             payload: {
               toFriedUserId: displayedUser.userId,
+              senderId: user.userId,
               username: user.username,
             },
           },
         },
       });
     } catch (e) {
-      console.log(e);
+      return;
     }
-    showToast("Friend request sent!", "success" as UseToastOptions);
+    toast({
+      title: "Friend Request",
+      description: "Friend Request Sent",
+      status: "success",
+      variant: "top-accent",
+    });
   };
 
   useEffect(() => {
     if (!friendRequestError) return;
-    showToast("Something went wrong!", "error" as UseToastOptions);
-  }, [friendRequestError]);
-
-  const [
-    removeFriend,
-    {
-      data: removeFriendData,
-      loading: removeFriendLoading,
-      error: removeFriendError,
-    },
-  ] = useMutation(REMOVE_FRIEND);
+    toast({
+      title: "Error",
+      description: friendRequestError.message,
+      status: "error",
+      variant: "top-accent",
+    });
+  }, [friendRequestError, toast]);
 
   useEffect(() => {
     if (!userByIdData) return;
     setDisplayedUser(userByIdData.userById as TUser);
   }, [userByIdData]);
 
-  useEffect(() => {
-    if (!getNextFriendsData) return;
-    setFriends(getNextFriendsData.getFriends?.nodes as TUser[]);
-    endCursor.current = getNextFriendsData.getFriends?.pageInfo.endCursor!;
-    startCurser.current = getNextFriendsData.getFriends?.pageInfo.startCursor!;
-    hasNextPage.current = getNextFriendsData.getFriends?.pageInfo.hasNextPage!;
-    hasPerviousPage.current =
-      getNextFriendsData.getFriends?.pageInfo.hasPreviousPage!;
-  }, [
-    getNextFriendsData,
-    endCursor,
-    startCurser,
-    hasNextPage,
-    hasPerviousPage,
-  ]);
-
-  useEffect(() => {
-    if (!getPerviousFriendsData) return;
-    setFriends(getPerviousFriendsData.getFriends?.nodes as TUser[]);
-    endCursor.current = getPerviousFriendsData.getFriends?.pageInfo.endCursor!;
-    startCurser.current =
-      getPerviousFriendsData.getFriends?.pageInfo.startCursor!;
-    hasNextPage.current =
-      getPerviousFriendsData.getFriends?.pageInfo.hasNextPage!;
-    hasPerviousPage.current =
-      getPerviousFriendsData.getFriends?.pageInfo.hasPreviousPage!;
-  }, [
-    getPerviousFriendsData,
-    endCursor,
-    startCurser,
-    hasNextPage,
-    hasPerviousPage,
-  ]);
-
-  useEffect(() => {
-    if (!firstFriendsData) return;
-    setFriends(firstFriendsData.getFriends?.nodes as TUser[]);
-    endCursor.current = firstFriendsData.getFriends?.pageInfo.endCursor!;
-    startCurser.current = firstFriendsData.getFriends?.pageInfo.startCursor!;
-    hasNextPage.current = firstFriendsData.getFriends?.pageInfo.hasNextPage!;
-    hasPerviousPage.current =
-      firstFriendsData.getFriends?.pageInfo.hasPreviousPage!;
-  }, [firstFriendsData, endCursor, startCurser, hasNextPage, hasPerviousPage]);
-
-  useEffect(() => {
-    if (oldToken === getAccessToken()) return;
-    getFirstFriends();
-    setOldToken(getAccessToken());
-  }, [getAccessToken()]);
-
-  const showToast = (message: string, type: any) => {
-    toast({
-      title: message,
-      status: type,
-      isClosable: true,
-    });
-  };
-
-  const removeFriendHandler = async (friend: TUser) => {
-    toast.closeAll();
-    try {
-      await removeFriend({
-        variables: { input: { friend_Id: friend.userId } },
-      });
-    } catch {
-      return false;
-    }
-    getFirstFriends();
-
-    showToast("Friend removed", "success" as UseToastOptions);
-  };
-
-  useEffect(() => {
-    if (!removeFriendError) return;
-    showToast(removeFriendError?.message!, "error" as UseToastOptions);
-  }, [removeFriendError]);
-
   return displayedUser.userId === userId ? (
     <>
-      {getNextFriendsError ? getNextFriendsError.message : null}
       <Flex
         alignItems={"center"}
         justifyContent={"flex-start"}
@@ -244,14 +161,14 @@ const Profile: NextPage = () => {
               size: "xl",
             }}
           />
-          <Text fontSize="xl">Role: {displayedUser.role}</Text>
-          {displayedUser.userId === user.userId ? (
-            <Button>Show Friends</Button>
-          ) : null}
-          {displayedUser.userId === user.userId ? null : (
+          <Text fontSize="2xl">Role: {displayedUser.role}</Text>
+          {displayedUser.userId === user.userId ? <DisplayFriends /> : null}
+          {isBefriended ? null : (
             <HStack>
               <Text fontSize={"xl"}>Add as Friend</Text>
               <IconButton
+                size={"sm"}
+                isLoading={friendRequestLoading}
                 aria-label="AddFriend"
                 icon={<AddIcon />}
                 colorScheme="green"
@@ -262,88 +179,7 @@ const Profile: NextPage = () => {
             </HStack>
           )}
         </VStack>
-        {displayedUser.userId === user.userId ? (
-          <VStack ml="auto" position="relative">
-            <TableContainer>
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Username</Th>
-                    <Th>Remove</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {friends
-                    ? friends.map((friend) => (
-                        <Tr key={friend.userId}>
-                          <Tooltip
-                            placement="left"
-                            label={`Got to ${friend.username}`}
-                            hasArrow
-                            aria-label="tooltip"
-                          >
-                            <Td
-                              color={
-                                friend.role === "PREMIUM_USER"
-                                  ? "purple.500"
-                                  : ""
-                              }
-                              _hover={{
-                                textDecoration: "underline",
-                              }}
-                              userSelect="none"
-                              onClick={() => {
-                                router.push(`/${friend.userId}`);
-                              }}
-                            >
-                              {friend.username}
-                            </Td>
-                          </Tooltip>
-                          <Td>
-                            <IconButton
-                              aria-label="Remove-Friend"
-                              colorScheme={"red"}
-                              position="relative"
-                              left="50%"
-                              transform="translateX(-50%)"
-                              icon={<ArrowBackIcon />}
-                              onClick={() => {
-                                removeFriendHandler(friend);
-                              }}
-                            />
-                          </Td>
-                        </Tr>
-                      ))
-                    : null}
-                </Tbody>
-              </Table>
-            </TableContainer>
-            <HStack>
-              <IconButton
-                aria-label="Previous"
-                isLoading={getPerviousFriendsLoading}
-                icon={<ArrowLeftIcon />}
-                isDisabled={!hasPerviousPage.current}
-                onClick={() => {
-                  if (!hasPerviousPage.current) return;
-                  getPerviousFriends({
-                    variables: { input: startCurser.current },
-                  });
-                }}
-              />
-              <IconButton
-                aria-label="Next"
-                isLoading={getNextFriendsLoading}
-                icon={<ArrowRightIcon />}
-                isDisabled={!hasNextPage.current}
-                onClick={() => {
-                  if (!hasNextPage.current) return;
-                  getNextFriends({ variables: { input: endCursor.current } });
-                }}
-              />
-            </HStack>
-          </VStack>
-        ) : null}
+        {displayedUser.userId === user.userId ? null : null}
       </Flex>
     </>
   ) : (

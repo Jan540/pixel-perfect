@@ -33,19 +33,21 @@ import {
   useControllableState,
   Spinner,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FC, RefObject, useContext, useEffect, useRef, useState } from "react";
 import LoginModal from "./LoginModal";
 import { UserContext } from "../lib/User/Usercontext";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import LOGOUT from "../graphql/mutations/logoutUser";
-import { setAccessToken } from "../lib/User/acesstoken";
+import { getAccessToken, setAccessToken } from "../lib/User/acesstoken";
 import USERSFILTERED from "../graphql/queries/getUsersFiltered";
 import { TUser } from "../lib/User/user";
 import { render } from "react-dom";
 import { MobileContext } from "../lib/MobileContext";
 import MessageDrawer from "./MessagesDrawer";
+import { ON_FRIENDREQUEST } from "../graphql/code/onFriendRequest";
 
 const Navbar: FC = () => {
   const { user, setUser } = useContext(UserContext);
@@ -54,19 +56,20 @@ const Navbar: FC = () => {
   const router = useRouter();
   const isMobile = useContext(MobileContext);
   const [logoutUser, { error: logoutError }] = useMutation(LOGOUT);
-
+  const toast = useToast();
   const logout = async () => {
-    setUser({ username: "", email: "", userId: "" });
     try {
-      logoutUser();
+      await logoutUser();
     } catch (error) {
       console.log(logoutError?.message);
+      return;
     }
     setUser({ username: "", email: "", userId: "", role: "" });
     setAccessToken("");
+    router.push("/");
   };
 
-  function OpenModal() {
+  function SearchModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [filterOptions, setFilterOptions] = useControllableState({
       defaultValue: "",
@@ -87,15 +90,7 @@ const Navbar: FC = () => {
       variables: { input: filterOptions },
     });
 
-    useEffect(() => {
-      if (filterOptions === "") return;
-      getFilteredUsersHandler();
-    }, [filterOptions]);
-
-    useEffect(() => {
-      if (!filteredUsersData) return;
-      setFilteredUser(filteredUsersData.usersFiltered as TUser[]);
-    }, [filteredUsersData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const getFilteredUsersHandler = async () => {
       try {
         await getUseresFiltered();
@@ -103,6 +98,16 @@ const Navbar: FC = () => {
         return false;
       }
     };
+    useEffect(() => {
+      if (filterOptions === "") return;
+      getFilteredUsersHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filterOptions]);
+
+    useEffect(() => {
+      if (!filteredUsersData) return;
+      setFilteredUser(filteredUsersData.usersFiltered as TUser[]);
+    }, [filteredUsersData, setFilteredUser]);
     return (
       <>
         {isMobile ? (
@@ -116,7 +121,7 @@ const Navbar: FC = () => {
         ) : (
           <Input
             width={"100%"}
-            placeholder="Search for User"
+            placeholder="Search for Users"
             variant="filled"
             size="md"
             type="text"
@@ -126,7 +131,6 @@ const Navbar: FC = () => {
             }}
           ></Input>
         )}
-
         <Modal
           isOpen={isOpen}
           onClose={onClose}
@@ -163,7 +167,6 @@ const Navbar: FC = () => {
                 {filteredUser.map((user) => (
                   <Link key={user.userId} href={`/${user.userId}`}>
                     <Text
-                      _hover={{}}
                       padding={1}
                       color={user.role === "PREMIUM_USER" ? "purple.500" : ""}
                     >
@@ -211,7 +214,6 @@ const Navbar: FC = () => {
                   colorScheme="red"
                   onClick={() => {
                     logout();
-                    router.push("/");
                     onClose();
                   }}
                   ml={3}
@@ -248,7 +250,7 @@ const Navbar: FC = () => {
         w={"20vw"}
         justifyContent="center"
       >
-        <OpenModal />
+        <SearchModal />
       </VStack>
       <div>
         {user.username ? (

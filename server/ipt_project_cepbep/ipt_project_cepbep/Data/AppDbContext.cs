@@ -23,8 +23,11 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Friend>(ub =>
+        {
             ub.Property(u => u.CreatedAt)
-                .HasDefaultValueSql("now()"));
+                .HasDefaultValueSql("now()");
+            ub.HasKey(k => new { k.UserId1, k.UserId2 });
+        });
         
         modelBuilder.Entity<User>(ub =>
         {
@@ -40,6 +43,13 @@ public class AppDbContext : DbContext
             ub.HasIndex(u => u.Username)
                 .IsUnique();
         });
+
+        modelBuilder.Entity<Friend_Request>(ub =>
+            {
+                ub.Property(u => u.CreatedAt)
+                    .HasDefaultValueSql("now()");
+                ub.HasKey(k => new { k.ReceiverId, k.SenderId });
+            });
         
         var users = new Faker<User>()
             .RuleFor(u => u.UserId, f => Guid.NewGuid())
@@ -56,5 +66,6 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Friend> Friends { get; set; }
     public DbSet<Canvas> Canvases { get; set; }
+    public DbSet<Friend_Request> FriendRequests { get; set; }
     
 }

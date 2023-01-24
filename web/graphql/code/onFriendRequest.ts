@@ -4,6 +4,7 @@ export const ON_FRIENDREQUEST = graphql(/* GraphQL */ `
   subscription OnFriendRequest($input: String!) {
     onAddFriend(userId: $input) {
       toFriedUserId
+      senderId
       username
     }
   }
