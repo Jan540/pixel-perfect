@@ -1,6 +1,7 @@
+import { gql } from "@apollo/client";
 import { graphql } from "../../gql";
 
-const CREATE_CANVAS = graphql(`
+const CREATE_CANVAS = gql`
   mutation createCanvas($input: CreateCanvasInput!) {
     createCanvas(input: $input) {
       canvas {
@@ -9,6 +10,6 @@ const CREATE_CANVAS = graphql(`
       }
     }
   }
-`);
+`;
 
 export default CREATE_CANVAS;

@@ -63,11 +63,15 @@ export function graphql(source: "\n  subscription OnPixelChange($canvasId: Strin
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation addFriend($input: AddFriendInput!) {\n    addFriend(input: $input) {\n      user {\n        username\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation addFriend($input: AddFriendInput!) {\n    addFriend(input: $input) {\n      user {\n        username\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation acceptFriendRequest($input: AcceptFriendRequestInput!) {\n    acceptFriendRequest(input: $input) {\n      boolean\n    }\n  }\n"): (typeof documents)["\n  mutation acceptFriendRequest($input: AcceptFriendRequestInput!) {\n    acceptFriendRequest(input: $input) {\n      boolean\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createCanvas {\n    createCanvas {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createCanvas {\n    createCanvas {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation createCanvas($input: CreateCanvasInput!) {\n    createCanvas(input: $input) {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createCanvas($input: CreateCanvasInput!) {\n    createCanvas(input: $input) {\n      canvas {\n        userId\n        canvasId\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation createPublicCanvas {\n    createPublicCanvas {\n      publicCanvas {\n        publicCanvasId\n        colors\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createPublicCanvas {\n    createPublicCanvas {\n      publicCanvas {\n        publicCanvasId\n        colors\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -147,7 +151,7 @@ export function graphql(source: "\n  query isBefriended ($input: String!) {\n   
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getCanvas {\n    getCanvas {\n      userId\n      canvasId\n      colors\n    }\n  }\n"): (typeof documents)["\n  query getCanvas {\n    getCanvas {\n      userId\n      canvasId\n      colors\n    }\n  }\n"];
+export function graphql(source: "\n  query getCanvas {\n    getCanvas {\n      userId\n      canvasId\n      colors\n      name\n    }\n  }\n"): (typeof documents)["\n  query getCanvas {\n    getCanvas {\n      userId\n      canvasId\n      colors\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

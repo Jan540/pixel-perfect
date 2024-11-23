@@ -108,7 +108,6 @@ namespace iptprojectcepbep.Migrations
                         .IsUnique();
 
                     b.ToTable("user");
-                });
 
                     b.HasData(
                         new
@@ -1111,7 +1110,6 @@ namespace iptprojectcepbep.Migrations
                             UpdatedAt = new DateTime(2023, 1, 5, 1, 46, 48, 917, DateTimeKind.Utc).AddTicks(5810),
                             Username = "Jeremy_Rodriguez18"
                         });
-                });
 
                 modelBuilder.Entity("ipt_project_cepbep.Models.Friend", b =>
                 {

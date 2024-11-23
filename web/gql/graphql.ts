@@ -471,6 +471,7 @@ export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  lastPlaced: Scalars['DateTime'];
   role: UserRole;
   updatedAt: Scalars['DateTime'];
   userId: Scalars['UUID'];
@@ -481,6 +482,7 @@ export type UserFilterInput = {
   and?: InputMaybe<Array<UserFilterInput>>;
   createdAt?: InputMaybe<DateTimeOperationFilterInput>;
   email?: InputMaybe<StringOperationFilterInput>;
+  lastPlaced?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<UserFilterInput>>;
   role?: InputMaybe<UserRoleOperationFilterInput>;
   updatedAt?: InputMaybe<DateTimeOperationFilterInput>;
@@ -510,6 +512,7 @@ export type UserRoleOperationFilterInput = {
 export type UserSortInput = {
   createdAt?: InputMaybe<SortEnumType>;
   email?: InputMaybe<SortEnumType>;
+  lastPlaced?: InputMaybe<SortEnumType>;
   role?: InputMaybe<SortEnumType>;
   updatedAt?: InputMaybe<SortEnumType>;
   userId?: InputMaybe<SortEnumType>;
